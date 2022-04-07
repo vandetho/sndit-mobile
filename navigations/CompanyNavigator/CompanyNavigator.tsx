@@ -1,6 +1,6 @@
 import React from 'react';
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { CompaniesScreen, CompanyScreen, NewCompanyScreen } from '@screens';
+import { createStackNavigator } from '@react-navigation/stack';
+import { CompaniesScreen, CompanyScreen } from '@screens';
 
 export type CompanyStackParamList = {
     Companies: undefined;
@@ -17,16 +17,6 @@ const CompanyNavigator = React.memo<CompanyNavigatorProps>(() => {
         <CompanyStack.Navigator screenOptions={{ headerShown: false }}>
             <CompanyStack.Screen name="Companies" component={CompaniesScreen} />
             <CompanyStack.Screen name="Company" component={CompanyScreen} />
-            <CompanyStack.Screen
-                name="NewCompany"
-                component={NewCompanyScreen}
-                options={{
-                    presentation: 'modal',
-                    gestureEnabled: true,
-                    cardOverlayEnabled: true,
-                    ...TransitionPresets.ModalPresentationIOS,
-                }}
-            />
         </CompanyStack.Navigator>
     );
 });

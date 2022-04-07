@@ -29,8 +29,11 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ c
     const { t } = useTranslation();
     return (
         <Animated.View style={[styles.container]}>
-            <Header goBackTitle={t('back')} containerStyle={{ marginTop: insets.top}} />
-            <View>
+            <Header
+                goBackTitle={t('back')}
+                containerStyle={{ marginTop: insets.top, marginHorizontal: 10, marginBottom: 10 }}
+            />
+            <View style={{ padding: 10, borderRadius: 15, backgroundColor: colors.card, marginHorizontal: 10 }}>
                 <Text>{company.name}</Text>
             </View>
         </Animated.View>

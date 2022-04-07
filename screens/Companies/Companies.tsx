@@ -2,8 +2,8 @@ import React from 'react';
 import { Animated, SafeAreaView, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { CompanyStackParamList } from '@navigations/CompanyNavigator';
 import { CompanyList, HeaderSection } from './components';
+import { ApplicationStackParamsList } from '@navigations';
 
 const styles = StyleSheet.create({
     container: {
@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     },
 });
 
-type NewCompanyNavigationProp = StackNavigationProp<CompanyStackParamList, 'NewCompany'>;
+type NewCompanyNavigationProp = StackNavigationProp<ApplicationStackParamsList, 'NewCompany'>;
 
 interface CompaniesProps {}
 

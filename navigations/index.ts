@@ -1,4 +1,5 @@
 export * from './ApplicationNavigator';
 export * from './BottomTabNavigator';
-export * from './SecureNavigator';
+export * from './CompanyNavigator';
+export * from './PackageNavigator';
 export * from './SettingNavigator';

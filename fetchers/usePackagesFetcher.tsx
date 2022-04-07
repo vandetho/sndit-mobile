@@ -2,7 +2,7 @@ import React from 'react';
 import { Company, Package, ResponseSuccess } from '@interfaces';
 import { axios } from '@utils';
 
-export const usePackagesFetcher = (company: Company | undefined) => {
+export const usePackagesFetcher = () => {
     const [state, setState] = React.useState<{
         packages: Package[];
         companiesPackages: Package[];
@@ -47,16 +47,6 @@ export const usePackagesFetcher = (company: Company | undefined) => {
             setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
         }
     }, []);
-
-    React.useEffect(() => {
-        (async () => fetch())();
-    }, [fetch]);
-
-    React.useEffect(() => {
-        if (company) {
-            (async () => fetchCompany(company))();
-        }
-    }, [company, fetchCompany]);
 
     return { ...state, fetch, fetchCompany };
 };

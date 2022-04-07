@@ -3,7 +3,7 @@ import { Animated, NativeScrollEvent, NativeSyntheticEvent, TouchableWithoutFeed
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { useCompany } from '@contexts';
-import { GradientIcon, GradientText, SEPARATOR_HEIGHT } from '@components';
+import { GradientIcon, GradientText, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Company } from '@interfaces';
 import { CARD_HEIGHT, CompanyCard } from './components';
 import { HEADER_HEIGHT } from '../HeaderSection';
@@ -57,12 +57,12 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onScr
         }),
         [],
     );
-    console.log({ companies });
 
     const data = React.useMemo<Array<Company>>(
-        () => [{ name: t('add_company'), id: 0, token: '', ...companies }],
+        () => [{ name: t('add_company'), id: 0, token: '', roles: [] }, ...companies],
         [companies, t],
     );
+    console.log({ data });
 
     return (
         <Animated.FlatList
@@ -72,6 +72,7 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onScr
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             getItemLayout={getItemLayout}
+            ItemSeparatorComponent={Separator}
             contentContainerStyle={{ paddingTop: HEADER_HEIGHT, paddingHorizontal: 10 }}
         />
     );

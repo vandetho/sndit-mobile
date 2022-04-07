@@ -34,7 +34,7 @@ export const CompanyProvider: React.FunctionComponent = ({ children }) => {
         if (isLogged) {
             (async () => await fetch())();
         }
-    }, [companies, fetch, isLogged]);
+    }, [fetch, isLogged]);
 
     React.useEffect(() => {
         setState((prevState) => ({ ...prevState, companies, isLoading }));

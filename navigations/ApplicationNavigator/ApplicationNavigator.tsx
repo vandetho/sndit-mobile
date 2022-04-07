@@ -2,17 +2,29 @@ import React from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { useColorScheme } from 'react-native';
-import { AuthLoadingScreen, LoginScreen, MapScreen } from '@screens';
+import {
+    AuthLoadingScreen,
+    EmployeeQrCodeScreen,
+    LoginScreen,
+    MapScreen,
+    NewCompanyScreen,
+    NewPackageScreen,
+    PackageQrCodeScreen,
+    UserQrCodeScreen,
+} from '@screens';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { BottomTabNavigator, BottomTabStackParamsList } from '@navigations/BottomTabNavigator';
-import { SecureNavigator } from '@navigations/SecureNavigator';
 import { darkTheme, lightTheme } from '@theme';
 import { useAuthentication } from '@contexts';
 
 export type ApplicationStackParamsList = {
     AuthLoading: undefined;
     BottomTabStack: NavigatorScreenParams<BottomTabStackParamsList>;
-    SecureStacks: undefined;
+    UserQrCode: undefined;
+    EmployeeQrCode: undefined;
+    PackageQrCode: undefined;
+    NewCompany: undefined;
+    NewPackage: undefined;
     Login: undefined;
     Map: { draggable: boolean; latitude?: number; longitude?: number };
 };
@@ -43,7 +55,58 @@ const ApplicationNavigator = React.memo<ApplicationNavigatorProps>(() => {
                         }}
                     />
                     {isLogged ? (
-                        <ApplicationStack.Screen name="SecureStacks" component={SecureNavigator} />
+                        <>
+                            <ApplicationStack.Screen
+                                name="UserQrCode"
+                                component={UserQrCodeScreen}
+                                options={{
+                                    presentation: 'modal',
+                                    gestureEnabled: true,
+                                    cardOverlayEnabled: true,
+                                    ...TransitionPresets.ModalPresentationIOS,
+                                }}
+                            />
+                            <ApplicationStack.Screen
+                                name="EmployeeQrCode"
+                                component={EmployeeQrCodeScreen}
+                                options={{
+                                    presentation: 'modal',
+                                    gestureEnabled: true,
+                                    cardOverlayEnabled: true,
+                                    ...TransitionPresets.ModalPresentationIOS,
+                                }}
+                            />
+                            <ApplicationStack.Screen
+                                name="PackageQrCode"
+                                component={PackageQrCodeScreen}
+                                options={{
+                                    presentation: 'modal',
+                                    gestureEnabled: true,
+                                    cardOverlayEnabled: true,
+                                    ...TransitionPresets.ModalPresentationIOS,
+                                }}
+                            />
+                            <ApplicationStack.Screen
+                                name="NewPackage"
+                                component={NewPackageScreen}
+                                options={{
+                                    presentation: 'modal',
+                                    gestureEnabled: true,
+                                    cardOverlayEnabled: true,
+                                    ...TransitionPresets.ModalPresentationIOS,
+                                }}
+                            />
+                            <ApplicationStack.Screen
+                                name="NewCompany"
+                                component={NewCompanyScreen}
+                                options={{
+                                    presentation: 'modal',
+                                    gestureEnabled: true,
+                                    cardOverlayEnabled: true,
+                                    ...TransitionPresets.ModalPresentationIOS,
+                                }}
+                            />
+                        </>
                     ) : (
                         <ApplicationStack.Screen
                             name="Login"
