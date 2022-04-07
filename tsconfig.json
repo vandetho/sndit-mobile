@@ -1,0 +1,48 @@
+{
+    "compilerOptions": {
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react-native",
+        "lib": [
+            "dom",
+            "esnext"
+        ],
+        "target": "ES2020",
+        "moduleResolution": "node",
+        "noEmit": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "paths": {
+            "@assets/*": ["assets/*"],
+            "@components": ["components/index.ts"],
+            "@components/*": ["components/*"],
+            "@config": ["config/index.ts"],
+            "@contexts": ["contexts/index.ts"],
+            "@database": ["database/index.ts"],
+            "@fetchers": ["fetchers/index.ts"],
+            "@hoc": ["hoc/index.ts"],
+            "@hoc/*": ["hoc/*"],
+            "@hooks": ["hooks/index.ts"],
+            "@interfaces": ["interfaces/index.ts"],
+            "@interfaces/*": ["interfaces/*"],
+            "@locales/*": ["locales/*"],
+            "@migrations/*": ["migrations/*.ts"],
+            "@models": ["models/index.ts"],
+            "@models/*": ["models/*.ts"],
+            "@navigations": ["navigations/index.ts"],
+            "@navigations/*": ["navigations/*"],
+            "@repositories/*": ["repositories/*.ts"],
+            "@screens": ["screens/index.ts"],
+            "@screens/*": ["screens/*"],
+            "@stores": ["stores/index.ts"],
+            "@stores/*": ["stores/*"],
+            "@theme": ["theme/index.ts"],
+            "@utils": ["utils/index.ts"],
+            "@workflow": ["workflow/index.ts"]
+        }
+    },
+    "extends": "expo/tsconfig.base"
+}

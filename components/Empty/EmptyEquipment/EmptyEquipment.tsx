@@ -1,0 +1,35 @@
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Text } from '@components/Text';
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    buttonContainer: {
+        height: 50,
+        borderRadius: 10,
+        marginVertical: 20,
+        paddingHorizontal: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    button: {},
+});
+
+interface EmptyEquipmentProps {}
+
+const EmptyEquipment = React.memo<EmptyEquipmentProps>(() => {
+    const { t } = useTranslation();
+
+    return (
+        <View style={styles.container}>
+            <Text>{t('no_equipment')}</Text>
+        </View>
+    );
+});
+
+export default EmptyEquipment;
