@@ -1,10 +1,11 @@
 {
     "expo": {
-        "name": "Sndit Beta",
+        "name": "Snit Beta",
         "slug": "sndit_beta",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
+        "userInterfaceStyle": "automatic",
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "contain",
@@ -17,10 +18,13 @@
             "**/*"
         ],
         "ios": {
+            "jsEngine": "jsc",
+            "userInterfaceStyle": "automatic",
             "bundleIdentifier": "io.sndit.mobile.beta",
             "supportsTablet": true
         },
         "android": {
+            "package": "io.sndit.mobile.beta",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#FFFFFF"

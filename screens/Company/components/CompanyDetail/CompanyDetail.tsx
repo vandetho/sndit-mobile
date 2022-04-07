@@ -5,6 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import company from '@screens/Company/Company';
 import { Company } from '@interfaces';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const HEADER_HEIGHT = 200;
 
@@ -24,10 +25,11 @@ interface CompanyDetailProps {
 
 const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ company }) => {
     const { colors } = useTheme();
+    const insets = useSafeAreaInsets();
     const { t } = useTranslation();
     return (
         <Animated.View style={[styles.container]}>
-            <Header goBackTitle={t('back')} />
+            <Header goBackTitle={t('back')} containerStyle={{ marginTop: insets.top}} />
             <View>
                 <Text>{company.name}</Text>
             </View>

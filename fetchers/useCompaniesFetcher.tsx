@@ -27,10 +27,6 @@ export const useCompaniesFetcher = () => {
             console.log({ data });
         }
     }, []);
-    console.log(state.companies);
-    React.useEffect(() => {
-        (async () => fetch())();
-    }, [fetch]);
 
     return { ...state, fetch };
 };

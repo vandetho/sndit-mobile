@@ -57,6 +57,7 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onScr
         }),
         [],
     );
+    console.log({ companies });
 
     const data = React.useMemo<Array<Company>>(
         () => [{ name: t('add_company'), id: 0, token: '', ...companies }],
