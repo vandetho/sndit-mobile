@@ -1,16 +1,15 @@
 import React from 'react';
 import { Package } from '@interfaces';
 import { usePackagesFetcher } from '@fetchers';
-import { useCompany } from './CompanyContext';
 
 export const PackageContext = React.createContext<{
     packages: Package[];
     companiesPackages: Package[];
     isLoading: boolean;
-    package: Package;
+    item: Package;
     onSelect: (pkg: Package) => void;
 }>({
-    package: undefined,
+    item: undefined,
     isLoading: false,
     packages: [],
     companiesPackages: [],
@@ -20,16 +19,15 @@ export const PackageContext = React.createContext<{
 });
 
 export const PackageProvider: React.FunctionComponent = ({ children }) => {
-    const { company } = useCompany();
     const [state, setState] = React.useState<{
         packages: Package[];
         companiesPackages: Package[];
-        package: Package;
+        item: Package;
         isLoading: boolean;
     }>({
         isLoading: false,
         packages: [],
-        package: undefined,
+        item: undefined,
         companiesPackages: [],
     });
     const { packages, companiesPackages, isLoading } = usePackagesFetcher();

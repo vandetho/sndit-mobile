@@ -5,6 +5,7 @@ export * from './FormType';
 export * from './Jwt';
 export * from './MenuItem';
 export * from './Package';
+export * from './PackageHistory';
 export * from './Response';
 export * from './ResponseError';
 export * from './ResponseSuccess';
