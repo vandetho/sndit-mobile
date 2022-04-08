@@ -1,21 +1,43 @@
 import React from 'react';
-import { usePackage } from '@contexts';
-import { useNavigation } from '@react-navigation/native';
-import { City, Company } from '@interfaces';
-import { axios, showToast } from '@utils';
-import { SafeAreaView, TextInput, View } from 'react-native';
-import { Button, CityPicker, Header, Text, TextField } from '@components';
+import { StyleSheet, TextInput, View } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import { Button, CityPicker, Header, Text, TextField } from '@components';
+import { usePackage } from '@contexts';
+import { City, Company } from '@interfaces';
+import { axios, showToast } from '@utils';
 import { BottomTabStackParamsList } from '@navigations/BottomTabNavigator';
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    headerContainer: {
+        padding: 10,
+    },
+    formContainer: {
+        padding: 10,
+        margin: 10,
+        borderRadius: 15,
+    },
+    saveButton: {
+        marginHorizontal: 10,
+        borderRadius: 15,
+    },
+});
 
 type PackageScreenNavigationProp = StackNavigationProp<BottomTabStackParamsList, 'PackageStack'>;
 
 interface PackageFormProps {
     company: Company;
+    onBack: () => void;
 }
 
-const PackageForm = React.memo<PackageFormProps>(({ company }) => {
+const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
+    const { t } = useTranslation();
+    const { colors } = useTheme();
     const { onSelect } = usePackage();
     const navigation = useNavigation<PackageScreenNavigationProp>();
     const [state, setState] = React.useState<{
@@ -78,9 +100,9 @@ const PackageForm = React.memo<PackageFormProps>(({ company }) => {
     }, [company.id, navigation, onSelect, state.address, state.city, state.name, state.note]);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Header goBackTitle={t('close')} goBackIcon="times" />
+                <Header goBackTitle={t('back')} onGoBack={onBack} />
             </View>
             <View style={[styles.formContainer, { backgroundColor: colors.card }]}>
                 <TextField label={t('name')} name="name" value={state.name} onChangeText={onChangeText} />
@@ -103,7 +125,7 @@ const PackageForm = React.memo<PackageFormProps>(({ company }) => {
                 onPress={onPressSave}
                 style={styles.saveButton}
             />
-        </SafeAreaView>
+        </View>
     );
 });
 

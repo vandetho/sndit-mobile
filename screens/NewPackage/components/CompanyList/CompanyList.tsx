@@ -4,14 +4,19 @@ import { useCompany } from '@contexts';
 import { CARD_HEIGHT, CompanyCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Company } from '@interfaces';
 
-interface CompanyListProps {}
+interface CompanyListProps {
+    onPress: (company: Company) => void;
+}
 
-const CompanyListComponent: React.FunctionComponent<CompanyListProps> = () => {
+const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onPress }) => {
     const { companies, isLoading } = useCompany();
 
-    const renderItem = React.useCallback(({ item }: { item: Company }) => {
-        return <CompanyCard company={item} />;
-    }, []);
+    const renderItem = React.useCallback(
+        ({ item }: { item: Company }) => {
+            return <CompanyCard company={item} onPress={onPress} />;
+        },
+        [onPress],
+    );
 
     const keyExtractor = React.useCallback((_, index: number) => `companies-picker-item-${index}`, []);
 

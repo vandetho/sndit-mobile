@@ -14,9 +14,10 @@ type CompanyScreenNavigationProp = StackNavigationProp<CompanyStackParamList, 'C
 
 interface CompanyCardProps {
     company: Company;
+    onPress?: (company: Company) => void;
 }
 
-const CompanyCardComponent: React.FunctionComponent<CompanyCardProps> = ({ company }) => {
+const CompanyCardComponent: React.FunctionComponent<CompanyCardProps> = ({ company, onPress }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
     const { onSelect } = useCompany();
@@ -32,13 +33,17 @@ const CompanyCardComponent: React.FunctionComponent<CompanyCardProps> = ({ compa
         return t('employee');
     }, [company.roles, t]);
 
-    const onPress = React.useCallback(() => {
+    const handlePress = React.useCallback(() => {
+        if (onPress) {
+            onPress(company);
+            return;
+        }
         onSelect(company);
         navigation.navigate('Company');
-    }, [company, navigation, onSelect]);
+    }, [company, navigation, onPress, onSelect]);
 
     return (
-        <TouchableWithoutFeedback onPress={onPress}>
+        <TouchableWithoutFeedback onPress={handlePress}>
             <View style={{ height: CARD_HEIGHT, borderRadius: 15, backgroundColor: colors.card, padding: 10 }}>
                 <Text bold>{company.name}</Text>
                 <Text style={{ marginVertical: 10 }}>{renderRole()}</Text>

@@ -1,37 +1,39 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '@react-navigation/native';
+import { View } from 'react-native';
 import { useCompany } from '@contexts';
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    headerContainer: {
-        padding: 10,
-    },
-    formContainer: {
-        padding: 10,
-        margin: 10,
-        borderRadius: 15,
-    },
-    saveButton: {
-        marginHorizontal: 10,
-        borderRadius: 15,
-    },
-});
+import PagerView from 'react-native-pager-view';
+import { CompanyList, PackageForm } from './components';
+import { Company } from '@interfaces';
 
 interface NewPackageProps {}
 
 const NewPackage = React.memo<NewPackageProps>(() => {
-    const { t } = useTranslation();
-    const { colors } = useTheme();
     const { company } = useCompany();
     const [state, setState] = React.useState({
         company,
         page: company ? 0 : 1,
     });
+
+    const onPress = React.useCallback((company: Company) => {
+        setState((prevState) => ({ ...prevState, company, page: 1 }));
+    }, []);
+
+    const onBack = React.useCallback(() => {
+        setState((prevState) => ({ ...prevState, page: 0 }));
+    }, []);
+
+    return (
+        <View style={{ flex: 1 }}>
+            <PagerView initialPage={state.page} scrollEnabled={false}>
+                <View key="1">
+                    <CompanyList onPress={onPress} />
+                </View>
+                <View key="1">
+                    <PackageForm company={state.company} onBack={onBack} />
+                </View>
+            </PagerView>
+        </View>
+    );
 });
 
 export default NewPackage;
