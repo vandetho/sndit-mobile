@@ -27,6 +27,17 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ c
     const { colors } = useTheme();
     const insets = useSafeAreaInsets();
     const { t } = useTranslation();
+
+    const renderRole = React.useCallback(() => {
+        if (company.roles.includes('ROLE_OWNER')) {
+            return t('owner');
+        }
+        if (company.roles.includes('ROLE_MANAGER')) {
+            return t('manager');
+        }
+        return t('employee');
+    }, [company.roles, t]);
+
     return (
         <Animated.View style={[styles.container]}>
             <Header
@@ -35,6 +46,7 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ c
             />
             <View style={{ padding: 10, borderRadius: 15, backgroundColor: colors.card, marginHorizontal: 10 }}>
                 <Text>{company.name}</Text>
+                <Text style={{ marginVertical: 10 }}>{renderRole()}</Text>
             </View>
         </Animated.View>
     );
