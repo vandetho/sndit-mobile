@@ -62,7 +62,6 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onScr
         () => [{ name: t('add_company'), id: 0, token: '', roles: [] }, ...companies],
         [companies, t],
     );
-    console.log({ data });
 
     return (
         <Animated.FlatList

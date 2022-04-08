@@ -9,6 +9,8 @@ import { City } from '@interfaces';
 import { axios, showToast } from '@utils';
 import { Button, CityPicker, Header, Text, TextField } from '@components';
 import { useCompany, usePackage } from '@contexts';
+import { BottomTabNavigator } from '@navigations';
+import { BottomTabParamsList } from '@navigations/BottomTabNavigator/BottomTabNavigator';
 
 const styles = StyleSheet.create({
     container: {
@@ -28,7 +30,7 @@ const styles = StyleSheet.create({
     },
 });
 
-type PackageScreenNavigationProp = StackNavigationProp<PackageStackParamList, 'Package'>;
+type PackageScreenNavigationProp = StackNavigationProp<BottomTabParamsList, 'PackageStack'>;
 
 interface NewPackageProps {}
 
@@ -84,7 +86,7 @@ const NewPackage = React.memo<NewPackageProps>(() => {
             const { data } = await axios.post('/api/packages', formData);
             setState((prevState) => ({ ...prevState, dispatch: false }));
             onSelect(data.data);
-            navigation.navigate('Package');
+            navigation.navigate('PackageStack', { screen: 'Package' });
         } catch (e) {
             if (e.response) {
                 const {
