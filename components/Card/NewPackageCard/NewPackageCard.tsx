@@ -1,10 +1,9 @@
 import React from 'react';
-import { Package } from '@interfaces';
 import { View } from 'react-native';
-import { Text } from '@components/Text';
-import { PACKAGE_ITEM_HEIGHT } from '@components/Card';
 import { useTheme } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Package } from '@interfaces';
+import { Text } from '@components/Text';
 
 export const NEW_PACKAGE_ITEM_HEIGHT = 100;
 
@@ -17,7 +16,7 @@ const NewPackageCard = React.memo<NewPackageCardProps>(({ item }) => {
     return (
         <View
             style={{
-                height: PACKAGE_ITEM_HEIGHT,
+                height: NEW_PACKAGE_ITEM_HEIGHT,
                 borderRadius: 15,
                 padding: 10,
                 backgroundColor: colors.card,
