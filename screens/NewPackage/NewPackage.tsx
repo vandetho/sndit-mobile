@@ -23,16 +23,14 @@ const NewPackage = React.memo<NewPackageProps>(() => {
     }, []);
 
     return (
-        <View style={{ flex: 1 }}>
-            <PagerView initialPage={state.page} scrollEnabled={false}>
-                <View key="1">
-                    <CompanyList onPress={onPress} />
-                </View>
-                <View key="1">
-                    <PackageForm company={state.company} onBack={onBack} />
-                </View>
-            </PagerView>
-        </View>
+        <PagerView initialPage={state.page} scrollEnabled={false}>
+            <View key="1">
+                <CompanyList onPress={onPress} />
+            </View>
+            <View key="2">
+                <PackageForm company={state.company} onBack={onBack} />
+            </View>
+        </PagerView>
     );
 });
 

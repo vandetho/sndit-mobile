@@ -1,8 +1,9 @@
 import React from 'react';
-import { Animated } from 'react-native';
+import { Animated, View } from 'react-native';
 import { useCompany } from '@contexts';
 import { CARD_HEIGHT, CompanyCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Company } from '@interfaces';
+import { EmptyCompany } from '@screens/NewPackage/components/CompanyList/components';
 
 interface CompanyListProps {
     onPress: (company: Company) => void;
@@ -30,15 +31,18 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onPre
     );
 
     return (
-        <Animated.FlatList
-            refreshing={isLoading}
-            data={companies}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            getItemLayout={getItemLayout}
-            ItemSeparatorComponent={Separator}
-            contentContainerStyle={{ paddingHorizontal: 10 }}
-        />
+        <View style={{ flex: 1 }}>
+            <Animated.FlatList
+                refreshing={isLoading}
+                data={companies}
+                renderItem={renderItem}
+                keyExtractor={keyExtractor}
+                ListEmptyComponent={EmptyCompany}
+                getItemLayout={getItemLayout}
+                ItemSeparatorComponent={Separator}
+                contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 10 }}
+            />
+        </View>
     );
 };
 

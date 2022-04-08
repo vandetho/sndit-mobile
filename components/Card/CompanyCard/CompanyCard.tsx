@@ -2,7 +2,7 @@ import React from 'react';
 import { Company } from '@interfaces';
 import { TouchableWithoutFeedback, View } from 'react-native';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { Text } from '@components';
+import { Text } from '@components/Text';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CompanyStackParamList } from '@navigations/CompanyNavigator';

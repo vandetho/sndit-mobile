@@ -97,7 +97,7 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
             console.error(e);
             setState((prevState) => ({ ...prevState, dispatch: false }));
         }
-    }, [company.id, navigation, onSelect, state.address, state.city, state.name, state.note]);
+    }, [company, navigation, onSelect, state.address, state.city, state.name, state.note]);
 
     return (
         <View style={styles.container}>
