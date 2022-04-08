@@ -2,12 +2,13 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { usePackage } from '@contexts';
-import { axios, showToast } from '@utils';
-import { Button, CityPicker, Header, TextField } from '@components';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PackageStackParamList } from '@navigations/PackageNavigator';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { City } from '@interfaces';
+import { axios, showToast } from '@utils';
+import { Button, CityPicker, Header, Text, TextField } from '@components';
+import { useCompany, usePackage } from '@contexts';
 
 const styles = StyleSheet.create({
     container: {
@@ -23,6 +24,7 @@ const styles = StyleSheet.create({
     },
     saveButton: {
         marginHorizontal: 10,
+        borderRadius: 15,
     },
 });
 
@@ -33,6 +35,7 @@ interface NewPackageProps {}
 const NewPackage = React.memo<NewPackageProps>(() => {
     const { t } = useTranslation();
     const { colors } = useTheme();
+    const { company } = useCompany();
     const { onSelect } = usePackage();
     const navigation = useNavigation<PackageScreenNavigationProp>();
     const [state, setState] = React.useState<{
@@ -66,19 +69,17 @@ const NewPackage = React.memo<NewPackageProps>(() => {
     const onPressSave = React.useCallback(async () => {
         setState((prevState) => ({ ...prevState, dispatch: true }));
         try {
-            const formData = new FormData();
-            formData.append('name', state.name);
+            const formData: { [key: string]: any } = {};
+            formData.name = state.name;
+            formData.company = company.id;
             if (state.address) {
-                formData.append('address', state.address);
+                formData.address = state.address;
             }
             if (state.note) {
-                formData.append('note', state.note);
+                formData.note = state.note;
             }
             if (state.city) {
-                formData.append('city', String(state.city.id));
-            }
-            if (state.image) {
-                formData.append('images[0][imageFile]', state.image);
+                formData.city = state.city.id;
             }
             const { data } = await axios.post('/api/packages', formData);
             setState((prevState) => ({ ...prevState, dispatch: false }));
@@ -94,7 +95,7 @@ const NewPackage = React.memo<NewPackageProps>(() => {
             console.error(e);
             setState((prevState) => ({ ...prevState, dispatch: false }));
         }
-    }, [navigation, onSelect, state.address, state.city, state.image, state.name, state.note]);
+    }, [company.id, navigation, onSelect, state.address, state.city, state.name, state.note]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -106,10 +107,22 @@ const NewPackage = React.memo<NewPackageProps>(() => {
                 <TextField label={t('address')} name="address" value={state.address} onChangeText={onChangeText} />
                 <CityPicker selected={state.city} onValueChange={onChangeCity} />
                 <View>
-                    <TextInput value={state.note} onChangeText={onChangeNote} />
+                    <Text>{t('note')}</Text>
+                    <TextInput
+                        value={state.note}
+                        multiline
+                        onChangeText={onChangeNote}
+                        style={{ minHeight: 100, borderBottomWidth: 1, color: colors.text }}
+                    />
                 </View>
             </View>
-            <Button label={t('save')} onPress={onPressSave} style={styles.saveButton} />
+            <Button
+                isLoading={state.dispatch}
+                label={t('save')}
+                endIcon={<FontAwesome5 name="save" color="#FFFFFF" size={20} />}
+                onPress={onPressSave}
+                style={styles.saveButton}
+            />
         </SafeAreaView>
     );
 });

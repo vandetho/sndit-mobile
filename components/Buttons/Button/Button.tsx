@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import { gradientColor, PALETTE } from '@theme';
 import { BarLoader } from '@components/Loader';
 import { CustomLinearGradient } from '@components/Gradient';
@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
+        height: 40,
     },
 });
 
@@ -74,25 +75,27 @@ const Button = React.memo<ButtonProps>(
 
         const renderContent = React.useCallback(() => {
             if (isLoading) {
-                return (
-                    <View style={[styles.container, { borderRadius: radius }]}>
-                        <BarLoader color={color} />
-                    </View>
-                );
+                return <BarLoader color={color} />;
             }
             return (
+                <>
+                    {renderStartIcon()}
+                    <Text style={{ color, marginHorizontal: 10 }}>{label}</Text>
+                    {renderEndIcon()}
+                </>
+            );
+        }, [color, isLoading, label, renderEndIcon, renderStartIcon]);
+
+        return (
+            <TouchableOpacity disabled={isLoading} onPress={handlePress}>
                 <CustomLinearGradient
                     colors={backgroundColor}
                     style={[styles.container, { borderRadius: radius }, style]}
                 >
-                    {renderStartIcon()}
-                    <Text style={{ color, marginHorizontal: 10 }}>{label}</Text>
-                    {renderEndIcon()}
+                    {renderContent()}
                 </CustomLinearGradient>
-            );
-        }, [backgroundColor, color, isLoading, label, radius, renderEndIcon, renderStartIcon, style]);
-
-        return <TouchableOpacity onPress={handlePress}>{renderContent()}</TouchableOpacity>;
+            </TouchableOpacity>
+        );
     },
 );
 

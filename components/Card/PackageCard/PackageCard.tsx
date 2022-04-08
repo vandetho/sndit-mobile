@@ -23,7 +23,7 @@ const PackageCard = React.memo<PackageCardProps>(({ item }) => {
         >
             <Text fontSize={16}>{item.name}</Text>
             <Text>{item.address}</Text>
-            <Text>{item.city.name}</Text>
+            {item.city && <Text>{item.city.name}</Text>}
         </View>
     );
 });
