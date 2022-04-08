@@ -8,14 +8,14 @@ import { CompanyNavigator, CompanyStackParamList } from '@navigations/CompanyNav
 import { DashboardScreen } from '@screens';
 import { BottomTabBar } from './components';
 
-export type BottomTabParamsList = {
+export type BottomTabStackParamsList = {
     Home: { eventToken?: string };
     PackageStack: NavigatorScreenParams<PackageStackParamList>;
     CompanyStack: NavigatorScreenParams<CompanyStackParamList>;
     SettingStack: NavigatorScreenParams<SettingStackParamsList>;
 };
 
-const BottomTabStack = createBottomTabNavigator<BottomTabParamsList>();
+const BottomTabStack = createBottomTabNavigator<BottomTabStackParamsList>();
 
 interface BottomTabNavigatorProps {}
 

@@ -3,9 +3,8 @@ import { Animated, NativeScrollEvent, NativeSyntheticEvent, TouchableWithoutFeed
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { useCompany } from '@contexts';
-import { GradientIcon, GradientText, Separator, SEPARATOR_HEIGHT } from '@components';
+import { CARD_HEIGHT, CompanyCard, GradientIcon, GradientText, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Company } from '@interfaces';
-import { CARD_HEIGHT, CompanyCard } from './components';
 import { HEADER_HEIGHT } from '../HeaderSection';
 
 interface CompanyListProps {

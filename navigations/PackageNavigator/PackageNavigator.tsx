@@ -13,7 +13,7 @@ interface PackageNavigatorProps {}
 
 const PackageNavigator = React.memo<PackageNavigatorProps>(() => {
     return (
-        <PackageStack.Navigator>
+        <PackageStack.Navigator screenOptions={{ headerShown: false }}>
             <PackageStack.Screen name="Packages" component={PackagesScreen} />
             <PackageStack.Screen name="Package" component={PackageScreen} />
         </PackageStack.Navigator>
