@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { PACKAGE_ITEM_HEIGHT, PackageCard, Separator, SEPARATOR_HEIGHT } from '@components';
+import { PACKAGE_ITEM_HEIGHT, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Package as IPackage } from '@interfaces';
 import { usePackage } from '@contexts';
 import { usePackageHistoriesFetcher } from '@fetchers';
@@ -19,7 +19,7 @@ const Package = React.memo<PackageProps>(() => {
     const animatedValue = React.useRef(new Animated.Value(0)).current;
     const { histories, isLoading } = usePackageHistoriesFetcher(item);
 
-    const renderItem = React.useCallback(({ item }: { item: IPackage }) => <PackageCard item={item} />, []);
+    const renderItem = React.useCallback(({ item }: { item: IPackage }) => <HistoryCard item={item} />, []);
 
     const keyExtractor = React.useCallback((_, index: number) => `package-packages-item-${index}`, []);
 
