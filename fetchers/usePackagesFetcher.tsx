@@ -1,5 +1,5 @@
 import React from 'react';
-import { Company, Package, ResponseSuccess } from '@interfaces';
+import { Company, Employee, Package, ResponseSuccess } from '@interfaces';
 import { axios } from '@utils';
 
 export const usePackagesFetcher = () => {
@@ -48,5 +48,24 @@ export const usePackagesFetcher = () => {
         }
     }, []);
 
-    return { ...state, fetch, fetchCompany };
+    const fetchEmployee = React.useCallback(async (employee: Employee) => {
+        setState((prevState) => ({ ...prevState, isLoading: true }));
+        try {
+            const {
+                data: { data },
+            } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(
+                `/api/${employee.id}/packages`,
+            );
+            setState((prevState) => ({
+                ...prevState,
+                companiesPackages: data.packages,
+                totalRows: data.totalRows,
+                isLoading: false,
+            }));
+        } catch ({ response: { data } }) {
+            setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
+        }
+    }, []);
+
+    return { ...state, fetch, fetchCompany, fetchEmployee };
 };

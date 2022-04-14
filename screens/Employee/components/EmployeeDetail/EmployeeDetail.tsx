@@ -1,12 +1,10 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { Header } from '@components';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { Company } from '@interfaces';
+import { Employee } from '@interfaces';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { CompanyStackParamList } from '@navigations';
 import { getRoleLabel } from '@utils';
 
 export const HEADER_HEIGHT = 180;
@@ -22,26 +20,17 @@ const styles = StyleSheet.create({
     },
 });
 
-type EmployeesScreenNavigationProps = StackNavigationProp<CompanyStackParamList, 'Employees'>;
-
-interface CompanyDetailProps {
+interface EmployeeDetailProps {
     animatedValue: Animated.Value;
-    company: Company;
+    employee: Employee;
 }
 
-const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ animatedValue, company }) => {
+const EmployeeDetailComponent: React.FunctionComponent<EmployeeDetailProps> = ({ animatedValue, employee }) => {
     const { colors } = useTheme();
     const insets = useSafeAreaInsets();
-    const navigation = useNavigation<EmployeesScreenNavigationProps>();
     const { t } = useTranslation();
 
-    const renderRole = React.useCallback(() => t(getRoleLabel(company.roles)), [company.roles, t]);
-
     const inputRange = React.useMemo<Array<number>>(() => [0, HEADER_HEIGHT], []);
-
-    const onViewEmployees = React.useCallback(() => {
-        navigation.navigate('Employees');
-    }, [navigation]);
 
     return (
         <Animated.View
@@ -92,12 +81,7 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ a
                     ],
                 }}
             >
-                <Header
-                    goBackTitle={t('back')}
-                    headerRightTitle={t('employees')}
-                    headerRightIcon="users"
-                    onRightButtonPress={onViewEmployees}
-                />
+                <Header goBackTitle={t('back')} />
             </Animated.View>
             <View style={{ padding: 10, borderRadius: 15, backgroundColor: colors.card, marginHorizontal: 10 }}>
                 <Animated.Text
@@ -116,7 +100,7 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ a
                         ],
                     }}
                 >
-                    {company.name}
+                    {employee.lastName} {employee.firstName}
                 </Animated.Text>
                 <Animated.Text
                     style={{
@@ -142,13 +126,13 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ a
                         ],
                     }}
                 >
-                    {renderRole()}
+                    {t(getRoleLabel(employee.roles))}
                 </Animated.Text>
             </View>
         </Animated.View>
     );
 };
 
-const CompanyDetail = React.memo(CompanyDetailComponent);
+const EmployeeDetail = React.memo(EmployeeDetailComponent);
 
-export default CompanyDetail;
+export default EmployeeDetail;

@@ -28,6 +28,7 @@ module.exports = function (api) {
                         '@stores': path.resolve(__dirname, './stores'),
                         '@theme': path.resolve(__dirname, './theme'),
                         '@utils': path.resolve(__dirname, './utils'),
+                        '@workflows': path.resolve(__dirname, './workflows'),
                     },
                 },
             ],

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { PACKAGE_ITEM_HEIGHT, Separator, SEPARATOR_HEIGHT } from '@components';
-import { Package as IPackage } from '@interfaces';
+import { HISTORY_ITEM_HEIGHT, HistoryCard, Separator, SEPARATOR_HEIGHT } from '@components';
+import { PackageHistory } from '@interfaces';
 import { usePackage } from '@contexts';
 import { usePackageHistoriesFetcher } from '@fetchers';
 import { HEADER_HEIGHT, PackageDetail } from './components';
@@ -19,15 +19,15 @@ const Package = React.memo<PackageProps>(() => {
     const animatedValue = React.useRef(new Animated.Value(0)).current;
     const { histories, isLoading } = usePackageHistoriesFetcher(item);
 
-    const renderItem = React.useCallback(({ item }: { item: IPackage }) => <HistoryCard item={item} />, []);
+    const renderItem = React.useCallback(({ item }: { item: PackageHistory }) => <HistoryCard history={item} />, []);
 
     const keyExtractor = React.useCallback((_, index: number) => `package-packages-item-${index}`, []);
 
     const getItemLayout = React.useCallback(
         (_, index: number) => ({
             index,
-            length: PACKAGE_ITEM_HEIGHT + SEPARATOR_HEIGHT,
-            offset: (PACKAGE_ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
+            length: HISTORY_ITEM_HEIGHT + SEPARATOR_HEIGHT,
+            offset: (HISTORY_ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
         }),
         [],
     );

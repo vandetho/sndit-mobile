@@ -41,7 +41,9 @@
             "@stores/*": ["stores/*"],
             "@theme": ["theme/index.ts"],
             "@utils": ["utils/index.ts"],
-            "@workflow": ["workflow/index.ts"]
+            "@utils/*": ["utils/*"],
+            "@workflow": ["workflow/index.ts"],
+            "@workflow/*": ["workflow/*"]
         }
     },
     "extends": "expo/tsconfig.base"

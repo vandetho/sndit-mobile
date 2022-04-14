@@ -1,10 +1,13 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { Header } from '@components';
+import { Button, Header } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { PACKAGE } from '../../../../workflows';
+import { ROLES } from '@config';
+import { useAuthentication } from '@contexts';
 
 export const HEADER_HEIGHT = 180;
 
@@ -28,8 +31,28 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
     const { colors } = useTheme();
     const insets = useSafeAreaInsets();
     const { t } = useTranslation();
+    const {
+        jwt: { user },
+    } = useAuthentication();
 
     const inputRange = React.useMemo<Array<number>>(() => [0, HEADER_HEIGHT], []);
+
+    const renderButtons = React.useCallback(() => {
+        const buttons: JSX.Element[] = [];
+        const keys = Object.keys(item.marking);
+        if (keys.includes(PACKAGE.WAITING_FOR_DELIVERY)) {
+            if (item.roles.includes(ROLES.MANAGER)) {
+                buttons.push(<Button label={t('give_to_deliverer')} />);
+            }
+            buttons.push(<Button label={t('take_package')} />);
+        }
+        if (
+            keys.includes(PACKAGE.ON_DELIVERY) &&
+            (item.roles.includes(ROLES.MANAGER) || item.deliverer.id === user.id)
+        ) {
+        }
+        return <View>{buttons}</View>;
+    }, [item.deliverer, item.marking, item.roles, t, user]);
 
     return (
         <Animated.View
@@ -128,6 +151,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                     {item.address}
                 </Animated.Text>
             </View>
+            {renderButtons()}
         </Animated.View>
     );
 };

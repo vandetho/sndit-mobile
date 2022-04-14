@@ -10,38 +10,10 @@ export const DISPLAY_TIME_FORMAT = 'HH:mm';
 
 export const HOST = Constants.manifest.extra.host;
 
-export enum EquipmentState {
-    IN_USE = 'in_use',
-    IN_MAINTENANCE = 'in_maintenance',
-}
-
-export enum EquipmentTransition {
-    MAINTENANCE = 'MAINTENANCE',
-    MAINTENANCE_DONE = 'MAINTENANCE_DONE',
-}
-
-export enum PARTICIPANT_ROLE {
-    PARTICIPANT = 'ROLE_PARTICIPANT',
-    MEMBER = 'ROLE_MEMBER',
-    ORGANIZER = 'ROLE_ORGANIZER',
-}
-export enum MEMBER_ROLE {
-    SPECTATOR = 'ROLE_SPECTATOR',
-    PLAYER = 'ROLE_PLAYER',
-    VICE_CAPTAIN = 'ROLE_VICE_CAPTAIN',
-    CAPTAIN = 'ROLE_CAPTAIN',
-}
-
-export const PRICING_TYPE = {
-    H: 'Hour',
-    D: 'Day',
-};
-
-export enum ReservationStatus {
-    CANCELLED = 'C',
-    BOOKED = 'B',
-    REJECTED = 'R',
-    PENDING = 'P',
+export enum ROLES {
+    DELIVERER = 'ROLE_DELIVERER',
+    MANAGER = 'ROLE_MANAGER',
+    OWNER = 'ROLE_OWNER',
 }
 
 export const COUNTRY_CODE = {
