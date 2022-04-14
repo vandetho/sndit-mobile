@@ -9,13 +9,20 @@ interface NewPackageProps {}
 
 const NewPackage = React.memo<NewPackageProps>(() => {
     const { company } = useCompany();
+    const viewerRef = React.useRef<PagerView>(null);
     const [state, setState] = React.useState({
         company,
-        page: company ? 0 : 1,
+        page: company ? 1 : 0,
     });
 
+    React.useEffect(() => {
+        if (viewerRef.current) {
+            viewerRef.current.setPage(state.page);
+        }
+    }, [state.page]);
+
     const onPress = React.useCallback((company: Company) => {
-        setState((prevState) => ({ ...prevState, company, page: 1 }));
+        setState((prevState) => ({ ...prevState, company, page: prevState.page + 1 }));
     }, []);
 
     const onBack = React.useCallback(() => {
@@ -23,14 +30,16 @@ const NewPackage = React.memo<NewPackageProps>(() => {
     }, []);
 
     return (
-        <PagerView initialPage={state.page} scrollEnabled={false}>
-            <View key="1">
-                <CompanyList onPress={onPress} />
-            </View>
-            <View key="2">
-                <PackageForm company={state.company} onBack={onBack} />
-            </View>
-        </PagerView>
+        <View style={{ flex: 1 }}>
+            <PagerView initialPage={state.page} scrollEnabled={false} ref={viewerRef} style={{ flex: 1 }}>
+                <View key="1">
+                    <CompanyList onPress={onPress} />
+                </View>
+                <View key="2">
+                    <PackageForm company={state.company} onBack={onBack} />
+                </View>
+            </PagerView>
+        </View>
     );
 });
 

@@ -7,7 +7,7 @@ import { EmptyCompany } from '@screens/NewPackage/components/CompanyList/compone
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-const HEADER_HEIGHT = 100;
+const HEADER_HEIGHT = 65;
 
 const styles = StyleSheet.create({
     headerContainer: {
@@ -55,6 +55,7 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onPre
             <Animated.View style={styles.headerContainer}>
                 <Animated.View
                     style={{
+                        position: 'absolute',
                         top: 0,
                         left: 0,
                         right: 0,
@@ -63,7 +64,7 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onPre
                         opacity: animatedValue.interpolate({ inputRange, outputRange: [0, 1], extrapolate: 'clamp' }),
                     }}
                 />
-                <Header goBackTitle={t('close')} goBackIcon="times" />
+                <Header goBackTitle={t('close')} goBackIcon="times" containerStyle={{ padding: 10 }} />
             </Animated.View>
             <Animated.FlatList
                 refreshing={isLoading}
