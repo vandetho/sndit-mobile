@@ -1,13 +1,15 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { Button, Header } from '@components';
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PACKAGE } from '../../../../workflows';
 import { ROLES } from '@config';
 import { useAuthentication } from '@contexts';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ApplicationStackParamsList } from '@navigations';
 
 export const HEADER_HEIGHT = 180;
 
@@ -22,6 +24,8 @@ const styles = StyleSheet.create({
     },
 });
 
+type PackageQrCodeScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'PackageQrCode'>;
+
 interface PackageDetailProps {
     animatedValue: Animated.Value;
     item: Package;
@@ -30,6 +34,7 @@ interface PackageDetailProps {
 const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ animatedValue, item }) => {
     const { colors } = useTheme();
     const insets = useSafeAreaInsets();
+    const navigation = useNavigation<PackageQrCodeScreenNavigationProps>();
     const { t } = useTranslation();
     const {
         jwt: { user },
@@ -53,6 +58,10 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
         }
         return <View>{buttons}</View>;
     }, [item.deliverer, item.marking, item.roles, t, user]);
+
+    const onPressQrCode = React.useCallback(() => {
+        navigation.navigate('PackageQrCode');
+    }, [navigation]);
 
     return (
         <Animated.View
@@ -103,7 +112,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                     ],
                 }}
             >
-                <Header goBackTitle={t('back')} />
+                <Header goBackTitle={t('back')} onRightButtonPress={onPressQrCode} headerRightIcon="qr-code" />
             </Animated.View>
             <View style={{ padding: 10, borderRadius: 15, backgroundColor: colors.card, marginHorizontal: 10 }}>
                 <Animated.Text

@@ -5,7 +5,11 @@ import { showToast } from '@utils';
 import { BarLoader, Header, ScannerMask } from '@components';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { CompositeNavigationProp, useNavigation, useTheme } from '@react-navigation/native';
+import { ApplicationStackParamsList, CompanyStackParamList, PackageStackParamList } from '@navigations';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useCompany, useEmployee, usePackage } from '@contexts';
+import { useCompanyFetcher, useEmployeeFetcher, usePackageFetcher } from '@fetchers';
 
 const styles = StyleSheet.create({
     container: {
@@ -24,6 +28,14 @@ const styles = StyleSheet.create({
     },
 });
 
+type RedirectScreenNavigationProps = CompositeNavigationProp<
+    CompositeNavigationProp<
+        StackNavigationProp<CompanyStackParamList, 'Company' | 'Employee'>,
+        StackNavigationProp<PackageStackParamList, 'Package'>
+    >,
+    StackNavigationProp<ApplicationStackParamsList, 'User'>
+>;
+
 interface ScannerModalProps {
     visible: boolean;
     onClose: () => void;
@@ -33,20 +45,26 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
     const { colors } = useTheme();
     const { height } = useWindowDimensions();
     const { t } = useTranslation();
-    const navigation = useNavigation();
+    const navigation = useNavigation<RedirectScreenNavigationProps>();
+    const { onSelect: onSelectCompany } = useCompany();
+    const { onSelect: onSelectEmployee } = useEmployee();
+    const { onSelect: onSelectPackage } = usePackage();
+    const { fetch: fetchEmployee, isLoading: isLoadingEmployee, employee } = useEmployeeFetcher();
+    const { fetch: fetchPackage, isLoading: isLoadingPackage, item } = usePackageFetcher();
+    const { fetch: fetchCompany, isLoading: isLoadingCompany, company } = useCompanyFetcher();
     const [state, setState] = React.useState<{
         left: number;
         top: number;
         height: number;
         width: number;
         scanned: boolean;
+        type: string;
         data: string | null;
         hasPermission: boolean | null;
-        isLoading: boolean;
     }>({
         height: 0,
+        type: '',
         scanned: false,
-        isLoading: false,
         hasPermission: null,
         width: 0,
         left: 0,
@@ -60,6 +78,38 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
             setState((prevState) => ({ ...prevState, hasPermission: status === 'granted' }));
         })();
     }, []);
+
+    React.useEffect(() => {
+        if (employee || item || company) {
+            const selectFunc = {
+                company: () => {
+                    onSelectCompany(company);
+                },
+                employee: () => onSelectEmployee(employee),
+                package: () => onSelectPackage(item),
+            };
+            if (selectFunc[state.type]) {
+                selectFunc[state.type]();
+                navigation.navigate(state.type as any);
+            }
+        }
+    }, [company, employee, item, navigation, onSelectCompany, onSelectEmployee, onSelectPackage, state.type]);
+
+    const pointerFunc = React.useCallback(
+        (type: string) => {
+            const func = {
+                company: fetchCompany,
+                package: fetchPackage,
+                employee: fetchEmployee,
+            };
+            if (func[type]) {
+                func[type]();
+                return;
+            }
+            showToast({ type: 'error', text2: t('invalid_qr_code') });
+        },
+        [fetchCompany, fetchEmployee, fetchPackage, t],
+    );
 
     const handleCodeScanned = React.useCallback(
         async ({ data, bounds }: BarCodeEvent) => {
@@ -78,29 +128,29 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
                     showToast({ type: 'error', text2: t('invalid_qr_code') });
                     return;
                 }
-
+                pointerFunc(infos[0]);
                 onClose();
             } catch (e) {
                 if (e.response) {
                     const {
                         response: { data },
                     } = e;
-                    showToast(data.message || data.detail);
+                    showToast({ type: 'error', text2: data.message || data.detail });
                 }
                 console.error(e);
             }
             setState((prevState) => ({ ...prevState, scanned: false, isLoading: false }));
         },
-        [onClose, t],
+        [onClose, pointerFunc, t],
     );
 
     const renderMask = React.useCallback(() => {
-        const { scanned, isLoading, ...bounds } = state;
-        if (isLoading) {
+        const { scanned, ...bounds } = state;
+        if (isLoadingCompany || isLoadingEmployee || isLoadingPackage) {
             return <BarLoader />;
         }
         return <ScannerMask visible={scanned} bounds={bounds} />;
-    }, [state]);
+    }, [isLoadingCompany, isLoadingEmployee, isLoadingPackage, state]);
 
     if (state.hasPermission === null) {
         return <Text>{t('requesting_camera_permission')}</Text>;

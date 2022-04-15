@@ -25,6 +25,7 @@ export type ApplicationStackParamsList = {
     PackageQrCode: undefined;
     NewCompany: undefined;
     NewPackage: undefined;
+    User: undefined;
     Login: undefined;
     Map: { draggable: boolean; latitude?: number; longitude?: number };
 };
