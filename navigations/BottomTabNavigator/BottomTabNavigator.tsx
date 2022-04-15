@@ -10,6 +10,7 @@ import { BottomTabBar } from './components';
 
 export type BottomTabStackParamsList = {
     Home: { eventToken?: string };
+    QrCodeScanner: undefined;
     PackageStack: NavigatorScreenParams<PackageStackParamList>;
     CompanyStack: NavigatorScreenParams<CompanyStackParamList>;
     SettingStack: NavigatorScreenParams<SettingStackParamsList>;
@@ -35,6 +36,13 @@ const BottomTabNavigatorComponent: React.FunctionComponent<BottomTabNavigatorPro
             />
             <BottomTabStack.Screen
                 name="PackageStack"
+                component={PackageNavigator}
+                options={{
+                    tabBarLabel: t('packages'),
+                }}
+            />
+            <BottomTabStack.Screen
+                name="QrCodeScanner"
                 component={PackageNavigator}
                 options={{
                     tabBarLabel: t('packages'),

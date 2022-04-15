@@ -4,6 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { PALETTE } from '@theme';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { ScannerButton } from './components';
 
 const TAB_HEIGHT = 75;
 const ICON_SIZE = 24;
@@ -73,10 +74,10 @@ const BottomTabButton: React.FunctionComponent<BottomTabButtonProps> = ({ iconNa
     );
 };
 
-type IconName = 'home' | 'box' | 'store' | 'cog';
+type IconName = 'home' | 'box' | 'store' | 'cog' | '';
 
 const BottomTabBarComponent: React.FunctionComponent<BottomTabBarProps> = ({ navigation, state, descriptors }: any) => {
-    const icons: Array<IconName> = React.useMemo(() => ['home', 'box', 'store', 'cog'], []);
+    const icons: Array<IconName> = React.useMemo(() => ['home', 'box', '', 'store', 'cog'], []);
     const { colors } = useTheme();
 
     const renderIcons = React.useCallback(
@@ -85,6 +86,10 @@ const BottomTabBarComponent: React.FunctionComponent<BottomTabBarProps> = ({ nav
                 const { options } = descriptors[route.key];
 
                 const isFocused = state.index === index;
+
+                if (route.name === 'QrCodeScanner') {
+                    return <ScannerButton />;
+                }
 
                 const onPress = () => {
                     const event = navigation.emit({

@@ -73,6 +73,12 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
                 left: bounds.origin.x,
             }));
             try {
+                const infos = data.split(':');
+                if (infos.length !== 2 && ['package', 'user', 'employee', 'company'].includes(infos[0])) {
+                    showToast({ type: 'error', text2: t('invalid_qr_code') });
+                    return;
+                }
+
                 onClose();
             } catch (e) {
                 if (e.response) {
@@ -85,11 +91,11 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
             }
             setState((prevState) => ({ ...prevState, scanned: false, isLoading: false }));
         },
-        [navigation, onClose],
+        [onClose, t],
     );
 
     const renderMask = React.useCallback(() => {
-        const { scanned, data, hasPermission, isLoading, ...bounds } = state;
+        const { scanned, isLoading, ...bounds } = state;
         if (isLoading) {
             return <BarLoader />;
         }

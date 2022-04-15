@@ -1,2 +1,2 @@
 export * from './BottomTabBar';
-export * from './ScannerModal';
+export * from './BottomTabBar/components/NewOrderButton/components/ScannerModal';
