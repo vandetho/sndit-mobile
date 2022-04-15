@@ -88,7 +88,7 @@ const BottomTabBarComponent: React.FunctionComponent<BottomTabBarProps> = ({ nav
                 const isFocused = state.index === index;
 
                 if (route.name === 'QrCodeScanner') {
-                    return <ScannerButton />;
+                    return <ScannerButton key={`bottom-tab-${index}`} />;
                 }
 
                 const onPress = () => {

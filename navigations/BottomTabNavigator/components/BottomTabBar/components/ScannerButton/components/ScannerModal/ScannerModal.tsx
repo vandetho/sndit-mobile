@@ -104,6 +104,7 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
             };
             if (func[type]) {
                 func[type]();
+                setState((prevState) => ({ ...prevState, type }));
                 return;
             }
             showToast({ type: 'error', text2: t('invalid_qr_code') });
@@ -117,6 +118,7 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
                 ...prevState,
                 scanned: true,
                 isLoading: true,
+                type: '',
                 width: bounds.size.width,
                 height: bounds.size.height,
                 top: bounds.origin.y,
