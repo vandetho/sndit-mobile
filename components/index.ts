@@ -8,7 +8,6 @@ export * from './Item';
 export * from './LineSeparator';
 export * from './Loader';
 export * from './Map';
-export * from './NewModal';
 export * from './Picker';
 export * from './PhoneField';
 export * from './Progress';

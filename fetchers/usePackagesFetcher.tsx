@@ -8,12 +8,18 @@ export const usePackagesFetcher = () => {
         companiesPackages: Package[];
         totalRows: number;
         isLoading: boolean;
+        isLoadingMore: boolean;
         errorMessage: string | undefined;
+        offset: number;
+        limit: number;
     }>({
+        limit: 10,
+        offset: 0,
         packages: [],
         companiesPackages: [],
         totalRows: 0,
         isLoading: false,
+        isLoadingMore: false,
         errorMessage: undefined,
     });
 
@@ -22,8 +28,31 @@ export const usePackagesFetcher = () => {
         try {
             const {
                 data: { data },
-            } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(`/api/packages`);
+            } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(`/api/packages`, {
+                params: {
+                    offset: 0,
+                    limit: state.limit,
+                },
+            });
+            console.log({ data });
             setState((prevState) => ({ ...prevState, ...data, isLoading: false }));
+        } catch ({ response: { data } }) {
+            setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
+        }
+    }, [state.limit]);
+
+    const fetchMore = React.useCallback(async () => {
+        setState((prevState) => ({ ...prevState, isLoadingMore: true }));
+        try {
+            const {
+                data: { data },
+            } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(`/api/packages`, {
+                params: {
+                    offset: state.offset,
+                    limit: state.limit,
+                },
+            });
+            setState((prevState) => ({ ...prevState, ...data, isLoadingMore: false }));
         } catch ({ response: { data } }) {
             setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
         }

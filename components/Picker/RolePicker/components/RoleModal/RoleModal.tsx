@@ -49,7 +49,7 @@ const RoleModal = React.memo<RoleModalProps>(({ visible, selected, onChange, onC
 
     const keyExtractor = React.useCallback((_, index) => `team-user-roles-item-${index}`, []);
 
-    const data = React.useMemo(() => ['ROLE_MANAGER', 'ROLE_SUPERVISOR', 'ROLE_TECHNICIAN'], []);
+    const data = React.useMemo(() => ['ROLE_OWNER', 'ROLE_MANAGER', 'ROLE_EMPLOYEE'], []);
 
     return (
         <Modal
