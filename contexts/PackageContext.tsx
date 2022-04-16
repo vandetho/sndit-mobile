@@ -30,7 +30,11 @@ export const PackageProvider: React.FunctionComponent = ({ children }) => {
         item: undefined,
         companiesPackages: [],
     });
-    const { packages, companiesPackages, isLoading } = usePackagesFetcher();
+    const { packages, companiesPackages, fetch, isLoading } = usePackagesFetcher();
+
+    React.useEffect(() => {
+        (async () => await fetch())();
+    }, [fetch]);
 
     React.useEffect(() => {
         setState((prevState) => ({ ...prevState, packages, isLoading }));
