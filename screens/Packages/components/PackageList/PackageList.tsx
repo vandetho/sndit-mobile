@@ -50,7 +50,11 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
             getItemLayout={getItemLayout}
             ItemSeparatorComponent={Separator}
             onScroll={onScroll}
-            contentContainerStyle={{ flexGrow: 1, paddingTop: HEADER_HEIGHT, paddingHorizontal: 10 }}
+            contentContainerStyle={{
+                flexGrow: 1,
+                paddingTop: HEADER_HEIGHT,
+                paddingHorizontal: 10,
+            }}
         />
     );
 };

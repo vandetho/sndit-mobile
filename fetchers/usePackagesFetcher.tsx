@@ -34,7 +34,6 @@ export const usePackagesFetcher = () => {
                     limit: state.limit,
                 },
             });
-            console.log({ data });
             setState((prevState) => ({ ...prevState, ...data, isLoading: false }));
         } catch ({ response: { data } }) {
             setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
@@ -52,11 +51,16 @@ export const usePackagesFetcher = () => {
                     limit: state.limit,
                 },
             });
-            setState((prevState) => ({ ...prevState, ...data, isLoadingMore: false }));
+            setState((prevState) => ({
+                ...prevState,
+                ...data,
+                isLoadingMore: false,
+                offset: prevState.limit + prevState.offset,
+            }));
         } catch ({ response: { data } }) {
             setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
         }
-    }, []);
+    }, [state.limit, state.offset]);
 
     const fetchCompany = React.useCallback(async (company: Company) => {
         setState((prevState) => ({ ...prevState, isLoading: true }));
@@ -96,5 +100,5 @@ export const usePackagesFetcher = () => {
         }
     }, []);
 
-    return { ...state, fetch, fetchCompany, fetchEmployee };
+    return { ...state, fetch, fetchMore, fetchCompany, fetchEmployee };
 };

@@ -37,7 +37,9 @@ export const PackageProvider: React.FunctionComponent = ({ children }) => {
     }, [fetch]);
 
     React.useEffect(() => {
-        setState((prevState) => ({ ...prevState, packages, isLoading }));
+        if (!isLoading) {
+            setState((prevState) => ({ ...prevState, packages, isLoading }));
+        }
     }, [isLoading, packages]);
 
     React.useEffect(() => {
