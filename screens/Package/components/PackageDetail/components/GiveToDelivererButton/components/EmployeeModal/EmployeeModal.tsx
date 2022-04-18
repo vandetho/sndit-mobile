@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 import { useEmployeesFetcher } from '@fetchers';
+import { BarLoader } from '@components';
 
 export const HEIGHT = 40;
 
@@ -20,6 +21,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
 });
+
+let onEndReachedCalledDuringMomentum = true;
 
 interface EmployeeModalProps {
     company: Company | undefined;
@@ -36,11 +39,20 @@ const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onSave
     const [state, setState] = React.useState<{ employee: Employee | undefined }>({ employee: undefined });
     const { employees, fetch, fetchMore, isLoading, isLoadingMore } = useEmployeesFetcher();
 
+    const handleFetch = React.useCallback(async () => await fetch(company), [company, fetch]);
+
     React.useEffect(() => {
         if (visible && company) {
-            (async () => await fetch(company))();
+            (async () => await handleFetch())();
+            setState((prevState) => ({ ...prevState, employee: undefined }));
         }
-    }, [company, fetch, visible]);
+    }, [company, handleFetch, visible]);
+
+    const handleFetchMore = React.useCallback(async () => {
+        if (company && onEndReachedCalledDuringMomentum) {
+            await fetchMore(company);
+        }
+    }, [company, fetchMore]);
 
     const renderItem = React.useCallback(
         ({ item }: { item: Employee }) => (
@@ -63,6 +75,18 @@ const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onSave
         () => <View style={{ height: 1, backgroundColor: colors.border }} />,
         [colors.border],
     );
+
+    const renderFooter = React.useCallback(() => {
+        return isLoadingMore ? (
+            <View style={{ flex: 1, height: 50, justifyContent: 'center', alignItems: 'center' }}>
+                <BarLoader />
+            </View>
+        ) : null;
+    }, [isLoadingMore]);
+
+    const onMomentumScrollBegin = React.useCallback(() => {
+        onEndReachedCalledDuringMomentum = false;
+    }, []);
 
     return (
         <Modal
@@ -106,12 +130,22 @@ const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onSave
                     </TouchableOpacity>
                 </View>
                 <FlatList
+                    refreshing={isLoading}
+                    onRefresh={handleFetch}
                     data={employees}
                     renderItem={renderItem}
                     keyExtractor={keyExtractor}
                     getItemLayout={getItemLayout}
                     ItemSeparatorComponent={Separator}
-                    contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 20 }}
+                    ListFooterComponent={renderFooter}
+                    onEndReached={handleFetchMore}
+                    onEndReachedThreshold={0.5}
+                    scrollEventThrottle={16}
+                    onMomentumScrollBegin={onMomentumScrollBegin}
+                    contentContainerStyle={{
+                        flexGrow: 1,
+                        paddingBottom: insets.bottom + 20,
+                    }}
                 />
             </View>
         </Modal>

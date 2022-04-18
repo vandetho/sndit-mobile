@@ -1,13 +1,15 @@
 import React from 'react';
-import { Animated, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import { Animated, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { usePackage } from '@contexts';
-import { NewPackageCard, PACKAGE_ITEM_HEIGHT, PackageCard, Separator, SEPARATOR_HEIGHT } from '@components';
+import { BarLoader, NewPackageCard, PACKAGE_ITEM_HEIGHT, PackageCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Package } from '@interfaces';
 import { HEADER_HEIGHT } from '../HeaderSection';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PackageStackParamList } from '@navigations';
+
+let onEndReachedCalledDuringMomentum = true;
 
 type PackageScreenNavigationProp = StackNavigationProp<PackageStackParamList, 'Package'>;
 
@@ -19,7 +21,7 @@ interface PackageListProps {
 const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScroll, onPressNewPackage }) => {
     const { t } = useTranslation();
     const navigation = useNavigation<PackageScreenNavigationProp>();
-    const { packages, isLoading, onSelect } = usePackage();
+    const { packages, isLoading, isLoadingMore, fetchMorePackages, onSelect } = usePackage();
 
     const data = React.useMemo<Array<Package>>(
         () => [{ id: 0, name: t('new_package'), token: '', roles: [] }, ...packages],
@@ -55,6 +57,26 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
         [],
     );
 
+    const renderFooter = React.useCallback(
+        () =>
+            isLoadingMore && (
+                <View style={{ height: 50, justifyContent: 'center', alignItems: 'center' }}>
+                    <BarLoader />
+                </View>
+            ),
+        [isLoadingMore],
+    );
+
+    const handleFetchMore = React.useCallback(async () => {
+        if (onEndReachedCalledDuringMomentum) {
+            await fetchMorePackages();
+        }
+    }, [fetchMorePackages]);
+
+    const onMomentumScrollBegin = React.useCallback(() => {
+        onEndReachedCalledDuringMomentum = false;
+    }, []);
+
     return (
         <Animated.FlatList
             refreshing={isLoading}
@@ -64,6 +86,11 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
             getItemLayout={getItemLayout}
             ItemSeparatorComponent={Separator}
             onScroll={onScroll}
+            ListFooterComponent={renderFooter}
+            onEndReached={handleFetchMore}
+            onEndReachedThreshold={0.5}
+            scrollEventThrottle={16}
+            onMomentumScrollBegin={onMomentumScrollBegin}
             contentContainerStyle={{
                 flexGrow: 1,
                 paddingTop: HEADER_HEIGHT,

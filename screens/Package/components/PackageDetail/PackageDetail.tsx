@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { Button, Header, Text } from '@components';
+import { Header, Text } from '@components';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
@@ -10,7 +10,7 @@ import { ROLES } from '@config';
 import { useAuthentication } from '@contexts';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
-import { GiveToDelivererButton, TakePackageButton } from './components';
+import { DeliveredButton, GiveToDelivererButton, TakePackageButton } from './components';
 
 export const HEADER_HEIGHT = 180;
 
@@ -30,9 +30,16 @@ type PackageQrCodeScreenNavigationProps = StackNavigationProp<ApplicationStackPa
 interface PackageDetailProps {
     animatedValue: Animated.Value;
     item: Package;
+    onDone: () => void;
+    onPress: () => void;
 }
 
-const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ animatedValue, item }) => {
+const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
+    animatedValue,
+    item,
+    onDone,
+    onPress,
+}) => {
     const { colors } = useTheme();
     const insets = useSafeAreaInsets();
     const navigation = useNavigation<PackageQrCodeScreenNavigationProps>();
@@ -43,33 +50,44 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
 
     const inputRange = React.useMemo<Array<number>>(() => [0, HEADER_HEIGHT], []);
 
-    const onPress = React.useCallback(() => {}, []);
-
     const renderButtons = React.useCallback(() => {
         const buttons: JSX.Element[] = [];
         const keys = Object.keys(item.marking);
         if (keys.includes(PACKAGE.WAITING_FOR_DELIVERY)) {
             if (item.roles.includes(ROLES.MANAGER)) {
                 buttons.push(
-                    <GiveToDelivererButton item={item} onPress={onPress} key={`package-detail-button-${1}`} />,
+                    <GiveToDelivererButton
+                        item={item}
+                        onPress={onPress}
+                        onDone={onDone}
+                        key={`package-${item.id}-detail-button-give-to-deliverer`}
+                    />,
                 );
             }
-            buttons.push(<TakePackageButton item={item} onPress={onPress} key={`package-detail-button-${2}`} />);
+            buttons.push(
+                <TakePackageButton
+                    item={item}
+                    onPress={onPress}
+                    onDone={onDone}
+                    key={`package-${item.id}-detail-button-take-package`}
+                />,
+            );
         }
         if (
             keys.includes(PACKAGE.ON_DELIVERY) &&
-            (item.roles.includes(ROLES.MANAGER) || (item.deliverer && item.deliverer.id === user.id))
+            (item.roles.includes(ROLES.MANAGER) || (item.deliverer && user && item.deliverer.id === user.id))
         ) {
             buttons.push(
-                <Button
-                    label={t('delivered')}
-                    style={{ margin: 10, borderRadius: 15 }}
-                    key={`package-detail-button-${3}`}
+                <DeliveredButton
+                    item={item}
+                    onPress={onPress}
+                    onDone={onDone}
+                    key={`package-${item.id}-detail-button-delivered`}
                 />,
             );
         }
         return <View>{buttons}</View>;
-    }, [item, onPress, t, user]);
+    }, [item, onDone, onPress, user]);
 
     const renderMarking = React.useCallback(
         () =>
