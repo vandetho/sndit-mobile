@@ -20,25 +20,27 @@ export const EmployeeContext = React.createContext<{
 export const EmployeeProvider: React.FunctionComponent = ({ children }) => {
     const { company } = useCompany();
     const [state, setState] = React.useState<{
-        employees: Employee[];
         employee: Employee;
-        isLoading: boolean;
     }>({
-        isLoading: false,
-        employees: [],
         employee: undefined,
     });
-    const { employees, isLoading } = useEmployeesFetcher(company);
+    const { employees, fetch, isLoading } = useEmployeesFetcher();
 
     React.useEffect(() => {
-        setState((prevState) => ({ ...prevState, employees, isLoading }));
-    }, [employees, isLoading]);
+        if (company) {
+            (async () => fetch(company))();
+        }
+    }, [company, fetch]);
 
     const onSelect = React.useCallback((employee: Employee) => {
         setState((prevState) => ({ ...prevState, employee }));
     }, []);
 
-    return <EmployeeContext.Provider value={{ ...state, onSelect }}>{children}</EmployeeContext.Provider>;
+    return (
+        <EmployeeContext.Provider value={{ ...state, employees, isLoading, onSelect }}>
+            {children}
+        </EmployeeContext.Provider>
+    );
 };
 
 export const useEmployee = () => {

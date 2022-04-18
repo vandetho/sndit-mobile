@@ -25,5 +25,7 @@
     "save": "Save",
     "waiting_for_delivery": "Waiting For Delivery",
     "delivered_by": "Delivered By",
-    "created_by": "Created By"
+    "created_by": "Created By",
+    "give_to_deliverer": "Give To Deliverer",
+    "take_package": "Take the package"
 }

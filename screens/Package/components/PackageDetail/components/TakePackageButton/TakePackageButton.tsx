@@ -6,19 +6,20 @@ import axios from 'axios';
 
 interface TakePackageButtonProps {
     item: Package;
+    onPress?: () => void;
 }
 
-const TakePackageButtonComponent: React.FunctionComponent<TakePackageButtonProps> = ({ item }) => {
-    const { t, i18n } = useTranslation();
+const TakePackageButtonComponent: React.FunctionComponent<TakePackageButtonProps> = ({ item, onPress }) => {
+    const { t } = useTranslation();
     const onPressTakePackage = React.useCallback(async () => {
         try {
-            const { data } = axios.get();
+            const { data } = await axios.post(`/api/packages/${item.token}/give-to-deliverer`);
         } catch (e) {
             if (e.response) {
                 const { response } = e;
             }
         }
-    }, []);
+    }, [item.token]);
     return (
         <Button
             label={t('take_package')}

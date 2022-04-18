@@ -1,16 +1,19 @@
 import React from 'react';
 import { Package } from '@interfaces';
-import { usePackagesFetcher } from '@fetchers';
+import { useCompanyPackagesFetcher, usePackagesFetcher } from '@fetchers';
+import { useCompany } from './CompanyContext';
 
 export const PackageContext = React.createContext<{
     packages: Package[];
     companiesPackages: Package[];
     isLoading: boolean;
+    isLoadingCompany: boolean;
     item: Package;
     onSelect: (pkg: Package) => void;
 }>({
     item: undefined,
     isLoading: false,
+    isLoadingCompany: false,
     packages: [],
     companiesPackages: [],
     onSelect: (pkg: Package) => {
@@ -19,38 +22,47 @@ export const PackageContext = React.createContext<{
 });
 
 export const PackageProvider: React.FunctionComponent = ({ children }) => {
+    const { company } = useCompany();
     const [state, setState] = React.useState<{
-        packages: Package[];
-        companiesPackages: Package[];
         item: Package;
-        isLoading: boolean;
     }>({
-        isLoading: false,
-        packages: [],
         item: undefined,
-        companiesPackages: [],
     });
-    const { packages, companiesPackages, fetch, isLoading } = usePackagesFetcher();
+    const { packages, fetch, isLoading } = usePackagesFetcher();
+    const {
+        packages: companiesPackages,
+        fetch: fetchCompany,
+        isLoading: isLoadingCompany,
+    } = useCompanyPackagesFetcher();
 
     React.useEffect(() => {
         (async () => await fetch())();
     }, [fetch]);
 
     React.useEffect(() => {
-        if (!isLoading) {
-            setState((prevState) => ({ ...prevState, packages, isLoading }));
+        if (company) {
+            (async () => await fetchCompany(company))();
         }
-    }, [isLoading, packages]);
-
-    React.useEffect(() => {
-        setState((prevState) => ({ ...prevState, companiesPackages, isLoading }));
-    }, [isLoading, companiesPackages]);
+    }, [company, fetchCompany]);
 
     const onSelect = React.useCallback((pkg: Package) => {
         setState((prevState) => ({ ...prevState, item: pkg }));
     }, []);
 
-    return <PackageContext.Provider value={{ ...state, onSelect }}>{children}</PackageContext.Provider>;
+    return (
+        <PackageContext.Provider
+            value={{
+                ...state,
+                companiesPackages,
+                packages,
+                isLoading,
+                isLoadingCompany,
+                onSelect,
+            }}
+        >
+            {children}
+        </PackageContext.Provider>
+    );
 };
 
 export const usePackage = () => {

@@ -5,7 +5,6 @@ import { axios } from '@utils';
 export const useEmployeePackagesFetcher = () => {
     const [state, setState] = React.useState<{
         packages: Package[];
-        companiesPackages: Package[];
         totalRows: number;
         isLoading: boolean;
         isLoadingMore: boolean;
@@ -14,7 +13,6 @@ export const useEmployeePackagesFetcher = () => {
         limit: number;
     }>({
         packages: [],
-        companiesPackages: [],
         totalRows: 0,
         isLoading: false,
         isLoadingMore: false,
@@ -37,7 +35,7 @@ export const useEmployeePackagesFetcher = () => {
                 );
                 setState((prevState) => ({
                     ...prevState,
-                    companiesPackages: data.packages,
+                    packages: data.packages,
                     totalRows: data.totalRows,
                     isLoading: false,
                     offset: prevState.limit,
@@ -51,28 +49,30 @@ export const useEmployeePackagesFetcher = () => {
 
     const fetchMore = React.useCallback(
         async (employee: Employee) => {
-            setState((prevState) => ({ ...prevState, isLoadingMore: true }));
-            try {
-                const {
-                    data: { data },
-                } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(
-                    `/api/${employee.id}/packages`,
-                    {
-                        params: { offset: state.offset, limit: state.limit },
-                    },
-                );
-                setState((prevState) => ({
-                    ...prevState,
-                    companiesPackages: data.packages,
-                    totalRows: data.totalRows,
-                    isLoadingMore: false,
-                    offset: prevState.offset + prevState.limit,
-                }));
-            } catch ({ response: { data } }) {
-                setState((prevState) => ({ ...prevState, isLoadingMore: false, errorMessage: data.message }));
+            if (state.offset < state.totalRows) {
+                setState((prevState) => ({ ...prevState, isLoadingMore: true, errorMessage: undefined }));
+                try {
+                    const {
+                        data: { data },
+                    } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(
+                        `/api/${employee.id}/packages`,
+                        {
+                            params: { offset: state.offset, limit: state.limit },
+                        },
+                    );
+                    setState((prevState) => ({
+                        ...prevState,
+                        packages: [...prevState.packages, ...data.packages],
+                        totalRows: data.totalRows,
+                        isLoadingMore: false,
+                        offset: prevState.offset + prevState.limit,
+                    }));
+                } catch ({ response: { data } }) {
+                    setState((prevState) => ({ ...prevState, isLoadingMore: false, errorMessage: data.message }));
+                }
             }
         },
-        [state.limit, state.offset],
+        [state.limit, state.offset, state.totalRows],
     );
 
     return { ...state, fetch, fetchMore };

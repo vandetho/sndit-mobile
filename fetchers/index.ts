@@ -1,6 +1,7 @@
 export * from './useCitiesFetcher';
 export * from './useCompaniesFetcher';
 export * from './useCompanyFetcher';
+export * from './useCompanyPackagesFetcher';
 export * from './useCurrentUserFetcher';
 export * from './useEmployeeFetcher';
 export * from './useEmployeePackagesFetcher';

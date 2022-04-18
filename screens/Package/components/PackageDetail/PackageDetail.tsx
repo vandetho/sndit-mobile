@@ -5,13 +5,12 @@ import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { PACKAGE } from '../../../../workflows';
+import { PACKAGE } from '@workflows';
 import { ROLES } from '@config';
 import { useAuthentication } from '@contexts';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
-import axios from 'axios';
-import { TakePackageButton } from '@screens/Package/components/PackageDetail/components';
+import { GiveToDelivererButton, TakePackageButton } from './components';
 
 export const HEADER_HEIGHT = 180;
 
@@ -44,14 +43,16 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
 
     const inputRange = React.useMemo<Array<number>>(() => [0, HEADER_HEIGHT], []);
 
+    const onPress = React.useCallback(() => {}, []);
+
     const renderButtons = React.useCallback(() => {
         const buttons: JSX.Element[] = [];
         const keys = Object.keys(item.marking);
         if (keys.includes(PACKAGE.WAITING_FOR_DELIVERY)) {
             if (item.roles.includes(ROLES.MANAGER)) {
-                buttons.push(<Button label={t('give_to_deliverer')} style={{ margin: 10, borderRadius: 15 }} />);
+                buttons.push(<GiveToDelivererButton item={item} onPress={onPress} />);
             }
-            buttons.push(<TakePackageButton item={item} />);
+            buttons.push(<TakePackageButton item={item} onPress={onPress} />);
         }
         if (
             keys.includes(PACKAGE.ON_DELIVERY) &&
@@ -60,7 +61,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
             buttons.push(<Button label={t('delivered')} style={{ margin: 10, borderRadius: 15 }} />);
         }
         return <View>{buttons}</View>;
-    }, [item.deliverer, item.marking, item.roles, t, user]);
+    }, [item, t, user]);
 
     const renderMarking = React.useCallback(
         () =>

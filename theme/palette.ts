@@ -1,9 +1,9 @@
 import { DarkTheme, DefaultTheme, Theme } from '@react-navigation/native';
 
 export const PALETTE = {
-    primary: '#7400B8',
-    secondary: '#80FFD8',
-    error: '#F44336',
+    primary: '#F16E8C',
+    secondary: '#F48FB1',
+    error: '#FF5252',
     success: '#4CAF50',
     warning: '#DEB801',
     info: '#036CD5',
@@ -33,7 +33,7 @@ export const lightTheme: Theme = {
 export const gradientColor: { [key: string]: string[] } = {
     amberAmber: ['#ff6f00', '#ffca28'],
     blueIndigo: ['#2962ff', '#3949ab'],
-    redPink: ['#ff5252', '#f48fb1'],
+    redPink: ['#FF5252', '#f48fb1'],
     lightBlueTeal: ['#b3e5fc', '#64ffda'],
     lightBlueIndigo: ['#b3e5fc', '#9fa8da'],
     yellowGreen: ['#ffff8d', '#b9f6ca'],
@@ -60,4 +60,5 @@ export const gradientColor: { [key: string]: string[] } = {
     purpleLightBlue: ['#e040fb', '#4fc3f7'],
     cyanCyan: ['#18ffff', '#00e5ff'],
     yellowTeal: ['#fff9c4', '#64ffda'],
+    pink: ['#F16E8C', '#F48FB1'],
 };

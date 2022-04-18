@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        height: 40,
+        height: 50,
     },
 });
 

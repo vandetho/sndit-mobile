@@ -1,11 +1,10 @@
 import React from 'react';
-import { Company, Employee, Package, ResponseSuccess } from '@interfaces';
+import { Package, ResponseSuccess } from '@interfaces';
 import { axios } from '@utils';
 
 export const usePackagesFetcher = () => {
     const [state, setState] = React.useState<{
         packages: Package[];
-        companiesPackages: Package[];
         totalRows: number;
         isLoading: boolean;
         isLoadingMore: boolean;
@@ -16,7 +15,6 @@ export const usePackagesFetcher = () => {
         limit: 10,
         offset: 0,
         packages: [],
-        companiesPackages: [],
         totalRows: 0,
         isLoading: false,
         isLoadingMore: false,
@@ -24,7 +22,7 @@ export const usePackagesFetcher = () => {
     });
 
     const fetch = React.useCallback(async () => {
-        setState((prevState) => ({ ...prevState, isLoading: true }));
+        setState((prevState) => ({ ...prevState, isLoading: true, errorMessage: undefined }));
         try {
             const {
                 data: { data },
@@ -41,64 +39,28 @@ export const usePackagesFetcher = () => {
     }, [state.limit]);
 
     const fetchMore = React.useCallback(async () => {
-        setState((prevState) => ({ ...prevState, isLoadingMore: true }));
-        try {
-            const {
-                data: { data },
-            } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(`/api/packages`, {
-                params: {
-                    offset: state.offset,
-                    limit: state.limit,
-                },
-            });
-            setState((prevState) => ({
-                ...prevState,
-                ...data,
-                isLoadingMore: false,
-                offset: prevState.limit + prevState.offset,
-            }));
-        } catch ({ response: { data } }) {
-            setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
+        if (state.offset < state.totalRows) {
+            setState((prevState) => ({ ...prevState, isLoadingMore: true, errorMessage: undefined }));
+            try {
+                const {
+                    data: { data },
+                } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(`/api/packages`, {
+                    params: {
+                        offset: state.offset,
+                        limit: state.limit,
+                    },
+                });
+                setState((prevState) => ({
+                    ...prevState,
+                    packages: [...prevState.packages, ...data.packages],
+                    isLoadingMore: false,
+                    offset: prevState.limit + prevState.offset,
+                }));
+            } catch ({ response: { data } }) {
+                setState((prevState) => ({ ...prevState, isLoadingMore: false, errorMessage: data.message }));
+            }
         }
-    }, [state.limit, state.offset]);
+    }, [state.limit, state.offset, state.totalRows]);
 
-    const fetchCompany = React.useCallback(async (company: Company) => {
-        setState((prevState) => ({ ...prevState, isLoading: true }));
-        try {
-            const {
-                data: { data },
-            } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(
-                `/api/${company.id}/packages`,
-            );
-            setState((prevState) => ({
-                ...prevState,
-                companiesPackages: data.packages,
-                totalRows: data.totalRows,
-                isLoading: false,
-            }));
-        } catch ({ response: { data } }) {
-            setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
-        }
-    }, []);
-
-    const fetchEmployee = React.useCallback(async (employee: Employee) => {
-        setState((prevState) => ({ ...prevState, isLoading: true }));
-        try {
-            const {
-                data: { data },
-            } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(
-                `/api/${employee.id}/packages`,
-            );
-            setState((prevState) => ({
-                ...prevState,
-                companiesPackages: data.packages,
-                totalRows: data.totalRows,
-                isLoading: false,
-            }));
-        } catch ({ response: { data } }) {
-            setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
-        }
-    }, []);
-
-    return { ...state, fetch, fetchMore, fetchCompany, fetchEmployee };
+    return { ...state, fetch, fetchMore };
 };

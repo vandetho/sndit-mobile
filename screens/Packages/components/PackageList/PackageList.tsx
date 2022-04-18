@@ -68,6 +68,7 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
                 flexGrow: 1,
                 paddingTop: HEADER_HEIGHT,
                 paddingHorizontal: 10,
+                paddingBottom: 75,
             }}
         />
     );

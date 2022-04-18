@@ -5,7 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import { Text } from '@components/Text';
 import { useTranslation } from 'react-i18next';
 
-export const PACKAGE_ITEM_HEIGHT = 125;
+export const PACKAGE_ITEM_HEIGHT = 200;
 
 interface PackageCardProps {
     item: Package;
