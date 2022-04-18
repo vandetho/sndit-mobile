@@ -50,18 +50,26 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
         const keys = Object.keys(item.marking);
         if (keys.includes(PACKAGE.WAITING_FOR_DELIVERY)) {
             if (item.roles.includes(ROLES.MANAGER)) {
-                buttons.push(<GiveToDelivererButton item={item} onPress={onPress} />);
+                buttons.push(
+                    <GiveToDelivererButton item={item} onPress={onPress} key={`package-detail-button-${1}`} />,
+                );
             }
-            buttons.push(<TakePackageButton item={item} onPress={onPress} />);
+            buttons.push(<TakePackageButton item={item} onPress={onPress} key={`package-detail-button-${2}`} />);
         }
         if (
             keys.includes(PACKAGE.ON_DELIVERY) &&
             (item.roles.includes(ROLES.MANAGER) || (item.deliverer && item.deliverer.id === user.id))
         ) {
-            buttons.push(<Button label={t('delivered')} style={{ margin: 10, borderRadius: 15 }} />);
+            buttons.push(
+                <Button
+                    label={t('delivered')}
+                    style={{ margin: 10, borderRadius: 15 }}
+                    key={`package-detail-button-${3}`}
+                />,
+            );
         }
         return <View>{buttons}</View>;
-    }, [item, t, user]);
+    }, [item, onPress, t, user]);
 
     const renderMarking = React.useCallback(
         () =>

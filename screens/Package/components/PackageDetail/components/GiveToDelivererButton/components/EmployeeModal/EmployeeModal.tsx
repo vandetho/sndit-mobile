@@ -24,26 +24,37 @@ const styles = StyleSheet.create({
 interface EmployeeModalProps {
     company: Company | undefined;
     visible: boolean;
-    onChange: (employee: Employee) => void;
+    onSave: (employee: Employee) => void;
     onClose: () => void;
 }
 
-const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onChange, onClose }) => {
+const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onSave, onClose }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const { height } = useWindowDimensions();
-    const {} = useEmployeesFetcher(company);
+    const [state, setState] = React.useState<{ employee: Employee | undefined }>({ employee: undefined });
+    const { employees, fetch, fetchMore, isLoading, isLoadingMore } = useEmployeesFetcher();
+
+    React.useEffect(() => {
+        if (visible && company) {
+            (async () => await fetch(company))();
+        }
+    }, [company, fetch, visible]);
 
     const renderItem = React.useCallback(
         ({ item }: { item: Employee }) => (
-            <TouchableOpacity onPress={() => onChange(item)} style={styles.itemContainer}>
+            <TouchableOpacity
+                onPress={() => setState((prevState) => ({ ...prevState, employee: item }))}
+                style={styles.itemContainer}
+            >
                 <Text numberOfLines={1} ellipsizeMode="tail" style={{ width: 200 }}>
                     {item.lastName} {item.firstName}
                 </Text>
+                {state.employee?.id === item.id && <GradientIcon name="check" />}
             </TouchableOpacity>
         ),
-        [onChange],
+        [state.employee?.id],
     );
 
     const getItemLayout = React.useCallback((_, index) => ({ index, length: HEIGHT, offset: HEIGHT * index }), []);
@@ -66,12 +77,32 @@ const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onChan
                     backgroundColor: colors.card,
                 }}
             >
-                <View style={{ height: 80, paddingTop: insets.top, paddingHorizontal: 20 }}>
-                    <TouchableOpacity onPress={onClose} style={{ flexDirection: 'row', width: 100 }}>
+                <View
+                    style={{
+                        height: 80,
+                        paddingTop: insets.top,
+                        paddingHorizontal: 20,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
+                >
+                    <TouchableOpacity onPress={onClose} style={{ flexDirection: 'row' }}>
                         <GradientIcon name="times" />
                         <Text bold style={{ marginHorizontal: 10 }}>
                             {t('close')}
                         </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            state.employee && onSave(state.employee);
+                        }}
+                        style={{ flexDirection: 'row' }}
+                    >
+                        <Text bold style={{ marginHorizontal: 10 }}>
+                            {t('save')}
+                        </Text>
+                        <GradientIcon name="times" />
                     </TouchableOpacity>
                 </View>
                 <FlatList

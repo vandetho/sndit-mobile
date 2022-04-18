@@ -29,7 +29,7 @@ export const useEmployeesFetcher = () => {
                     const {
                         data: { data },
                     } = await axios.get<ResponseSuccess<{ employees: Employee[]; totalRows: number }>>(
-                        `/api/${company.id}/employees`,
+                        `/api/companies/${company.id}/employees`,
                         {
                             params: {
                                 offset: 0,
@@ -39,6 +39,7 @@ export const useEmployeesFetcher = () => {
                     );
                     setState((prevState) => ({ ...prevState, ...data, isLoading: false, offset: prevState.limit }));
                 } catch ({ response: { data } }) {
+                    console.error({ data });
                     setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
                 }
             }
