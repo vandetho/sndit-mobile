@@ -83,9 +83,11 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
             if (state.city) {
                 formData.city = state.city.id;
             }
-            const { data } = await axios.post('/api/packages', formData);
+            const {
+                data: { data },
+            } = await axios.post('/api/packages', formData);
             setState((prevState) => ({ ...prevState, dispatch: false }));
-            onSelect(data.data);
+            onSelect(data);
             navigation.navigate('PackageStack', { screen: 'Package' });
         } catch (e) {
             if (e.response) {

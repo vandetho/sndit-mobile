@@ -16,18 +16,20 @@ export const usePackageHistoriesFetcher = (item: Package) => {
     });
 
     const fetch = React.useCallback(async () => {
-        setState((prevState) => ({ ...prevState, isLoading: true }));
-        try {
-            const {
-                data: { data },
-            } = await axios.get<ResponseSuccess<{ histories: PackageHistory[]; totalRows: number }>>(
-                `/api/packages/${item.id}/histories`,
-            );
-            setState((prevState) => ({ ...prevState, ...data, isLoading: false }));
-        } catch ({ response: { data } }) {
-            setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
+        if (item) {
+            setState((prevState) => ({ ...prevState, isLoading: true }));
+            try {
+                const {
+                    data: { data },
+                } = await axios.get<ResponseSuccess<{ histories: PackageHistory[]; totalRows: number }>>(
+                    `/api/packages/${item.id}/histories`,
+                );
+                setState((prevState) => ({ ...prevState, ...data, isLoading: false }));
+            } catch ({ response: { data } }) {
+                setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
+            }
         }
-    }, [item.id]);
+    }, [item]);
 
     return { ...state, fetch };
 };

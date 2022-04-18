@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { PALETTE } from '@theme';
 import { GradientIcon, Text } from '@components';
@@ -16,8 +16,9 @@ const styles = StyleSheet.create({
     closeButton: {
         flexDirection: 'row',
         justifyContent: 'center',
+        alignItems: 'center',
         marginVertical: 20,
-        padding: 20,
+        padding: 10,
         borderRadius: 40,
     },
 });
@@ -25,23 +26,28 @@ const styles = StyleSheet.create({
 interface PackageQrCodeProps {}
 
 const PackageQrCode = React.memo<PackageQrCodeProps>(() => {
-    const { package: pkg } = usePackage();
+    const { item } = usePackage();
     const { colors } = useTheme();
     const { t } = useTranslation();
+    const navigation = useNavigation();
+
+    const onPress = React.useCallback(() => {
+        navigation.goBack();
+    }, [navigation]);
 
     return (
         <View style={styles.container}>
             <QRCode
-                value={`package:${pkg.token}`}
+                value={`package:${item.token}`}
                 logoSize={30}
                 enableLinearGradient
                 linearGradient={[PALETTE.primary, PALETTE.secondary]}
                 size={220}
                 backgroundColor={colors.card}
             />
-            <TouchableOpacity style={[styles.closeButton, { backgroundColor: colors.card }]}>
+            <TouchableOpacity style={[styles.closeButton, { backgroundColor: colors.card }]} onPress={onPress}>
                 <Text style={{ marginHorizontal: 10 }}>{t('close')}</Text>
-                <GradientIcon name="time" />
+                <GradientIcon name="times" />
             </TouchableOpacity>
         </View>
     );

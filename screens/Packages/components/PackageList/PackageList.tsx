@@ -5,6 +5,11 @@ import { usePackage } from '@contexts';
 import { NewPackageCard, PACKAGE_ITEM_HEIGHT, PackageCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Package } from '@interfaces';
 import { HEADER_HEIGHT } from '../HeaderSection';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PackageStackParamList } from '@navigations';
+
+type PackageScreenNavigationProp = StackNavigationProp<PackageStackParamList, 'Package'>;
 
 interface PackageListProps {
     onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -13,11 +18,20 @@ interface PackageListProps {
 
 const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScroll, onPressNewPackage }) => {
     const { t } = useTranslation();
-    const { packages, isLoading } = usePackage();
+    const navigation = useNavigation<PackageScreenNavigationProp>();
+    const { packages, isLoading, onSelect } = usePackage();
 
     const data = React.useMemo<Array<Package>>(
         () => [{ id: 0, name: t('new_package'), token: '', roles: [] }, ...packages],
         [packages, t],
+    );
+
+    const onPress = React.useCallback(
+        (item: Package) => {
+            onSelect(item);
+            navigation.navigate('Package');
+        },
+        [navigation, onSelect],
     );
 
     const renderItem = React.useCallback(
@@ -25,9 +39,9 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
             if (item.id === 0) {
                 return <NewPackageCard item={item} onPressNewPackage={onPressNewPackage} />;
             }
-            return <PackageCard item={item} />;
+            return <PackageCard item={item} onPress={onPress} />;
         },
-        [onPressNewPackage],
+        [onPress, onPressNewPackage],
     );
 
     const keyExtractor = React.useCallback((_, index: number) => `packages-item-${index}`, []);

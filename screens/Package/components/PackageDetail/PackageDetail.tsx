@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { Button, Header } from '@components';
+import { Button, Header, Text } from '@components';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
@@ -10,6 +10,8 @@ import { ROLES } from '@config';
 import { useAuthentication } from '@contexts';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
+import axios from 'axios';
+import { TakePackageButton } from '@screens/Package/components/PackageDetail/components';
 
 export const HEADER_HEIGHT = 180;
 
@@ -47,17 +49,26 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
         const keys = Object.keys(item.marking);
         if (keys.includes(PACKAGE.WAITING_FOR_DELIVERY)) {
             if (item.roles.includes(ROLES.MANAGER)) {
-                buttons.push(<Button label={t('give_to_deliverer')} />);
+                buttons.push(<Button label={t('give_to_deliverer')} style={{ margin: 10, borderRadius: 15 }} />);
             }
-            buttons.push(<Button label={t('take_package')} />);
+            buttons.push(<TakePackageButton item={item} />);
         }
         if (
             keys.includes(PACKAGE.ON_DELIVERY) &&
-            (item.roles.includes(ROLES.MANAGER) || item.deliverer.id === user.id)
+            (item.roles.includes(ROLES.MANAGER) || (item.deliverer && item.deliverer.id === user.id))
         ) {
+            buttons.push(<Button label={t('delivered')} style={{ margin: 10, borderRadius: 15 }} />);
         }
         return <View>{buttons}</View>;
     }, [item.deliverer, item.marking, item.roles, t, user]);
+
+    const renderMarking = React.useCallback(
+        () =>
+            Object.keys(item.marking).map((marking, index) => (
+                <Text key={`package-${item.id}-marking-${index}`}>{t(marking)}</Text>
+            )),
+        [item.id, item.marking, t],
+    );
 
     const onPressQrCode = React.useCallback(() => {
         navigation.navigate('PackageQrCode');
@@ -112,9 +123,22 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                     ],
                 }}
             >
-                <Header goBackTitle={t('back')} onRightButtonPress={onPressQrCode} headerRightIcon="qr-code" />
+                <Header
+                    goBackTitle={t('back')}
+                    onRightButtonPress={onPressQrCode}
+                    headerRightSize={20}
+                    headerRightIcon="qrcode"
+                />
             </Animated.View>
-            <View style={{ padding: 10, borderRadius: 15, backgroundColor: colors.card, marginHorizontal: 10 }}>
+            <View
+                style={{
+                    padding: 10,
+                    borderRadius: 15,
+                    justifyContent: 'space-between',
+                    backgroundColor: colors.card,
+                    marginHorizontal: 10,
+                }}
+            >
                 <Animated.Text
                     style={{
                         color: colors.text,
@@ -159,6 +183,28 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                 >
                     {item.address}
                 </Animated.Text>
+                {item.city && <Text>{item.city.name}</Text>}
+                {renderMarking()}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View>
+                        <Text bold fontSize={12} style={{ marginVertical: 5 }}>
+                            {t('created_by')}
+                        </Text>
+                        <Text>
+                            {item.creator.lastName} {item.creator.firstName}
+                        </Text>
+                    </View>
+                    {item.deliverer && (
+                        <View>
+                            <Text bold fontSize={12} style={{ marginVertical: 5 }}>
+                                {t('delivered_by')}
+                            </Text>
+                            <Text>
+                                {item.deliverer.lastName} {item.deliverer.firstName}
+                            </Text>
+                        </View>
+                    )}
+                </View>
             </View>
             {renderButtons()}
         </Animated.View>

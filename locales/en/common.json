@@ -22,6 +22,8 @@
     "location": "Location",
     "select_city_placeholder": "Select a city",
     "note": "Note",
-    "save": "Save"
-
+    "save": "Save",
+    "waiting_for_delivery": "Waiting For Delivery",
+    "delivered_by": "Delivered By",
+    "created_by": "Created By"
 }

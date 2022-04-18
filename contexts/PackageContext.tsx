@@ -47,7 +47,7 @@ export const PackageProvider: React.FunctionComponent = ({ children }) => {
     }, [isLoading, companiesPackages]);
 
     const onSelect = React.useCallback((pkg: Package) => {
-        setState((prevState) => ({ ...prevState, package: pkg }));
+        setState((prevState) => ({ ...prevState, item: pkg }));
     }, []);
 
     return <PackageContext.Provider value={{ ...state, onSelect }}>{children}</PackageContext.Provider>;
