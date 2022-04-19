@@ -32,7 +32,6 @@ export const usePackagesFetcher = () => {
                     limit: state.limit,
                 },
             });
-            console.log({ data });
             setState((prevState) => ({ ...prevState, ...data, isLoading: false }));
         } catch ({ response: { data } }) {
             setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
@@ -40,7 +39,7 @@ export const usePackagesFetcher = () => {
     }, [state.limit]);
 
     const fetchMore = React.useCallback(async () => {
-        if (state.offset < state.totalRows) {
+        if (state.offset < state.totalRows && !state.isLoadingMore) {
             setState((prevState) => ({ ...prevState, isLoadingMore: true, errorMessage: undefined }));
             try {
                 const {
@@ -54,6 +53,7 @@ export const usePackagesFetcher = () => {
                 setState((prevState) => ({
                     ...prevState,
                     packages: [...prevState.packages, ...data.packages],
+                    totalRows: data.totalRows,
                     isLoadingMore: false,
                     offset: prevState.limit + prevState.offset,
                 }));
@@ -61,7 +61,7 @@ export const usePackagesFetcher = () => {
                 setState((prevState) => ({ ...prevState, isLoadingMore: false, errorMessage: data.message }));
             }
         }
-    }, [state.limit, state.offset, state.totalRows]);
+    }, [state.isLoadingMore, state.limit, state.offset, state.totalRows]);
 
     return { ...state, fetch, fetchMore };
 };
