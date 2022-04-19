@@ -36,7 +36,6 @@ export const usePackageHistoriesFetcher = (item: Package) => {
                         },
                     },
                 );
-                console.log({ data });
                 setState((prevState) => ({
                     ...prevState,
                     ...data,
@@ -44,7 +43,6 @@ export const usePackageHistoriesFetcher = (item: Package) => {
                     offset: prevState.limit,
                 }));
             } catch ({ response: { data } }) {
-                console.error({ data });
                 setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
             }
         }
