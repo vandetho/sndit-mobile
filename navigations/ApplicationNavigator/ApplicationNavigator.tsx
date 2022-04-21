@@ -4,12 +4,14 @@ import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/na
 import { useColorScheme } from 'react-native';
 import {
     AuthLoadingScreen,
+    CompanyQrCode,
     EmployeeQrCodeScreen,
     LoginScreen,
     MapScreen,
     NewCompanyScreen,
     NewPackageScreen,
     PackageQrCodeScreen,
+    PrinterScreen,
     UserQrCodeScreen,
 } from '@screens';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -21,7 +23,9 @@ export type ApplicationStackParamsList = {
     AuthLoading: undefined;
     BottomTabStack: NavigatorScreenParams<BottomTabStackParamsList>;
     UserQrCode: undefined;
+    CompanyQrCode: undefined;
     EmployeeQrCode: undefined;
+    Printer: undefined;
     PackageQrCode: undefined;
     NewCompany: undefined;
     NewPackage: undefined;
@@ -56,10 +60,20 @@ const ApplicationNavigator = React.memo<ApplicationNavigatorProps>(() => {
                         }}
                     />
                     {isLogged ? (
-                        <>
+                        <React.Fragment>
                             <ApplicationStack.Screen
                                 name="UserQrCode"
                                 component={UserQrCodeScreen}
+                                options={{
+                                    presentation: 'modal',
+                                    gestureEnabled: true,
+                                    cardOverlayEnabled: true,
+                                    ...TransitionPresets.ModalPresentationIOS,
+                                }}
+                            />
+                            <ApplicationStack.Screen
+                                name="CompanyQrCode"
+                                component={CompanyQrCode}
                                 options={{
                                     presentation: 'modal',
                                     gestureEnabled: true,
@@ -107,7 +121,17 @@ const ApplicationNavigator = React.memo<ApplicationNavigatorProps>(() => {
                                     ...TransitionPresets.ModalPresentationIOS,
                                 }}
                             />
-                        </>
+                            <ApplicationStack.Screen
+                                name="Printer"
+                                component={PrinterScreen}
+                                options={{
+                                    presentation: 'modal',
+                                    gestureEnabled: true,
+                                    cardOverlayEnabled: true,
+                                    ...TransitionPresets.ModalPresentationIOS,
+                                }}
+                            />
+                        </React.Fragment>
                     ) : (
                         <ApplicationStack.Screen
                             name="Login"

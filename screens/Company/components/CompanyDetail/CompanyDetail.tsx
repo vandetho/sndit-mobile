@@ -1,13 +1,11 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { Header } from '@components';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Company } from '@interfaces';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { CompanyStackParamList } from '@navigations';
 import { getRoleLabel } from '@utils';
+import { HeaderButton } from './components';
 
 export const HEADER_HEIGHT = 180;
 
@@ -22,8 +20,6 @@ const styles = StyleSheet.create({
     },
 });
 
-type EmployeesScreenNavigationProps = StackNavigationProp<CompanyStackParamList, 'Employees'>;
-
 interface CompanyDetailProps {
     animatedValue: Animated.Value;
     company: Company;
@@ -32,16 +28,11 @@ interface CompanyDetailProps {
 const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ animatedValue, company }) => {
     const { colors } = useTheme();
     const insets = useSafeAreaInsets();
-    const navigation = useNavigation<EmployeesScreenNavigationProps>();
     const { t } = useTranslation();
 
     const renderRole = React.useCallback(() => t(getRoleLabel(company.roles)), [company.roles, t]);
 
     const inputRange = React.useMemo<Array<number>>(() => [0, HEADER_HEIGHT], []);
-
-    const onViewEmployees = React.useCallback(() => {
-        navigation.navigate('Employees');
-    }, [navigation]);
 
     return (
         <Animated.View
@@ -92,12 +83,7 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ a
                     ],
                 }}
             >
-                <Header
-                    goBackTitle={t('back')}
-                    headerRightTitle={t('employees')}
-                    headerRightIcon="users"
-                    onRightButtonPress={onViewEmployees}
-                />
+                <HeaderButton />
             </Animated.View>
             <View style={{ padding: 10, borderRadius: 15, backgroundColor: colors.card, marginHorizontal: 10 }}>
                 <Animated.Text
