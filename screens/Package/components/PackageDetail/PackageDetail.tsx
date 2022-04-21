@@ -1,16 +1,14 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { Header, Text } from '@components';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { GradientIcon, Text } from '@components';
+import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PACKAGE } from '@workflows';
 import { ROLES } from '@config';
 import { useAuthentication } from '@contexts';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { ApplicationStackParamsList } from '@navigations';
-import { DeliveredButton, GiveToDelivererButton, TakePackageButton } from './components';
+import { DeliveredButton, GiveToDelivererButton, HeaderButton, PrintButton, TakePackageButton } from './components';
 
 export const HEADER_HEIGHT = 180;
 
@@ -24,8 +22,6 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
 });
-
-type PackageQrCodeScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'PackageQrCode'>;
 
 interface PackageDetailProps {
     animatedValue: Animated.Value;
@@ -42,7 +38,6 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
 }) => {
     const { colors } = useTheme();
     const insets = useSafeAreaInsets();
-    const navigation = useNavigation<PackageQrCodeScreenNavigationProps>();
     const { t } = useTranslation();
     const {
         jwt: { user },
@@ -86,6 +81,16 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
                 />,
             );
         }
+        if (item.roles.includes(ROLES.MANAGER)) {
+            buttons.push(
+                <PrintButton
+                    item={item}
+                    onPress={onPress}
+                    onDone={onDone}
+                    key={`package-${item.id}-detail-button-print`}
+                />,
+            );
+        }
         return <View>{buttons}</View>;
     }, [item, onDone, onPress, user]);
 
@@ -96,10 +101,6 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
             )),
         [item.id, item.marking, t],
     );
-
-    const onPressQrCode = React.useCallback(() => {
-        navigation.navigate('PackageQrCode');
-    }, [navigation]);
 
     return (
         <Animated.View
@@ -150,12 +151,19 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
                     ],
                 }}
             >
-                <Header
-                    goBackTitle={t('back')}
-                    onRightButtonPress={onPressQrCode}
-                    headerRightSize={20}
-                    headerRightIcon="qrcode"
-                />
+                <HeaderButton />
+                <View
+                    style={{
+                        height: 40,
+                        width: 40,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: colors.card,
+                        borderRadius: 20,
+                    }}
+                >
+                    <GradientIcon name="location" size={20} />
+                </View>
             </Animated.View>
             <View
                 style={{

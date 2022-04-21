@@ -7,6 +7,7 @@ import {
     useFonts,
 } from '@expo-google-fonts/rubik';
 import { enableScreens } from 'react-native-screens';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import Toast from 'react-native-toast-message';
 import {
     ApplicationProvider,
@@ -35,21 +36,23 @@ export default function App() {
         return <AppLoadingScreen />;
     }
     return (
-        <ApplicationProvider>
-            <CityProvider>
-                <MapProvider>
-                    <AuthenticationProvider>
-                        <CompanyProvider>
-                            <EmployeeProvider>
-                                <PackageProvider>
-                                    <ApplicationNavigator />
-                                    <Toast />
-                                </PackageProvider>
-                            </EmployeeProvider>
-                        </CompanyProvider>
-                    </AuthenticationProvider>
-                </MapProvider>
-            </CityProvider>
-        </ApplicationProvider>
+        <BottomSheetModalProvider>
+            <ApplicationProvider>
+                <CityProvider>
+                    <MapProvider>
+                        <AuthenticationProvider>
+                            <CompanyProvider>
+                                <EmployeeProvider>
+                                    <PackageProvider>
+                                        <ApplicationNavigator />
+                                        <Toast />
+                                    </PackageProvider>
+                                </EmployeeProvider>
+                            </CompanyProvider>
+                        </AuthenticationProvider>
+                    </MapProvider>
+                </CityProvider>
+            </ApplicationProvider>
+        </BottomSheetModalProvider>
     );
 }

@@ -32,7 +32,7 @@ export const usePackagesFetcher = () => {
                     limit: state.limit,
                 },
             });
-            setState((prevState) => ({ ...prevState, ...data, isLoading: false }));
+            setState((prevState) => ({ ...prevState, ...data, offset: prevState.limit, isLoading: false }));
         } catch ({ response: { data } }) {
             setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
         }

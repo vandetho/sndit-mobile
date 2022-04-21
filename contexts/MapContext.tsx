@@ -29,12 +29,12 @@ export const MapProvider: React.FunctionComponent = ({ children }) => {
 
     React.useEffect(() => {
         (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
+            const { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 return;
             }
             setState((prevState) => ({ ...prevState, isLoading: true }));
-            let location = await Location.getCurrentPositionAsync({});
+            const location = await Location.getCurrentPositionAsync({});
             setState((prevState) => ({
                 ...prevState,
                 isLoading: false,
