@@ -1,7 +1,7 @@
 import React from 'react';
-import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { useCompany, useUser } from '@contexts';
-import { UserAvatar } from './components';
+import { AddToCompanyButton, UserAvatar } from './components';
 import { AVATAR_HEIGHT } from '@screens/User/components/UserAvatar/UserAvatar';
 
 const styles = StyleSheet.create({
@@ -18,17 +18,17 @@ const styles = StyleSheet.create({
 interface UserProps {}
 
 const UserComponent: React.FunctionComponent<UserProps> = () => {
-    const { companies } = useCompany();
+    const { managerCompanies } = useCompany();
     const { user } = useUser();
     const scrollY = React.useRef(new Animated.Value(0)).current;
 
     const renderButtons = React.useCallback(() => {
         const buttons: JSX.Element[] = [];
-        if (companies.length) {
-            buttons.push(<TouchableOpacity style={styles.buttonContainer}></TouchableOpacity>);
+        if (managerCompanies.length) {
+            buttons.push(<AddToCompanyButton companies={managerCompanies} />);
         }
         return buttons;
-    }, [companies.length]);
+    }, [managerCompanies]);
 
     return (
         <View style={styles.container}>
