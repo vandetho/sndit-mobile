@@ -1,49 +1,34 @@
 import React from 'react';
-import { Animated, NativeScrollEvent, NativeSyntheticEvent, TouchableWithoutFeedback, View } from 'react-native';
+import { Animated, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@react-navigation/native';
 import { useCompany } from '@contexts';
-import { CARD_HEIGHT, CompanyCard, GradientIcon, GradientText, Separator, SEPARATOR_HEIGHT } from '@components';
+import { CARD_HEIGHT, CompanyCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Company } from '@interfaces';
 import { HEADER_HEIGHT } from '../HeaderSection';
+import { NewCompanyCard } from './components';
 
 interface CompanyListProps {
+    animatedValue: Animated.Value;
     onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
     onPressAddCompany: () => void;
 }
 
-const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onScroll, onPressAddCompany }) => {
+const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({
+    animatedValue,
+    onScroll,
+    onPressAddCompany,
+}) => {
     const { t } = useTranslation();
-    const { colors } = useTheme();
     const { companies, isLoading } = useCompany();
 
     const renderItem = React.useCallback(
         ({ item }: { item: Company }) => {
             if (item.id === 0) {
-                return (
-                    <TouchableWithoutFeedback onPress={onPressAddCompany}>
-                        <View
-                            style={{
-                                height: CARD_HEIGHT,
-                                borderRadius: 15,
-                                flexDirection: 'row',
-                                backgroundColor: colors.card,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                width: '100%',
-                            }}
-                        >
-                            <GradientIcon name="plus" />
-                            <GradientText fontSize={16} bold style={{ marginLeft: 10 }}>
-                                {item.name}
-                            </GradientText>
-                        </View>
-                    </TouchableWithoutFeedback>
-                );
+                return <NewCompanyCard company={item} animatedValue={animatedValue} onPress={onPressAddCompany} />;
             }
             return <CompanyCard company={item} />;
         },
-        [colors.card, onPressAddCompany],
+        [animatedValue, onPressAddCompany],
     );
 
     const keyExtractor = React.useCallback((_, index: number) => `companies-item-${index}`, []);
@@ -71,7 +56,11 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onScr
             keyExtractor={keyExtractor}
             getItemLayout={getItemLayout}
             ItemSeparatorComponent={Separator}
-            contentContainerStyle={{ paddingTop: HEADER_HEIGHT, paddingHorizontal: 10 }}
+            scrollEventThrottle={16}
+            contentContainerStyle={{
+                paddingTop: HEADER_HEIGHT,
+                paddingHorizontal: 10,
+            }}
         />
     );
 };

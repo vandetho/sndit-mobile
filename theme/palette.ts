@@ -2,7 +2,7 @@ import { DarkTheme, DefaultTheme, Theme } from '@react-navigation/native';
 
 export const PALETTE = {
     primary: '#F16E8C',
-    secondary: '#F48FB1',
+    secondary: '#EF4136',
     error: '#FF5252',
     success: '#4CAF50',
     warning: '#DEB801',

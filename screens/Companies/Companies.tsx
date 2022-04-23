@@ -27,6 +27,7 @@ const Companies = React.memo<CompaniesProps>(() => {
         <SafeAreaView style={styles.container}>
             <HeaderSection animatedValue={animatedValue} onPressAddCompany={onPressAddCompany} />
             <CompanyList
+                animatedValue={animatedValue}
                 onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: animatedValue } } }], {
                     useNativeDriver: true,
                 })}
