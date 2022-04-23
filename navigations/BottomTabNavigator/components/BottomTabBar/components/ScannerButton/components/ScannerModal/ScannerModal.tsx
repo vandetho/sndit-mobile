@@ -16,7 +16,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     headerContainer: {
-        margin: 10,
+        position: 'absolute',
+        zIndex: 1,
+        top: 10,
+        left: 10,
     },
     maskViewContainer: {
         ...StyleSheet.absoluteFillObject,
@@ -89,8 +92,14 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
                 package: () => onSelectPackage(item),
             };
             if (selectFunc[state.type]) {
+                const screens = {
+                    package: 'Package',
+                    company: 'Company',
+                    user: 'User',
+                    employee: 'Employee',
+                };
                 selectFunc[state.type]();
-                navigation.navigate(state.type as any);
+                navigation.navigate(screens[state.type]);
             }
         }
     }, [company, employee, item, navigation, onSelectCompany, onSelectEmployee, onSelectPackage, state.type]);

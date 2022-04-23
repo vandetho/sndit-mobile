@@ -16,4 +16,5 @@ export * from './PackageQrCode';
 export * from './Packages';
 export * from './Printer';
 export * from './Setting';
+export * from './User';
 export * from './UserQrCode';

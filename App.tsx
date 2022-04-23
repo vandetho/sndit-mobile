@@ -17,6 +17,7 @@ import {
     EmployeeProvider,
     MapProvider,
     PackageProvider,
+    UserProvider,
 } from '@contexts';
 import { AppLoadingScreen } from '@screens';
 import { ApplicationNavigator } from '@navigations';
@@ -38,20 +39,22 @@ export default function App() {
     return (
         <BottomSheetModalProvider>
             <ApplicationProvider>
-                <CityProvider>
-                    <MapProvider>
-                        <AuthenticationProvider>
-                            <CompanyProvider>
-                                <EmployeeProvider>
-                                    <PackageProvider>
-                                        <ApplicationNavigator />
-                                        <Toast />
-                                    </PackageProvider>
-                                </EmployeeProvider>
-                            </CompanyProvider>
-                        </AuthenticationProvider>
-                    </MapProvider>
-                </CityProvider>
+                <UserProvider>
+                    <CityProvider>
+                        <MapProvider>
+                            <AuthenticationProvider>
+                                <CompanyProvider>
+                                    <EmployeeProvider>
+                                        <PackageProvider>
+                                            <ApplicationNavigator />
+                                            <Toast />
+                                        </PackageProvider>
+                                    </EmployeeProvider>
+                                </CompanyProvider>
+                            </AuthenticationProvider>
+                        </MapProvider>
+                    </CityProvider>
+                </UserProvider>
             </ApplicationProvider>
         </BottomSheetModalProvider>
     );

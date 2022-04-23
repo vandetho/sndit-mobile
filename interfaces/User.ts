@@ -4,5 +4,6 @@ export interface User {
     firstName: string;
     lastName: string;
     fullName: string;
+    imageFile: string | undefined;
     locale: string;
 }

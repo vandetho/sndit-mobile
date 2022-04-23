@@ -16,8 +16,9 @@ const styles = StyleSheet.create({
     closeButton: {
         flexDirection: 'row',
         justifyContent: 'center',
+        alignItems: 'center',
         marginVertical: 20,
-        padding: 20,
+        padding: 10,
         borderRadius: 40,
     },
 });

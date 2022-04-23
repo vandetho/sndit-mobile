@@ -13,6 +13,7 @@ import {
     PackageQrCodeScreen,
     PrinterScreen,
     UserQrCodeScreen,
+    UserScreen,
 } from '@screens';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { BottomTabNavigator, BottomTabStackParamsList } from '@navigations/BottomTabNavigator';
@@ -61,6 +62,16 @@ const ApplicationNavigator = React.memo<ApplicationNavigatorProps>(() => {
                     />
                     {isLogged ? (
                         <React.Fragment>
+                            <ApplicationStack.Screen
+                                name="User"
+                                component={UserScreen}
+                                options={{
+                                    presentation: 'modal',
+                                    gestureEnabled: true,
+                                    cardOverlayEnabled: true,
+                                    ...TransitionPresets.ModalPresentationIOS,
+                                }}
+                            />
                             <ApplicationStack.Screen
                                 name="UserQrCode"
                                 component={UserQrCodeScreen}

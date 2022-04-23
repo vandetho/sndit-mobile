@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextStyle, TouchableOpacity, TouchableWithoutFeedback
 import { format } from 'date-fns';
 import Collapsible from 'react-native-collapsible';
 import { useTheme } from '@react-navigation/native';
-import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useTranslation } from 'react-i18next';
 import { useVisible } from '@hooks';
 import { PALETTE } from '@theme';
@@ -65,7 +65,7 @@ const DatePicker: React.FunctionComponent<DoneAtProps> = ({
     );
 
     const handleChange = React.useCallback(
-        (event: Event, date?: Date) => {
+        (event: DateTimePickerEvent, date?: Date) => {
             if (isAndroid) {
                 handleClose();
                 if (event.type === 'dismissed') {
