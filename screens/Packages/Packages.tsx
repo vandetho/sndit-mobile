@@ -3,11 +3,12 @@ import { Animated, SafeAreaView, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
-import { Button } from '@components';
+import { Button, Text } from '@components';
 import { HEADER_HEIGHT } from '@screens/Company/components';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { HeaderSection, PackageList } from '@screens/Packages/components';
 import { useTranslation } from 'react-i18next';
+import { useCompany } from '@contexts';
 
 const styles = StyleSheet.create({
     container: {
@@ -21,12 +22,21 @@ interface PackagesProps {}
 
 const Packages = React.memo<PackagesProps>(() => {
     const { t } = useTranslation();
+    const { managerCompanies } = useCompany();
     const navigation = useNavigation<NewPackageNavigationProp>();
     const animatedValue = React.useRef(new Animated.Value(0)).current;
 
     const onPressNewPackage = React.useCallback(() => {
         navigation.navigate('NewPackage');
     }, [navigation]);
+
+    if (managerCompanies) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <Text>{t('no_package_found')}</Text>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView style={styles.container}>

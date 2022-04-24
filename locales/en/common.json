@@ -37,5 +37,7 @@
     "dob": "Day of Birth",
     "register": "Register",
     "login": "Login",
-    "login_or_signup": "Login Or Sign Up"
+    "login_or_signup": "Login Or Sign Up",
+    "login_or_signup_description": "Login Or Sign Up Now to create or continue to track packages"
+
 }

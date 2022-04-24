@@ -8,6 +8,7 @@ export const AuthenticationContext = React.createContext<{
     isRefreshingToken: boolean;
     onLogged: (jwt: Jwt) => void;
     onNotLogged: () => void;
+    onSignOut: () => void;
     storeAuthentication: () => void;
     onUpdateUser: (user: User) => void;
 }>({
@@ -24,7 +25,10 @@ export const AuthenticationContext = React.createContext<{
         console.log({ name: 'storeAuthentication' });
     },
     onUpdateUser: (user: User) => {
-        console.log(user);
+        console.log({ name: 'onUpdateUser', user });
+    },
+    onSignOut: () => {
+        console.log({ name: 'onSignOut' });
     },
 });
 
@@ -57,6 +61,16 @@ export const AuthenticationProvider: React.FunctionComponent = ({ children }) =>
         setAuthentication((prevState) => ({ ...prevState, isRefreshingToken: false }));
     }, []);
 
+    const onSignOut = React.useCallback(async () => {
+        await AuthStorage.signOut();
+        setAuthentication((prevState) => ({
+            ...prevState,
+            jwt: undefined,
+            isLogged: false,
+            isRefreshingToken: false,
+        }));
+    }, []);
+
     const onUpdateUser = React.useCallback(
         async (user: User) => {
             const jwt: Jwt = { ...authentication.jwt, user };
@@ -68,7 +82,14 @@ export const AuthenticationProvider: React.FunctionComponent = ({ children }) =>
 
     return (
         <AuthenticationContext.Provider
-            value={{ ...authentication, onLogged, onNotLogged, onUpdateUser, storeAuthentication }}
+            value={{
+                ...authentication,
+                onLogged,
+                onNotLogged,
+                onUpdateUser,
+                storeAuthentication,
+                onSignOut,
+            }}
         >
             {children}
         </AuthenticationContext.Provider>

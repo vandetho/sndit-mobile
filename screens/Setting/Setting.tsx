@@ -4,32 +4,48 @@ import { MenuItem } from '@interfaces';
 import { ITEM_HEIGHT, SettingItem } from './components';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { Text } from '@components';
 import Constants from 'expo-constants';
+import { useAuthentication } from '@contexts';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ApplicationStackParamsList } from '@navigations';
+
+type LoginScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'Login'>;
 
 interface SettingProps {}
 
 const Setting = React.memo<SettingProps>(() => {
     const animatedValue = React.useRef(new Animated.Value(0)).current;
     const { colors } = useTheme();
+    const { isLogged, onSignOut } = useAuthentication();
+    const navigation = useNavigation<LoginScreenNavigationProps>();
     const insets = useSafeAreaInsets();
     const { t } = useTranslation();
 
     const inputRange = React.useMemo(() => [0, 150], []);
 
-    const onPressRegisterStore = React.useCallback(() => {}, []);
+    const onPressLogin = React.useCallback(() => {
+        navigation.navigate('Login');
+    }, [navigation]);
 
     const menu = React.useMemo(
         (): MenuItem[] => [
-            {
-                icon: 'plus',
-                text: t('register_store'),
-                key: 'register-store',
-                onPress: onPressRegisterStore,
-            },
+            isLogged
+                ? {
+                      icon: 'plus',
+                      text: t('login_or_signup'),
+                      key: 'login-or_signup',
+                      onPress: onPressLogin,
+                  }
+                : {
+                      icon: 'plus',
+                      text: t('sign_out'),
+                      key: 'sign-out',
+                      onPress: onSignOut,
+                  },
         ],
-        [onPressRegisterStore, t],
+        [isLogged, t, onPressLogin, onSignOut],
     );
 
     const renderItem = React.useCallback(({ item }: { item: MenuItem }) => <SettingItem item={item} />, []);
