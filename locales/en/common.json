@@ -29,5 +29,13 @@
     "give_to_deliverer": "Give To Deliverer",
     "take_package": "Take the package",
     "on_delivery": "On Delivery",
-    "delivered": "Delivered"
+    "delivered": "Delivered",
+    "phone_number": "Phone Number",
+    "country_code": "Country Code",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "dob": "Day of Birth",
+    "register": "Register",
+    "login": "Login",
+    "login_or_signup": "Login Or Sign Up"
 }

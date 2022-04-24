@@ -83,7 +83,7 @@ const Register = React.memo<RegisterProps>(({ phoneNumber, jwt, onRegistered }) 
 
     const onSubmit = React.useCallback(async () => {
         setState((prevState) => ({ ...prevState, dispatch: true }));
-
+        console.log({ jwt });
         try {
             const {
                 data: { user, message },

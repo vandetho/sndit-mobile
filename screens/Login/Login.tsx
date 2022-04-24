@@ -27,7 +27,12 @@ const Welcome = React.memo<WelcomeProps>(() => {
     const { onLogged } = useAuthentication();
     const { isBeta } = useApplication();
     const navigation = useNavigation();
-    const [state, setState] = React.useState<{ phoneNumber: string; jwt: Jwt; isRegister: boolean; page: number }>({
+    const [state, setState] = React.useState<{
+        phoneNumber: string;
+        jwt: Jwt | undefined;
+        isRegister: boolean;
+        page: number;
+    }>({
         isRegister: false,
         jwt: undefined,
         page: 0,

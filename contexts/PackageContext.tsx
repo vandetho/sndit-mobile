@@ -2,6 +2,7 @@ import React from 'react';
 import { Package } from '@interfaces';
 import { useCompanyPackagesFetcher, usePackageFetcher, usePackagesFetcher } from '@fetchers';
 import { useCompany } from './CompanyContext';
+import { useAuthentication } from './AuthenticationContext';
 
 export const PackageContext = React.createContext<{
     packages: Package[];
@@ -37,6 +38,7 @@ export const PackageContext = React.createContext<{
 
 export const PackageProvider: React.FunctionComponent = ({ children }) => {
     const { company } = useCompany();
+    const { isLogged } = useAuthentication();
     const [state, setState] = React.useState<{
         item: Package;
     }>({
@@ -58,8 +60,10 @@ export const PackageProvider: React.FunctionComponent = ({ children }) => {
     } = useCompanyPackagesFetcher();
 
     React.useEffect(() => {
-        (async () => await fetchPackages())();
-    }, [fetchPackages]);
+        if (isLogged) {
+            (async () => await fetchPackages())();
+        }
+    }, [fetchPackages, isLogged]);
 
     React.useEffect(() => {
         if (item) {
