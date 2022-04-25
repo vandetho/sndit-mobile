@@ -5,12 +5,11 @@ import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 15;
 
-type PackageQrCodeScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'PackageQrCode'>;
+type PackageQrCodeScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'PackageQrCode' | 'Map'>;
 
 const styles = StyleSheet.create({
     buttonContainer: {
@@ -31,8 +30,6 @@ interface HeaderButtonProps {}
 const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => {
     const { colors } = useTheme();
     const { t } = useTranslation();
-    const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
-    const snapPoints = React.useMemo(() => ['25%', '50%'], []);
     const navigation = useNavigation<PackageQrCodeScreenNavigationProps>();
 
     const handleGoBack = React.useCallback(() => {
@@ -40,10 +37,8 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => 
     }, [navigation]);
 
     const onPressLocation = React.useCallback(() => {
-        if (bottomSheetModalRef.current) {
-            bottomSheetModalRef.current.present();
-        }
-    }, []);
+        navigation.navigate('Map');
+    }, [navigation]);
 
     const onPressQrCode = React.useCallback(() => {
         navigation.navigate('PackageQrCode');
@@ -74,11 +69,6 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => 
                     </TouchableOpacity>
                 </View>
             </View>
-            <BottomSheetModal ref={bottomSheetModalRef} index={1} snapPoints={snapPoints}>
-                <View style={styles.contentContainer}>
-                    <Text>Awesome 🎉</Text>
-                </View>
-            </BottomSheetModal>
         </React.Fragment>
     );
 };

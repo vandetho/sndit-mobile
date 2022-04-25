@@ -1,6 +1,7 @@
 import React from 'react';
 import { Region } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { LocationAccuracy } from 'expo-location';
 
 export const MapContext = React.createContext<{
     isLoading: boolean;
@@ -16,6 +17,8 @@ export const MapContext = React.createContext<{
     },
 });
 
+const LOCATION_TASK_NAME = 'background-location-task';
+
 export const MapProvider: React.FunctionComponent = ({ children }) => {
     const [state, setState] = React.useState<{
         region: Region | undefined;
@@ -27,6 +30,32 @@ export const MapProvider: React.FunctionComponent = ({ children }) => {
         region: undefined,
     });
 
+    const getLocationAsync = React.useCallback(async () => {
+        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+            accuracy: LocationAccuracy.Highest,
+            distanceInterval: 1,
+            timeInterval: 5000,
+        });
+
+        return await Location.watchPositionAsync(
+            {
+                accuracy: LocationAccuracy.Highest,
+                distanceInterval: 1,
+                timeInterval: 10000,
+            },
+            (newLocation) => {
+                const { coords } = newLocation;
+                const region = {
+                    latitude: coords.latitude,
+                    longitude: coords.longitude,
+                    latitudeDelta: 0.045,
+                    longitudeDelta: 0.045,
+                };
+                setState((prevState) => ({ ...prevState, region }));
+            },
+        );
+    }, []);
+
     React.useEffect(() => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
@@ -34,6 +63,7 @@ export const MapProvider: React.FunctionComponent = ({ children }) => {
                 return;
             }
             setState((prevState) => ({ ...prevState, isLoading: true }));
+            getLocationAsync();
             const location = await Location.getCurrentPositionAsync({});
             setState((prevState) => ({
                 ...prevState,
@@ -54,7 +84,7 @@ export const MapProvider: React.FunctionComponent = ({ children }) => {
                 },
             }));
         })();
-    }, []);
+    }, [getLocationAsync]);
 
     const onSelectRegion = React.useCallback((region: Region) => {
         setState((prevState) => ({ ...prevState, selectRegion: region }));

@@ -16,6 +16,7 @@ import {
     CompanyProvider,
     EmployeeProvider,
     MapProvider,
+    NotificationProvider,
     PackageProvider,
     UserProvider,
 } from '@contexts';
@@ -36,6 +37,7 @@ export default function App() {
     if (!fontsLoaded) {
         return <AppLoadingScreen />;
     }
+
     return (
         <BottomSheetModalProvider>
             <ApplicationProvider>
@@ -43,14 +45,16 @@ export default function App() {
                     <CityProvider>
                         <MapProvider>
                             <AuthenticationProvider>
-                                <CompanyProvider>
-                                    <EmployeeProvider>
-                                        <PackageProvider>
-                                            <ApplicationNavigator />
-                                            <Toast />
-                                        </PackageProvider>
-                                    </EmployeeProvider>
-                                </CompanyProvider>
+                                <NotificationProvider>
+                                    <CompanyProvider>
+                                        <EmployeeProvider>
+                                            <PackageProvider>
+                                                <ApplicationNavigator />
+                                                <Toast />
+                                            </PackageProvider>
+                                        </EmployeeProvider>
+                                    </CompanyProvider>
+                                </NotificationProvider>
                             </AuthenticationProvider>
                         </MapProvider>
                     </CityProvider>

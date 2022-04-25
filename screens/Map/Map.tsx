@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { useMap } from '@contexts';
-import { BarLoader, CustomLinearGradient, Header, Text } from '@components';
 import { FontAwesome5 } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { ApplicationStackParamsList } from '@navigations/ApplicationNavigator/ApplicationNavigator';
+import { ApplicationStackParamsList } from '@navigations/ApplicationNavigator';
+import { useMap } from '@contexts';
+import { BarLoader, CustomLinearGradient, Header, Text } from '@components';
 
 type MapScreenRouteProp = RouteProp<ApplicationStackParamsList, 'Map'>;
 
@@ -41,12 +41,12 @@ const Map = React.memo<MapProps>(() => {
 
     const onPressCurrentLocation = React.useCallback(async () => {
         setCurrenLocation(true);
-        let { status } = await Location.requestForegroundPermissionsAsync();
+        const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
             return;
         }
         if (params.draggable) {
-            let location = await Location.getCurrentPositionAsync({});
+            const location = await Location.getCurrentPositionAsync({});
             setMapRegion({
                 longitude: location.coords.longitude,
                 latitude: location.coords.latitude,

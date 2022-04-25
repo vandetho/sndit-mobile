@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { GradientIcon, Text } from '@components';
+import { Text } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
@@ -152,18 +152,6 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
                 }}
             >
                 <HeaderButton />
-                <View
-                    style={{
-                        height: 40,
-                        width: 40,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: colors.card,
-                        borderRadius: 20,
-                    }}
-                >
-                    <GradientIcon name="location" size={20} />
-                </View>
             </Animated.View>
             <View
                 style={{
