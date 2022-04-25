@@ -11,7 +11,7 @@ import { useAuthentication } from '@contexts';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
 
-type LoginScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'Login'>;
+type LoginScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'Login' | 'UserQrCode'>;
 
 interface SettingProps {}
 
@@ -31,19 +31,28 @@ const Setting = React.memo<SettingProps>(() => {
 
     const menu = React.useMemo(
         (): MenuItem[] => [
-            isLogged
-                ? {
-                      icon: 'plus',
-                      text: t('login_or_signup'),
-                      key: 'login-or_signup',
-                      onPress: onPressLogin,
-                  }
-                : {
-                      icon: 'plus',
-                      text: t('sign_out'),
-                      key: 'sign-out',
-                      onPress: onSignOut,
-                  },
+            ...(isLogged
+                ? [
+                      {
+                          icon: 'plus',
+                          text: t('login_or_signup'),
+                          key: 'login-or_signup',
+                          onPress: onPressLogin,
+                      },
+                  ]
+                : [
+                      {
+                          icon: 'qrcode',
+                          text: t('user_qrcode'),
+                          key: 'user-qrcode',
+                      },
+                      {
+                          icon: 'plus',
+                          text: t('sign_out'),
+                          key: 'sign-out',
+                          onPress: onSignOut,
+                      },
+                  ]),
         ],
         [isLogged, t, onPressLogin, onSignOut],
     );

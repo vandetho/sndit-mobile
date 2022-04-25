@@ -38,6 +38,8 @@
     "register": "Register",
     "login": "Login",
     "login_or_signup": "Login Or Sign Up",
-    "login_or_signup_description": "Login Or Sign Up Now to create or continue to track packages"
+    "login_or_signup_description": "Login Or Sign Up Now to create or continue to track packages",
+    "sign_out": "Sign Out",
+    "user_qrcode": "User Qr-Code"
 
 }
