@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications';
 import { Subscription } from 'expo-modules-core';
 import { Notification } from 'expo-notifications';
 import { useAuthentication } from './AuthenticationContext';
+import { axios } from '@utils';
 
 const NotificationContext = React.createContext({});
 
@@ -53,6 +54,11 @@ export const NotificationProvider = React.memo<NotificationProviderProps>(({ chi
                 return;
             }
             token = (await Notifications.getExpoPushTokenAsync()).data;
+            try {
+                await axios.post(`/api/users/current/notification-tokens`, { token });
+            } catch (e) {
+                console.error(e);
+            }
         } else {
             alert('Must use physical device for Push Notifications');
         }

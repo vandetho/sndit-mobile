@@ -5,6 +5,8 @@ import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
+import { Package } from '@interfaces';
+import { PACKAGE } from '@workflows';
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 15;
@@ -25,9 +27,11 @@ const styles = StyleSheet.create({
     },
 });
 
-interface HeaderButtonProps {}
+interface HeaderButtonProps {
+    item: Package;
+}
 
-const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => {
+const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = ({ item }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
     const navigation = useNavigation<PackageQrCodeScreenNavigationProps>();
@@ -37,8 +41,8 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => 
     }, [navigation]);
 
     const onPressLocation = React.useCallback(() => {
-        navigation.navigate('Map');
-    }, [navigation]);
+        navigation.navigate('Map', { latitude: item.latitude, longitude: item.longitude, draggable: true });
+    }, [item.latitude, item.longitude, navigation]);
 
     const onPressQrCode = React.useCallback(() => {
         navigation.navigate('PackageQrCode');
@@ -55,12 +59,14 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => 
                     <Text style={{ marginHorizontal: 10 }}>{t('back')}</Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                    <TouchableOpacity
-                        style={[styles.buttonContainer, { backgroundColor: colors.card }]}
-                        onPress={onPressLocation}
-                    >
-                        <GradientIcon name="map-marker-alt" />
-                    </TouchableOpacity>
+                    {item.marking[PACKAGE.DELIVERED] && (
+                        <TouchableOpacity
+                            style={[styles.buttonContainer, { backgroundColor: colors.card }]}
+                            onPress={onPressLocation}
+                        >
+                            <GradientIcon name="map-marker-alt" />
+                        </TouchableOpacity>
+                    )}
                     <TouchableOpacity
                         style={[styles.buttonContainer, { backgroundColor: colors.card }]}
                         onPress={onPressQrCode}

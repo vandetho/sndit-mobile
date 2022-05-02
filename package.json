@@ -28,7 +28,7 @@
         "expo": "^44.0.6",
         "expo-barcode-scanner": "~11.2.0",
         "expo-constants": "~13.0.1",
-        "expo-dev-client": "~0.8.4",
+        "expo-dev-client": "~0.8.5",
         "expo-device": "~4.1.0",
         "expo-font": "~10.0.4",
         "expo-linear-gradient": "~11.0.3",

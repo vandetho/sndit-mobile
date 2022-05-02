@@ -9,6 +9,8 @@ export interface Package {
     marking?: { [key: string]: number };
     address?: string;
     note?: string;
+    latitude?: number;
+    longitude?: number;
     city?: City;
     roles: string[];
     user?: User;
