@@ -25,6 +25,10 @@ const Setting = React.memo<SettingProps>(() => {
 
     const inputRange = React.useMemo(() => [0, 150], []);
 
+    const onPressUserQrCode = React.useCallback(() => {
+        navigation.navigate('UserQrCode');
+    }, [navigation]);
+
     const onPressLogin = React.useCallback(() => {
         navigation.navigate('Login');
     }, [navigation]);
@@ -34,27 +38,28 @@ const Setting = React.memo<SettingProps>(() => {
             ...(isLogged
                 ? [
                       {
+                          icon: 'qrcode',
+                          text: t('user_qrcode'),
+                          key: 'user-qrcode',
+                          onPress: onPressUserQrCode,
+                      },
+                      {
+                          icon: 'sign-out-alt',
+                          text: t('sign_out'),
+                          key: 'sign-out',
+                          onPress: onSignOut,
+                      },
+                  ]
+                : [
+                      {
                           icon: 'plus',
                           text: t('login_or_signup'),
                           key: 'login-or_signup',
                           onPress: onPressLogin,
                       },
-                  ]
-                : [
-                      {
-                          icon: 'qrcode',
-                          text: t('user_qrcode'),
-                          key: 'user-qrcode',
-                      },
-                      {
-                          icon: 'plus',
-                          text: t('sign_out'),
-                          key: 'sign-out',
-                          onPress: onSignOut,
-                      },
                   ]),
         ],
-        [isLogged, t, onPressLogin, onSignOut],
+        [isLogged, t, onPressUserQrCode, onSignOut, onPressLogin],
     );
 
     const renderItem = React.useCallback(({ item }: { item: MenuItem }) => <SettingItem item={item} />, []);

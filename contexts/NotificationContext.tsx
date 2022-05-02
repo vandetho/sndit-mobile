@@ -1,11 +1,12 @@
 import React from 'react';
-import Device from 'expo-device';
+import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { Subscription } from 'expo-modules-core';
 import { Notification } from 'expo-notifications';
-import { useAuthentication } from './AuthenticationContext';
+import Constants from 'expo-constants';
 import { axios } from '@utils';
+import { useAuthentication } from './AuthenticationContext';
 
 const NotificationContext = React.createContext({});
 
@@ -21,6 +22,7 @@ interface NotificationProviderProps {}
 
 export const NotificationProvider = React.memo<NotificationProviderProps>(({ children }) => {
     const { isLogged } = useAuthentication();
+    const experienceId = Constants.manifest.extra.experienceId || '@bangkeut/sndit_beta';
     const [state, setState] = React.useState<{ expoPushToken: string; notification: Notification }>({
         expoPushToken: '',
         notification: undefined,
@@ -53,7 +55,7 @@ export const NotificationProvider = React.memo<NotificationProviderProps>(({ chi
                 alert('Failed to get push token for push notification!');
                 return;
             }
-            token = (await Notifications.getExpoPushTokenAsync()).data;
+            token = (await Notifications.getExpoPushTokenAsync({ experienceId })).data;
             try {
                 await axios.post(`/api/users/current/notification-tokens`, { token });
             } catch (e) {
@@ -73,7 +75,7 @@ export const NotificationProvider = React.memo<NotificationProviderProps>(({ chi
         }
 
         return token;
-    }, []);
+    }, [experienceId]);
 
     React.useEffect(() => {
         if (isLogged) {

@@ -28,6 +28,14 @@
         },
         "web": {
             "favicon": "./assets/favicon.png"
+        },
+        "extra": {
+            "beta": "true",
+            "host": "http://139.99.47.109:8080",
+            "eas": {
+                "projectId": "02089a8c-de21-49b2-9d89-c0bacf5a4a97"
+            },
+            "experienceId": "@bangkeut/sndit"
         }
     }
 }
