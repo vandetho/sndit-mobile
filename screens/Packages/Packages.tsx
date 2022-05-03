@@ -4,9 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
 import { Button, Text } from '@components';
-import { HEADER_HEIGHT } from '@screens/Company/components';
+import { HEADER_HEIGHT, HeaderSection, PackageList } from './components';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { HeaderSection, PackageList } from '@screens/Packages/components';
 import { useTranslation } from 'react-i18next';
 import { useCompany } from '@contexts';
 
@@ -30,9 +29,17 @@ const Packages = React.memo<PackagesProps>(() => {
         navigation.navigate('NewPackage');
     }, [navigation]);
 
-    if (managerCompanies) {
+    if (managerCompanies.length < 1) {
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView
+                style={[
+                    styles.container,
+                    {
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    },
+                ]}
+            >
                 <Text>{t('no_package_found')}</Text>
             </SafeAreaView>
         );

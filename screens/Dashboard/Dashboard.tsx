@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Button, Text } from '@components';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthentication } from '@contexts';
+import { useAuthentication, useCompany } from '@contexts';
+import { HEADER_HEIGHT, HeaderSection, PackageList } from './components';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
     container: {
@@ -18,14 +20,20 @@ const styles = StyleSheet.create({
     },
 });
 
-type LoginScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'Login'>;
+type LoginScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'Login' | 'NewPackage'>;
 
 interface DashboardProps {}
 
 const Dashboard = React.memo<DashboardProps>(() => {
     const { isLogged } = useAuthentication();
     const { t } = useTranslation();
+    const { managerCompanies } = useCompany();
     const navigation = useNavigation<LoginScreenNavigationProps>();
+    const animatedValue = React.useRef(new Animated.Value(0)).current;
+
+    const onPressNewPackage = React.useCallback(() => {
+        navigation.navigate('NewPackage');
+    }, [navigation]);
 
     const onPressLogin = React.useCallback(() => {
         navigation.navigate('Login');
@@ -33,7 +41,45 @@ const Dashboard = React.memo<DashboardProps>(() => {
 
     const renderContent = React.useCallback(() => {
         if (isLogged) {
-            return null;
+            return (
+                <React.Fragment>
+                    <HeaderSection animatedValue={animatedValue} />
+                    <PackageList
+                        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: animatedValue } } }], {
+                            useNativeDriver: true,
+                        })}
+                        onPressNewPackage={onPressNewPackage}
+                    />
+                    <Animated.View
+                        style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            opacity: animatedValue.interpolate({
+                                inputRange: [0, HEADER_HEIGHT],
+                                outputRange: [0, 1],
+                                extrapolate: 'clamp',
+                            }),
+                            transform: [
+                                {
+                                    translateY: animatedValue.interpolate({
+                                        inputRange: [0, HEADER_HEIGHT],
+                                        outputRange: [50, 0],
+                                        extrapolate: 'clamp',
+                                    }),
+                                },
+                            ],
+                        }}
+                    >
+                        <Button
+                            label={t('new_package')}
+                            startIcon={<FontAwesome5 name="plus" color="#FFFFFF" />}
+                            onPress={onPressNewPackage}
+                        />
+                    </Animated.View>
+                </React.Fragment>
+            );
         }
         return (
             <View style={styles.loginContainer} testID="loginContainer">
@@ -41,8 +87,23 @@ const Dashboard = React.memo<DashboardProps>(() => {
                 <Button label={t('login_or_signup')} onPress={onPressLogin} />
             </View>
         );
-    }, [isLogged, onPressLogin, t]);
+    }, [animatedValue, isLogged, onPressLogin, onPressNewPackage, t]);
 
+    if (managerCompanies.length < 1) {
+        return (
+            <SafeAreaView
+                style={[
+                    styles.container,
+                    {
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    },
+                ]}
+            >
+                <Text>{t('no_package_found')}</Text>
+            </SafeAreaView>
+        );
+    }
     return <View style={styles.container}>{renderContent()}</View>;
 });
 

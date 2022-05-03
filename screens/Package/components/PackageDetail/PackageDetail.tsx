@@ -151,7 +151,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
                     ],
                 }}
             >
-                <HeaderButton />
+                <HeaderButton item={item} />
             </Animated.View>
             <View
                 style={{

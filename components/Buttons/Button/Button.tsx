@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 
 interface ButtonProps {
     shape?: 'rectangle' | 'square';
-    type?: 'error' | 'success' | 'primary' | 'secondary' | 'warning';
+    type?: 'error' | 'success' | 'primary' | 'secondary' | 'warning' | 'info';
     label: string;
     textColor?: string;
     startIcon?: JSX.Element;
@@ -62,14 +62,21 @@ const Button = React.memo<ButtonProps>(
                 error: gradientColor.redPink,
                 success: gradientColor.green,
                 warning: gradientColor.amberAmber,
-                secondary: gradientColor.indigoPurple,
+                secondary: gradientColor.deedPurplePurple,
+                info: gradientColor.indigoBlue,
                 primary: [PALETTE.primary, PALETTE.secondary],
             };
             return backgroundColors[type];
         }, [type]);
 
         const color = React.useMemo(() => {
-            const colors = { error: '#FFFFFF', success: '#FFFFFF', primary: '#FFFFFF', secondary: '#FFFFFF' };
+            const colors = {
+                error: '#FFFFFF',
+                success: '#FFFFFF',
+                info: '#FFFFFF',
+                primary: '#FFFFFF',
+                secondary: '#000000',
+            };
             return textColor || colors[type];
         }, [textColor, type]);
 

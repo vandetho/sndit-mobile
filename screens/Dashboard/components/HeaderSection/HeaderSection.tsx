@@ -1,7 +1,6 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
 
 export const HEADER_HEIGHT = 100;
 
@@ -26,7 +25,6 @@ interface HeaderSectionProps {
 
 const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ animatedValue }) => {
     const { colors } = useTheme();
-    const { t } = useTranslation();
     const inputRange = React.useMemo(() => [0, HEADER_HEIGHT], []);
 
     return (
@@ -76,7 +74,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                     ],
                 }}
             >
-                {t('packages')}
+                Sndit
             </Animated.Text>
         </View>
     );

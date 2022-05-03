@@ -158,7 +158,7 @@ const LoginForm = React.memo<LoginFormProps>(({ phoneNumber, onNext }) => {
                         ]}
                     >
                         <Text fontSize={20} bold>
-                            {t('welcome_keiila')}
+                            {t('welcome_sndit')}
                         </Text>
                         <Text fontSize={14}>{t('enter_phone_number_login_register')}</Text>
                     </Animated.View>

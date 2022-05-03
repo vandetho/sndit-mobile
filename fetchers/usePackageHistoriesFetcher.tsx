@@ -25,7 +25,9 @@ export const usePackageHistoriesFetcher = (item: Package) => {
         if (item) {
             setState((prevState) => ({ ...prevState, isLoading: true, errorMessage: undefined }));
             try {
-                const { data } = await axios.get<ResponseSuccess<{ histories: PackageHistory[]; totalRows: number }>>(
+                const {
+                    data: { data },
+                } = await axios.get<ResponseSuccess<{ histories: PackageHistory[]; totalRows: number }>>(
                     `/api/packages/${item.token}/histories`,
                     {
                         params: {
@@ -36,7 +38,7 @@ export const usePackageHistoriesFetcher = (item: Package) => {
                 );
                 setState((prevState) => ({
                     ...prevState,
-                    ...data.data,
+                    ...data,
                     isLoading: false,
                     offset: prevState.limit,
                 }));
@@ -53,7 +55,7 @@ export const usePackageHistoriesFetcher = (item: Package) => {
                 const {
                     data: { data },
                 } = await axios.get<ResponseSuccess<{ histories: PackageHistory[]; totalRows: number }>>(
-                    `/api/packages/${item.id}/histories`,
+                    `/api/packages/${item.token}/histories`,
                     {
                         params: {
                             offset: state.offset,

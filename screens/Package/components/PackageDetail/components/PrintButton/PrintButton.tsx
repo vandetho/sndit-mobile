@@ -37,10 +37,10 @@ const PrintButtonComponent: React.FunctionComponent<PrintButtonProps> = ({ item,
 
     return (
         <Button
-            label={t('take_package')}
-            type="warning"
+            label={t('print_receipt')}
+            type="info"
             endIcon={<FontAwesome5 size={24} name="" />}
-            style={{ marginHorizontal: 10, borderRadius: 15 }}
+            style={{ margin: 10, borderRadius: 15 }}
             onPress={onPressPrint}
         />
     );

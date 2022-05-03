@@ -96,10 +96,13 @@ const Package = React.memo<PackageProps>(() => {
         return null;
     }, [dispatch]);
 
+    console.log({ histories, item });
+
     return (
         <View style={styles.container}>
             <PackageDetail item={item} animatedValue={animatedValue} onPress={onPress} onDone={onDone} />
             <Animated.FlatList
+                onRefresh={fetch}
                 refreshing={isLoading}
                 data={histories}
                 renderItem={renderItem}

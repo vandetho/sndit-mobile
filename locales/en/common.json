@@ -40,6 +40,11 @@
     "login_or_signup": "Login Or Sign Up",
     "login_or_signup_description": "Login Or Sign Up Now to create or continue to track packages",
     "sign_out": "Sign Out",
-    "user_qrcode": "User Qr-Code"
-
+    "user_qrcode": "User Qr-Code",
+    "no_package_found": "No Package Found",
+    "print_receipt": "Print Receipt",
+    "use_current_location": "Use Current Location",
+    "phone_number_invalid": "Phone number invalid",
+    "enter_phone_number_login_register": "Enter your phone number to login to your account or register one",
+    "welcome_sndit": "Welcome to Sndit"
 }

@@ -102,7 +102,7 @@ const Map = React.memo<MapProps>(() => {
                 pitchEnabled={!currenLocation}
                 rotateEnabled={!currenLocation}
                 onRegionChange={params.draggable && setMapRegion}
-                provider={PROVIDER_GOOGLE}
+                //provider={PROVIDER_GOOGLE}
                 ref={mapRef}
             >
                 <Marker
