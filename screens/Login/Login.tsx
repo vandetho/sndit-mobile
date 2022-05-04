@@ -39,46 +39,54 @@ const Welcome = React.memo<WelcomeProps>(() => {
         phoneNumber: '',
     });
 
+    const handleLogged = React.useCallback(
+        async (jwt: Jwt) => {
+            try {
+                const {
+                    data: { data },
+                } = await request.get<ResponseSuccess<User>>('/api/users/current', {
+                    headers: {
+                        Authorization: `Bearer ${jwt.token}`,
+                    },
+                });
+                onLogged({ ...jwt, createdAt: new Date(), user: data });
+                navigation.goBack();
+            } catch (e) {
+                let errorMessage: string | undefined = e.toString();
+                if (e.response) {
+                    const { data } = e.response;
+                    errorMessage = data.message || data.detail;
+                } else {
+                    console.error(e);
+                }
+                showToast({ type: 'error', text2: errorMessage });
+            }
+        },
+        [navigation, onLogged],
+    );
+
     React.useEffect(() => {
         if (pageViewerRef.current) {
             pageViewerRef.current.setPage(state.page);
         }
-    }, [state.page]);
-
-    const handleLogged = React.useCallback(async () => {
-        try {
-            const {
-                data: { data },
-            } = await request.get<ResponseSuccess<User>>('/api/users/current', {
-                headers: {
-                    Authorization: `Bearer ${state.jwt.token}`,
-                },
-            });
-            onLogged({ ...state.jwt, user: data });
-            navigation.goBack();
-        } catch (e) {
-            let errorMessage: string | undefined = e.toString();
-            if (e.response) {
-                const { data } = e.response;
-                errorMessage = data.message || data.detail;
-            } else {
-                console.error(e);
-            }
-            showToast({ type: 'error', text2: errorMessage });
-        }
-    }, [navigation, onLogged, state.jwt]);
+    }, [state.page, state.isRegister, isBeta, handleLogged, navigation]);
 
     const onLogin = React.useCallback(
-        (phoneNumber: string, jwt: Jwt, isRegister: boolean) => {
+        async (phoneNumber: string, jwt: Jwt, isRegister: boolean) => {
             setState((prevState) => ({
                 ...prevState,
-                page: isBeta ? prevState.page + 2 : prevState.page + 1,
+                page: isBeta ? (isRegister ? prevState.page + 2 : prevState.page) : prevState.page + 1,
                 phoneNumber,
                 jwt,
                 isRegister,
             }));
+            if (isBeta && !state.isRegister) {
+                await handleLogged(jwt);
+                navigation.goBack();
+                return;
+            }
         },
-        [isBeta],
+        [handleLogged, isBeta, navigation, state.isRegister],
     );
 
     const onVerified = React.useCallback(async () => {
@@ -86,8 +94,8 @@ const Welcome = React.memo<WelcomeProps>(() => {
             setState((prevState) => ({ ...prevState, page: prevState.page + 1 }));
             return;
         }
-        await handleLogged();
-    }, [handleLogged, state.isRegister]);
+        await handleLogged(state.jwt);
+    }, [handleLogged, state.isRegister, state.jwt]);
 
     const onBack = React.useCallback(() => {
         setState((prevState) => ({ ...prevState, page: prevState.page - 1 }));

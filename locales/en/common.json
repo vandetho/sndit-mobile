@@ -46,5 +46,9 @@
     "use_current_location": "Use Current Location",
     "phone_number_invalid": "Phone number invalid",
     "enter_phone_number_login_register": "Enter your phone number to login to your account or register one",
-    "welcome_sndit": "Welcome to Sndit"
+    "welcome_sndit": "Welcome to Sndit",
+    "done": "Done",
+    "deliver": "Deliver",
+    "create_new_package": "Create New Package",
+    "show_buttons": "Show Buttons"
 }

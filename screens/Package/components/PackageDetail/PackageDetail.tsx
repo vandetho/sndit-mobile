@@ -1,16 +1,13 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { Text } from '@components';
+import { Button, Text } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { PACKAGE } from '@workflows';
-import { ROLES } from '@config';
-import { useAuthentication } from '@contexts';
-import { DeliveredButton, GiveToDelivererButton, HeaderButton, PrintButton, TakePackageButton } from './components';
+import { HeaderButton } from '../ActionButtons/components';
 
-export const HEADER_HEIGHT = 180;
+export const HEADER_HEIGHT = 335;
 
 const styles = StyleSheet.create({
     container: {
@@ -26,80 +23,45 @@ const styles = StyleSheet.create({
 interface PackageDetailProps {
     animatedValue: Animated.Value;
     item: Package;
-    onDone: () => void;
-    onPress: () => void;
+    onShowButton: () => void;
 }
 
-const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
-    animatedValue,
-    item,
-    onDone,
-    onPress,
-}) => {
+const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ animatedValue, item, onShowButton }) => {
     const { colors } = useTheme();
     const insets = useSafeAreaInsets();
     const { t } = useTranslation();
-    const {
-        jwt: { user },
-    } = useAuthentication();
 
     const inputRange = React.useMemo<Array<number>>(() => [0, HEADER_HEIGHT], []);
-
-    const renderButtons = React.useCallback(() => {
-        const buttons: JSX.Element[] = [];
-        const keys = Object.keys(item.marking);
-        if (keys.includes(PACKAGE.WAITING_FOR_DELIVERY)) {
-            if (item.roles.includes(ROLES.MANAGER)) {
-                buttons.push(
-                    <GiveToDelivererButton
-                        item={item}
-                        onPress={onPress}
-                        onDone={onDone}
-                        key={`package-${item.id}-detail-button-give-to-deliverer`}
-                    />,
-                );
-            }
-            buttons.push(
-                <TakePackageButton
-                    item={item}
-                    onPress={onPress}
-                    onDone={onDone}
-                    key={`package-${item.id}-detail-button-take-package`}
-                />,
-            );
-        }
-        if (
-            keys.includes(PACKAGE.ON_DELIVERY) &&
-            (item.roles.includes(ROLES.MANAGER) || (item.deliverer && user && item.deliverer.id === user.id))
-        ) {
-            buttons.push(
-                <DeliveredButton
-                    item={item}
-                    onPress={onPress}
-                    onDone={onDone}
-                    key={`package-${item.id}-detail-button-delivered`}
-                />,
-            );
-        }
-        if (item.roles.includes(ROLES.MANAGER)) {
-            buttons.push(
-                <PrintButton
-                    item={item}
-                    onPress={onPress}
-                    onDone={onDone}
-                    key={`package-${item.id}-detail-button-print`}
-                />,
-            );
-        }
-        return <View>{buttons}</View>;
-    }, [item, onDone, onPress, user]);
+    const height = React.useMemo(() => (item.address ? HEADER_HEIGHT : HEADER_HEIGHT + 10), [item.address]);
 
     const renderMarking = React.useCallback(
-        () =>
-            Object.keys(item.marking).map((marking, index) => (
-                <Text key={`package-${item.id}-marking-${index}`}>{t(marking)}</Text>
-            )),
-        [item.id, item.marking, t],
+        () => (
+            <Animated.View
+                style={{
+                    transform: [
+                        {
+                            translateY: animatedValue.interpolate({
+                                inputRange,
+                                outputRange: [0, height - 25],
+                                extrapolate: 'clamp',
+                            }),
+                        },
+                        {
+                            translateX: animatedValue.interpolate({
+                                inputRange,
+                                outputRange: [0, 210],
+                                extrapolate: 'clamp',
+                            }),
+                        },
+                    ],
+                }}
+            >
+                {Object.keys(item.marking).map((marking, index) => (
+                    <Text key={`package-${item.id}-marking-${index}`}>{t(marking)}</Text>
+                ))}
+            </Animated.View>
+        ),
+        [animatedValue, height, inputRange, item.id, item.marking, t],
     );
 
     return (
@@ -126,7 +88,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
                     left: 0,
                     right: 0,
                     backgroundColor: colors.card,
-                    height: HEADER_HEIGHT,
+                    height: HEADER_HEIGHT - 110,
                     opacity: animatedValue.interpolate({
                         inputRange,
                         outputRange: [0, 1],
@@ -153,13 +115,22 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
             >
                 <HeaderButton item={item} />
             </Animated.View>
-            <View
+            <Animated.View
                 style={{
                     padding: 10,
                     borderRadius: 15,
                     justifyContent: 'space-between',
                     backgroundColor: colors.card,
                     marginHorizontal: 10,
+                    transform: [
+                        {
+                            translateY: animatedValue.interpolate({
+                                inputRange,
+                                outputRange: [0, -350],
+                                extrapolate: 'clamp',
+                            }),
+                        },
+                    ],
                 }}
             >
                 <Animated.Text
@@ -171,7 +142,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
                             {
                                 translateY: animatedValue.interpolate({
                                     inputRange,
-                                    outputRange: [0, 40],
+                                    outputRange: [0, 380],
                                     extrapolate: 'clamp',
                                 }),
                             },
@@ -180,35 +151,24 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
                 >
                     {item.name}
                 </Animated.Text>
-                <Animated.Text
+                <Text>{item.address}</Text>
+                {item.city && <Text>{item.city.name}</Text>}
+                {renderMarking()}
+                <Animated.View
                     style={{
-                        color: colors.text,
-                        fontFamily: 'Rubik_900Black',
-                        fontSize: 16,
-                        marginVertical: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
                         transform: [
                             {
                                 translateY: animatedValue.interpolate({
                                     inputRange,
-                                    outputRange: [0, 10],
-                                    extrapolate: 'clamp',
-                                }),
-                            },
-                            {
-                                translateX: animatedValue.interpolate({
-                                    inputRange,
-                                    outputRange: [0, 300],
+                                    outputRange: [0, -250],
                                     extrapolate: 'clamp',
                                 }),
                             },
                         ],
                     }}
                 >
-                    {item.address}
-                </Animated.Text>
-                {item.city && <Text>{item.city.name}</Text>}
-                {renderMarking()}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View>
                         <Text bold fontSize={12} style={{ marginVertical: 5 }}>
                             {t('created_by')}
@@ -227,9 +187,23 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({
                             </Text>
                         </View>
                     )}
-                </View>
-            </View>
-            {renderButtons()}
+                </Animated.View>
+            </Animated.View>
+            <Animated.View
+                style={{
+                    transform: [
+                        {
+                            translateY: animatedValue.interpolate({
+                                inputRange,
+                                outputRange: [0, height - 440],
+                                extrapolate: 'clamp',
+                            }),
+                        },
+                    ],
+                }}
+            >
+                <Button label={t('show_buttons')} onPress={onShowButton} style={{ margin: 10, borderRadius: 15 }} />
+            </Animated.View>
         </Animated.View>
     );
 };

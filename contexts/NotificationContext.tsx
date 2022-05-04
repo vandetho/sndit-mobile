@@ -94,12 +94,18 @@ export const NotificationProvider = React.memo<NotificationProviderProps>(({ chi
                     console.log(response);
                 });
             }
-
-            return () => {
-                Notifications.removeNotificationSubscription(notificationListener.current);
-                Notifications.removeNotificationSubscription(responseListener.current);
-            };
         }
+
+        return () => {
+            if (isLogged) {
+                if (notificationListener.current) {
+                    Notifications.removeNotificationSubscription(notificationListener.current);
+                }
+                if (responseListener.current) {
+                    Notifications.removeNotificationSubscription(responseListener.current);
+                }
+            }
+        };
     }, [isLogged, registerForPushNotificationsAsync]);
 
     return (

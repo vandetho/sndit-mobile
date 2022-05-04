@@ -14,7 +14,7 @@ export const usePackageHistoriesFetcher = (item: Package) => {
     }>({
         histories: [],
         totalRows: 0,
-        limit: 0,
+        limit: 10,
         offset: 0,
         isLoading: false,
         isLoadingMore: false,

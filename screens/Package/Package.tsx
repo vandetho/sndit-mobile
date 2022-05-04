@@ -1,10 +1,11 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { BarLoader, HISTORY_ITEM_HEIGHT, HistoryCard, Separator, SEPARATOR_HEIGHT } from '@components';
+import { BarLoader, HISTORY_ITEM_HEIGHT, HistoryCard } from '@components';
 import { PackageHistory } from '@interfaces';
 import { usePackage } from '@contexts';
 import { usePackageHistoriesFetcher } from '@fetchers';
-import { HEADER_HEIGHT, PackageDetail } from './components';
+import { useVisible } from '@hooks';
+import { ActionButtons, HEADER_HEIGHT, PackageDetail } from './components';
 
 const styles = StyleSheet.create({
     container: {
@@ -21,6 +22,7 @@ const Package = React.memo<PackageProps>(() => {
     const animatedValue = React.useRef(new Animated.Value(0)).current;
     const { histories, isLoading, fetch, fetchMore, isLoadingMore } = usePackageHistoriesFetcher(item);
     const [dispatch, setDispatch] = React.useState(false);
+    const { visible, onToggle } = useVisible();
 
     React.useEffect(() => {
         if (item) {
@@ -46,8 +48,8 @@ const Package = React.memo<PackageProps>(() => {
     const getItemLayout = React.useCallback(
         (_, index: number) => ({
             index,
-            length: HISTORY_ITEM_HEIGHT + SEPARATOR_HEIGHT,
-            offset: (HISTORY_ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
+            length: HISTORY_ITEM_HEIGHT + 5,
+            offset: (HISTORY_ITEM_HEIGHT + 5) * index,
         }),
         [],
     );
@@ -96,11 +98,11 @@ const Package = React.memo<PackageProps>(() => {
         return null;
     }, [dispatch]);
 
-    console.log({ histories, item });
+    const Separator = React.useCallback(() => <View style={{ height: 5 }} />, []);
 
     return (
         <View style={styles.container}>
-            <PackageDetail item={item} animatedValue={animatedValue} onPress={onPress} onDone={onDone} />
+            <PackageDetail item={item} animatedValue={animatedValue} onShowButton={onToggle} />
             <Animated.FlatList
                 onRefresh={fetch}
                 refreshing={isLoading}
@@ -117,8 +119,14 @@ const Package = React.memo<PackageProps>(() => {
                 onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: animatedValue } } }], {
                     useNativeDriver: true,
                 })}
-                contentContainerStyle={{ flexGrow: 1, paddingTop: HEADER_HEIGHT, paddingHorizontal: 10 }}
+                contentContainerStyle={{
+                    flexGrow: 1,
+                    paddingTop: HEADER_HEIGHT - 10,
+                    paddingBottom: 10,
+                    paddingHorizontal: 10,
+                }}
             />
+            <ActionButtons item={item} visible={visible} onPress={onPress} onDone={onDone} onClose={onToggle} />
             {renderLoader()}
         </View>
     );

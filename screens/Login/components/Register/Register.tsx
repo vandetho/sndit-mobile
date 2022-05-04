@@ -83,10 +83,9 @@ const Register = React.memo<RegisterProps>(({ phoneNumber, jwt, onRegistered }) 
 
     const onSubmit = React.useCallback(async () => {
         setState((prevState) => ({ ...prevState, dispatch: true }));
-        console.log({ jwt });
         try {
             const {
-                data: { user, message },
+                data: { data, message },
             } = await request.put(
                 '/api/users/current',
                 {
@@ -103,7 +102,7 @@ const Register = React.memo<RegisterProps>(({ phoneNumber, jwt, onRegistered }) 
                 },
             );
             showToast({ type: 'success', text2: message });
-            onRegistered(user);
+            onRegistered(data);
         } catch (e) {
             if (e.response) {
                 const { data } = e.response;
