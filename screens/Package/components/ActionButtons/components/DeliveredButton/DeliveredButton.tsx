@@ -35,7 +35,7 @@ const DeliveredButtonComponent: React.FunctionComponent<DeliveredButtonProps> = 
         if (onDone) {
             onDone();
         }
-    }, [item.token, onDone, onPress]);
+    }, [item.token, onDone, onPress, region.latitude, region.longitude]);
 
     return <Button label={t('delivered')} style={{ margin: 10, borderRadius: 15 }} onPress={onPressDeliver} />;
 };
