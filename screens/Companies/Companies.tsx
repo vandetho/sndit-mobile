@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CompanyList, HeaderSection } from './components';
@@ -7,6 +7,8 @@ import { ApplicationStackParamsList } from '@navigations';
 import { useAuthentication } from '@contexts';
 import { Button, Text } from '@components';
 import { useTranslation } from 'react-i18next';
+import { HEADER_HEIGHT } from '@screens/Packages/components';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
     container: {
@@ -41,7 +43,7 @@ const Companies = React.memo<CompaniesProps>(() => {
         if (isLogged) {
             return (
                 <React.Fragment>
-                    <HeaderSection animatedValue={animatedValue} onPressAddCompany={onPressAddCompany} />
+                    <HeaderSection animatedValue={animatedValue} />
                     <CompanyList
                         animatedValue={animatedValue}
                         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: animatedValue } } }], {
@@ -49,6 +51,34 @@ const Companies = React.memo<CompaniesProps>(() => {
                         })}
                         onPressAddCompany={onPressAddCompany}
                     />
+                    <Animated.View
+                        style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            opacity: animatedValue.interpolate({
+                                inputRange: [0, HEADER_HEIGHT],
+                                outputRange: [0, 1],
+                                extrapolate: 'clamp',
+                            }),
+                            transform: [
+                                {
+                                    translateY: animatedValue.interpolate({
+                                        inputRange: [0, HEADER_HEIGHT],
+                                        outputRange: [50, 0],
+                                        extrapolate: 'clamp',
+                                    }),
+                                },
+                            ],
+                        }}
+                    >
+                        <Button
+                            label={t('new_package')}
+                            startIcon={<FontAwesome5 name="plus" color="#FFFFFF" />}
+                            onPress={onPressAddCompany}
+                        />
+                    </Animated.View>
                 </React.Fragment>
             );
         }
@@ -60,7 +90,7 @@ const Companies = React.memo<CompaniesProps>(() => {
         );
     }, [animatedValue, isLogged, onPressAddCompany, onPressLogin, t]);
 
-    return <SafeAreaView style={styles.container}>{renderContent()}</SafeAreaView>;
+    return <View style={styles.container}>{renderContent()}</View>;
 });
 
 export default Companies;

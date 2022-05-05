@@ -95,7 +95,7 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
             onMomentumScrollBegin={onMomentumScrollBegin}
             contentContainerStyle={{
                 flexGrow: 1,
-                paddingTop: HEADER_HEIGHT,
+                paddingTop: HEADER_HEIGHT + 10,
                 paddingHorizontal: 10,
                 paddingBottom: 75,
             }}

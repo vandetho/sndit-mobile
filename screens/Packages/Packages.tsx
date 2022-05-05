@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, SafeAreaView, StyleSheet } from 'react-native';
+import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
@@ -46,7 +46,7 @@ const Packages = React.memo<PackagesProps>(() => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <HeaderSection animatedValue={animatedValue} />
             <PackageList
                 onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: animatedValue } } }], {
@@ -82,7 +82,7 @@ const Packages = React.memo<PackagesProps>(() => {
                     onPress={onPressNewPackage}
                 />
             </Animated.View>
-        </SafeAreaView>
+        </View>
     );
 });
 

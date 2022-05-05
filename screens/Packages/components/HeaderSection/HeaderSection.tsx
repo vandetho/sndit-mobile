@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -30,14 +30,29 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
     const inputRange = React.useMemo(() => [0, HEADER_HEIGHT], []);
 
     return (
-        <View style={styles.container}>
+        <Animated.View
+            style={[
+                styles.container,
+                {
+                    transform: [
+                        {
+                            translateY: animatedValue.interpolate({
+                                inputRange,
+                                outputRange: [0, -25],
+                                extrapolate: 'clamp',
+                            }),
+                        },
+                    ],
+                },
+            ]}
+        >
             <Animated.View
                 style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
                     right: 0,
-                    height: HEADER_HEIGHT - 20,
+                    height: HEADER_HEIGHT,
                     backgroundColor: colors.card,
                     opacity: animatedValue.interpolate({
                         inputRange,
@@ -55,14 +70,14 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, -25],
+                                outputRange: [0, 0],
                                 extrapolate: 'clamp',
                             }),
                         },
                         {
                             translateX: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, 10],
+                                outputRange: [0, 5],
                                 extrapolate: 'clamp',
                             }),
                         },
@@ -78,7 +93,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
             >
                 {t('packages')}
             </Animated.Text>
-        </View>
+        </Animated.View>
     );
 };
 
