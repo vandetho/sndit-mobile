@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { CompositeNavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { ApplicationStackParamsList, CompanyStackParamList, PackageStackParamList } from '@navigations';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useCompany, useEmployee, usePackage } from '@contexts';
-import { useCompanyFetcher, useEmployeeFetcher, usePackageFetcher } from '@fetchers';
+import { useCompany, useEmployee, usePackage, useUser } from '@contexts';
+import { useCompanyFetcher, useEmployeeFetcher, usePackageFetcher, useUserFetcher } from '@fetchers';
 
 const styles = StyleSheet.create({
     container: {
@@ -52,9 +52,11 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
     const { onSelect: onSelectCompany } = useCompany();
     const { onSelect: onSelectEmployee } = useEmployee();
     const { onSelect: onSelectPackage } = usePackage();
+    const { onSelect: onSelectUser } = useUser();
     const { fetch: fetchEmployee, isLoading: isLoadingEmployee, employee } = useEmployeeFetcher();
     const { fetch: fetchPackage, isLoading: isLoadingPackage, item } = usePackageFetcher();
     const { fetch: fetchCompany, isLoading: isLoadingCompany, company } = useCompanyFetcher();
+    const { fetch: fetchUser, isLoading: isLoadingUser, user } = useUserFetcher();
     const [state, setState] = React.useState<{
         left: number;
         top: number;
@@ -83,13 +85,12 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
     }, []);
 
     React.useEffect(() => {
-        if (employee || item || company) {
+        if (employee || item || company || user) {
             const selectFunc = {
-                company: () => {
-                    onSelectCompany(company);
-                },
+                company: () => onSelectCompany(company),
                 employee: () => onSelectEmployee(employee),
                 package: () => onSelectPackage(item),
+                user: () => onSelectUser(user),
             };
             if (selectFunc[state.type]) {
                 const screens = {
@@ -102,7 +103,18 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
                 navigation.navigate(screens[state.type]);
             }
         }
-    }, [company, employee, item, navigation, onSelectCompany, onSelectEmployee, onSelectPackage, state.type]);
+    }, [
+        company,
+        employee,
+        item,
+        navigation,
+        onSelectCompany,
+        onSelectEmployee,
+        onSelectPackage,
+        onSelectUser,
+        state.type,
+        user,
+    ]);
 
     const pointerFunc = React.useCallback(
         (type: string) => {
@@ -110,6 +122,7 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
                 company: fetchCompany,
                 package: fetchPackage,
                 employee: fetchEmployee,
+                user: fetchUser,
             };
             if (func[type]) {
                 func[type]();
@@ -118,7 +131,7 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
             }
             showToast({ type: 'error', text2: t('invalid_qr_code') });
         },
-        [fetchCompany, fetchEmployee, fetchPackage, t],
+        [fetchCompany, fetchEmployee, fetchPackage, fetchUser, t],
     );
 
     const handleCodeScanned = React.useCallback(
@@ -157,11 +170,11 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
 
     const renderMask = React.useCallback(() => {
         const { scanned, ...bounds } = state;
-        if (isLoadingCompany || isLoadingEmployee || isLoadingPackage) {
+        if (isLoadingCompany || isLoadingEmployee || isLoadingPackage || isLoadingUser) {
             return <BarLoader />;
         }
         return <ScannerMask visible={scanned} bounds={bounds} />;
-    }, [isLoadingCompany, isLoadingEmployee, isLoadingPackage, state]);
+    }, [isLoadingCompany, isLoadingEmployee, isLoadingPackage, isLoadingUser, state]);
 
     if (state.hasPermission === null) {
         return <Text>{t('requesting_camera_permission')}</Text>;

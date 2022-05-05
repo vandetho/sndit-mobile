@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getRoleLabel } from '@utils';
 import { HeaderButton } from './components';
 
-export const HEADER_HEIGHT = 180;
+export const HEADER_HEIGHT = 200;
 
 const styles = StyleSheet.create({
     container: {
@@ -43,7 +43,7 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, -50],
+                                outputRange: [0, -80],
                                 extrapolate: 'clamp',
                             }),
                         },
@@ -76,7 +76,7 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, 50],
+                                outputRange: [0, 70],
                                 extrapolate: 'clamp',
                             }),
                         },
@@ -95,7 +95,7 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ a
                             {
                                 translateY: animatedValue.interpolate({
                                     inputRange,
-                                    outputRange: [0, 40],
+                                    outputRange: [0, 60],
                                     extrapolate: 'clamp',
                                 }),
                             },
@@ -114,7 +114,7 @@ const CompanyDetailComponent: React.FunctionComponent<CompanyDetailProps> = ({ a
                             {
                                 translateY: animatedValue.interpolate({
                                     inputRange,
-                                    outputRange: [0, 10],
+                                    outputRange: [0, 25],
                                     extrapolate: 'clamp',
                                 }),
                             },

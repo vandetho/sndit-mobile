@@ -9,3 +9,4 @@ export * from './useEmployeesFetcher';
 export * from './usePackageFetcher';
 export * from './usePackageHistoriesFetcher';
 export * from './usePackagesFetcher';
+export * from './useUserFetcher';

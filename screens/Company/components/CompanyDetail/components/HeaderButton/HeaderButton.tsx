@@ -59,10 +59,10 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => 
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                     <TouchableOpacity
-                        style={[styles.buttonContainer, { backgroundColor: colors.card }]}
+                        style={[styles.buttonContainer, { backgroundColor: colors.card, marginRight: 10 }]}
                         onPress={onPressEmployees}
                     >
-                        <GradientIcon name="map-marker-alt" />
+                        <GradientIcon name="users" />
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.buttonContainer, { backgroundColor: colors.card }]}

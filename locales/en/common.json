@@ -51,5 +51,7 @@
     "deliver": "Deliver",
     "create_new_package": "Create New Package",
     "show_buttons": "Show Buttons",
-    "use_sndit_app_scanner": "User Sndit App to Scanner this Qr-Code"
+    "use_sndit_app_scanner": "User Sndit App to Scanner this Qr-Code",
+    "employees": "Employees",
+    "invalid_qr_code": "Invalid Qr-Code"
 }

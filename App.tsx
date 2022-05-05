@@ -48,10 +48,12 @@ export default function App() {
                                 <NotificationProvider>
                                     <CompanyProvider>
                                         <EmployeeProvider>
-                                            <PackageProvider>
-                                                <ApplicationNavigator />
-                                                <Toast />
-                                            </PackageProvider>
+                                            <UserProvider>
+                                                <PackageProvider>
+                                                    <ApplicationNavigator />
+                                                    <Toast />
+                                                </PackageProvider>
+                                            </UserProvider>
                                         </EmployeeProvider>
                                     </CompanyProvider>
                                 </NotificationProvider>

@@ -2,6 +2,8 @@ import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { HeaderButton } from './components';
 
 export const HEADER_HEIGHT = 100;
 
@@ -12,10 +14,6 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        paddingHorizontal: 10,
-        alignItems: 'flex-end',
         zIndex: 1,
     },
 });
@@ -27,7 +25,10 @@ interface HeaderSectionProps {
 const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ animatedValue }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
+    const insets = useSafeAreaInsets();
+
     const inputRange = React.useMemo(() => [0, HEADER_HEIGHT], []);
+
     return (
         <View style={styles.container}>
             <Animated.View
@@ -36,7 +37,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                     top: 0,
                     left: 0,
                     right: 0,
-                    height: HEADER_HEIGHT - 20,
+                    height: HEADER_HEIGHT,
                     backgroundColor: colors.card,
                     opacity: animatedValue.interpolate({
                         inputRange,
@@ -45,6 +46,15 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                     }),
                 }}
             />
+            <Animated.View
+                style={{
+                    marginTop: insets.top,
+                    marginHorizontal: 10,
+                    marginBottom: 10,
+                }}
+            >
+                <HeaderButton />
+            </Animated.View>
             <Animated.Text
                 style={{
                     color: colors.text,
@@ -54,14 +64,14 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, -25],
+                                outputRange: [0, -50],
                                 extrapolate: 'clamp',
                             }),
                         },
                         {
                             translateX: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, 10],
+                                outputRange: [10, 100],
                                 extrapolate: 'clamp',
                             }),
                         },

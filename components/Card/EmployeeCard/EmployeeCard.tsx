@@ -6,7 +6,7 @@ import { Text } from '@components/Text';
 import { getRoleLabel } from '@utils';
 import { useTranslation } from 'react-i18next';
 
-export const EMPLOYEE_ITEM_HEIGHT = 100;
+export const EMPLOYEE_ITEM_HEIGHT = 75;
 
 interface EmployeeCardProps {
     employee: Employee;
@@ -36,7 +36,7 @@ const EmployeeCard = React.memo<EmployeeCardProps>(({ employee, onPress }) => {
                 <Text fontSize={16}>
                     {employee.firstName} {employee.lastName}
                 </Text>
-                <Text disabled>{t(getRoleLabel(employee.roles))}</Text>
+                <Text>{t(getRoleLabel(employee.roles))}</Text>
             </View>
         </TouchableWithoutFeedback>
     );
