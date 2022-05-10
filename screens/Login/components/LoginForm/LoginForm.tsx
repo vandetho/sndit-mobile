@@ -107,6 +107,7 @@ const LoginForm = React.memo<LoginFormProps>(({ phoneNumber, onNext }) => {
             isRegister = true;
         }
         setState((prevState) => ({ ...prevState, dispatch: !prevState.dispatch }));
+        data.createdAt = new Date();
         onNext(state.values.phoneNumber, data, isRegister);
     }, [onNext, state.values.phoneNumber]);
 

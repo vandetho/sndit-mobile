@@ -69,7 +69,7 @@ const Welcome = React.memo<WelcomeProps>(() => {
         if (pageViewerRef.current) {
             pageViewerRef.current.setPage(state.page);
         }
-    }, [state.page, state.isRegister, isBeta, handleLogged, navigation]);
+    }, [state.page]);
 
     const onLogin = React.useCallback(
         async (phoneNumber: string, jwt: Jwt, isRegister: boolean) => {
@@ -80,13 +80,13 @@ const Welcome = React.memo<WelcomeProps>(() => {
                 jwt,
                 isRegister,
             }));
-            if (isBeta && !state.isRegister) {
+            if (isBeta && !isRegister) {
                 await handleLogged(jwt);
                 navigation.goBack();
                 return;
             }
         },
-        [handleLogged, isBeta, navigation, state.isRegister],
+        [handleLogged, isBeta, navigation],
     );
 
     const onVerified = React.useCallback(async () => {

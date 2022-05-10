@@ -48,9 +48,10 @@ const styles = StyleSheet.create({
 interface ScannerMaskProps {
     visible: boolean;
     bounds: { top: number; left: number; width: number; height: number };
+    isLoading?: boolean;
 }
 
-const ScannerMask: React.FC<ScannerMaskProps> = ({ visible, bounds }) => {
+const ScannerMask: React.FC<ScannerMaskProps> = ({ visible, bounds, isLoading }) => {
     const animatedValue = React.useRef(new Animated.Value(0)).current;
 
     React.useEffect(() => {
@@ -64,6 +65,31 @@ const ScannerMask: React.FC<ScannerMaskProps> = ({ visible, bounds }) => {
         }
     }, [animatedValue, visible]);
 
+    const renderLoader = React.useCallback(() => {
+        if (isLoading) {
+            return (
+                <Animated.View
+                    style={{
+                        position: 'absolute',
+                        left: -10,
+                        right: -10,
+                        height: 2,
+                        backgroundColor: PALETTE.primary,
+                        transform: [
+                            {
+                                translateY: animatedValue.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [0, bounds.height],
+                                }),
+                            },
+                        ],
+                    }}
+                />
+            );
+        }
+        return null;
+    }, [animatedValue, bounds.height, isLoading]);
+
     if (visible) {
         const { top, left, width, height } = bounds;
 
@@ -76,18 +102,22 @@ const ScannerMask: React.FC<ScannerMaskProps> = ({ visible, bounds }) => {
                 }}
             >
                 <Animated.View
-                    style={{
-                        width,
-                        height,
-                        transform: [
-                            {
-                                scale: animatedValue.interpolate({
-                                    inputRange: [0, 1],
-                                    outputRange: [1, 1.2],
-                                }),
-                            },
-                        ],
-                    }}
+                    style={[
+                        {
+                            width,
+                            height,
+                        },
+                        !isLoading && {
+                            transform: [
+                                {
+                                    scale: animatedValue.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [1, 1.2],
+                                    }),
+                                },
+                            ],
+                        },
+                    ]}
                 >
                     <View style={styles.maskViewBlockContainerRow}>
                         <View style={styles.maskViewBlockWithBorderLeftTop} />
@@ -101,6 +131,7 @@ const ScannerMask: React.FC<ScannerMaskProps> = ({ visible, bounds }) => {
                         <View style={styles.maskViewBlockWithBorderRightBottom} />
                     </View>
                 </Animated.View>
+                {renderLoader()}
             </View>
         );
     }

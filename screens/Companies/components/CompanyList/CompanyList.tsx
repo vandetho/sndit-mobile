@@ -58,7 +58,7 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({
             ItemSeparatorComponent={Separator}
             scrollEventThrottle={16}
             contentContainerStyle={{
-                paddingTop: HEADER_HEIGHT,
+                paddingTop: HEADER_HEIGHT + 10,
                 paddingHorizontal: 10,
             }}
         />

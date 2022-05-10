@@ -1,15 +1,20 @@
 import React from 'react';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text } from '@components';
+import { Separator, SEPARATOR_HEIGHT, Text } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { Company } from '@interfaces';
+import { Company, ResponseSuccess } from '@interfaces';
+import { axios, showToast } from '@utils';
+import { CompanyItem, ITEM_HEIGHT } from './components';
+import { AxiosResponse } from 'axios';
 
 const styles = StyleSheet.create({
     container: {
         height: 50,
         borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     listContainer: {
         flexGrow: 1,
@@ -26,7 +31,7 @@ const AddToCompanyButtonComponent: React.FunctionComponent<AddToCompanyButtonPro
     const { t } = useTranslation();
     const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 
-    const snapPoints = React.useMemo(() => ['25%', '50%'], []);
+    const snapPoints = React.useMemo(() => ['50%', '75%'], []);
 
     const onPress = React.useCallback(() => {
         if (bottomSheetModalRef.current) {
@@ -34,31 +39,57 @@ const AddToCompanyButtonComponent: React.FunctionComponent<AddToCompanyButtonPro
         }
     }, []);
 
-    const renderItem = React.useCallback(
-        ({ item }: { item: Company }) => {
-            return (
-                <TouchableOpacity style={{ backgroundColor: colors.card, borderRadius: 15, height: 50 }}>
-                    <Text>{item.name}</Text>
-                </TouchableOpacity>
+    const onPressCompany = React.useCallback(async (company: Company) => {
+        try {
+            const { data } = await axios.post<{ user: string | number }, AxiosResponse<ResponseSuccess<any>>>(
+                `/api/companies/${company.token}/employees`,
             );
-        },
-        [colors.card],
+            showToast({ type: 'success', text2: data.message });
+            if (bottomSheetModalRef.current) {
+                bottomSheetModalRef.current.dismiss();
+            }
+        } catch (e) {
+            if (!e.response) {
+                console.error(e);
+                return;
+            }
+            showToast({ type: 'error', text2: e.response.data.message || e.response.data.detail });
+        }
+    }, []);
+
+    const renderItem = React.useCallback(
+        ({ item }: { item: Company }) => <CompanyItem company={item} onPress={onPressCompany} />,
+        [onPressCompany],
     );
 
     const keyExtractor = React.useCallback((_, index: number) => `manager-companies-item-${index}`, []);
-    const getItemLayout = React.useCallback((_, index: number) => ({ offset: 50 * index, index, length: 50 }), []);
+    const getItemLayout = React.useCallback(
+        (_, index: number) => ({
+            offset: (ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
+            index,
+            length: ITEM_HEIGHT + SEPARATOR_HEIGHT,
+        }),
+        [],
+    );
 
     return (
         <React.Fragment>
             <TouchableOpacity onPress={onPress} style={[styles.container, { backgroundColor: colors.card }]}>
                 <Text>{t('add_to_company')}</Text>
             </TouchableOpacity>
-            <BottomSheetModal index={1} snapPoints={snapPoints} ref={bottomSheetModalRef}>
+            <BottomSheetModal
+                index={1}
+                snapPoints={snapPoints}
+                ref={bottomSheetModalRef}
+                backgroundStyle={{ backgroundColor: colors.card }}
+                handleIndicatorStyle={{ backgroundColor: colors.text }}
+            >
                 <FlatList
                     data={companies}
                     renderItem={renderItem}
                     keyExtractor={keyExtractor}
                     getItemLayout={getItemLayout}
+                    ItemSeparatorComponent={Separator}
                     contentContainerStyle={styles.listContainer}
                 />
             </BottomSheetModal>

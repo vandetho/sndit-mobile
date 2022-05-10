@@ -3,11 +3,14 @@ import { User } from '@interfaces';
 import { Animated, StyleSheet } from 'react-native';
 import Avatar from 'react-native-user-avatar';
 
-export const AVATAR_HEIGHT = 75;
+export const AVATAR_SIZE = 125;
 
 const styles = StyleSheet.create({
     container: {
-        height: AVATAR_HEIGHT,
+        alignSelf: 'center',
+        position: 'absolute',
+        top: 70,
+        zIndex: 1,
     },
 });
 
@@ -17,16 +20,22 @@ interface UserAvatarProps {
 }
 
 const UserAvatarComponent: React.FunctionComponent<UserAvatarProps> = ({ user, scrollY }) => {
+    const inputRange = React.useMemo(() => [0, AVATAR_SIZE], []);
     return (
         <Animated.View
             style={[
                 styles.container,
                 {
+                    opacity: scrollY.interpolate({
+                        inputRange,
+                        outputRange: [1, 0],
+                        extrapolate: 'clamp',
+                    }),
                     transform: [
                         {
                             translateY: scrollY.interpolate({
-                                inputRange: [0, AVATAR_HEIGHT],
-                                outputRange: [0, 25],
+                                inputRange,
+                                outputRange: [0, -AVATAR_SIZE],
                                 extrapolate: 'clamp',
                             }),
                         },
@@ -34,7 +43,7 @@ const UserAvatarComponent: React.FunctionComponent<UserAvatarProps> = ({ user, s
                 },
             ]}
         >
-            <Avatar name={`${user.lastName} ${user.firstName}`} src={user.imageFile} />
+            <Avatar name={`${user.lastName} ${user.firstName}`} size={100} src={user.imageFile} />
         </Animated.View>
     );
 };

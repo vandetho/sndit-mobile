@@ -1,1 +1,1 @@
-export { default as UserAvatar } from './UserAvatar';
+export { default as UserAvatar, AVATAR_SIZE } from './UserAvatar';

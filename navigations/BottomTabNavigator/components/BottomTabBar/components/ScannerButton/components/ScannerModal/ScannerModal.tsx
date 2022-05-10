@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'react-native-modal';
 import { BarCodeEvent, BarCodeScanner } from 'expo-barcode-scanner';
 import { showToast } from '@utils';
-import { BarLoader, Header, ScannerMask } from '@components';
+import { Header, ScannerMask } from '@components';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { CompositeNavigationProp, useNavigation, useTheme } from '@react-navigation/native';
@@ -117,15 +117,15 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
     ]);
 
     const pointerFunc = React.useCallback(
-        (type: string) => {
+        async (type: string, code: string) => {
             const func = {
                 company: fetchCompany,
                 package: fetchPackage,
                 employee: fetchEmployee,
                 user: fetchUser,
             };
-            if (func[type]) {
-                func[type]();
+            if (func[type] && code) {
+                await func[type](code);
                 setState((prevState) => ({ ...prevState, type }));
                 return;
             }
@@ -139,7 +139,6 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
             setState((prevState) => ({
                 ...prevState,
                 scanned: true,
-                isLoading: true,
                 type: '',
                 width: bounds.size.width,
                 height: bounds.size.height,
@@ -152,7 +151,7 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
                     showToast({ type: 'error', text2: t('invalid_qr_code') });
                     return;
                 }
-                pointerFunc(infos[0]);
+                await pointerFunc(infos[0], infos[1]);
                 onClose();
             } catch (e) {
                 if (e.response) {
@@ -163,17 +162,20 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
                 }
                 console.error(e);
             }
-            setState((prevState) => ({ ...prevState, scanned: false, isLoading: false }));
+            setState((prevState) => ({ ...prevState, scanned: false }));
         },
         [onClose, pointerFunc, t],
     );
 
     const renderMask = React.useCallback(() => {
         const { scanned, ...bounds } = state;
-        if (isLoadingCompany || isLoadingEmployee || isLoadingPackage || isLoadingUser) {
-            return <BarLoader />;
-        }
-        return <ScannerMask visible={scanned} bounds={bounds} />;
+        return (
+            <ScannerMask
+                isLoading={isLoadingCompany || isLoadingEmployee || isLoadingPackage || isLoadingUser}
+                visible={scanned}
+                bounds={bounds}
+            />
+        );
     }, [isLoadingCompany, isLoadingEmployee, isLoadingPackage, isLoadingUser, state]);
 
     if (state.hasPermission === null) {

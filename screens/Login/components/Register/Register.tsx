@@ -14,7 +14,7 @@ import { FormType } from '@interfaces/FormType';
 import { Jwt, User } from '@interfaces';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import isEmpty from 'validator/lib/isEmpty';
-import { request, showToast, displayErrors, hasError } from '@utils';
+import { displayErrors, hasError, request, showToast } from '@utils';
 
 const width = Dimensions.get('window').width;
 

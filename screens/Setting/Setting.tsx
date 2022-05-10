@@ -52,9 +52,9 @@ const Setting = React.memo<SettingProps>(() => {
                   ]
                 : [
                       {
-                          icon: 'plus',
+                          icon: 'sign-in-alt',
                           text: t('login_or_signup'),
-                          key: 'login-or_signup',
+                          key: 'login-or-signup',
                           onPress: onPressLogin,
                       },
                   ]),
