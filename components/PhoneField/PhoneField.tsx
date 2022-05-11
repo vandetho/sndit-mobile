@@ -23,7 +23,7 @@ interface PhoneFieldProps {
     error?: boolean;
     onBlur?: () => void;
     onFocus?: () => void;
-    onChangePhoneNumber: (value: string) => void;
+    onChangePhoneNumber: (value: string, countryCode: string) => void;
 }
 
 const PhoneFieldComponent: React.FunctionComponent<PhoneFieldProps> = ({
@@ -47,7 +47,10 @@ const PhoneFieldComponent: React.FunctionComponent<PhoneFieldProps> = ({
     const handleChangePhoneNumber = React.useCallback(
         (value: string) => {
             setState((prevState) => ({ ...prevState, value }));
-            onChangePhoneNumber(`${COUNTRY_CODE[state.countryCode].dialCode}${parseInt(value, 10) || ''}`);
+            onChangePhoneNumber(
+                `${COUNTRY_CODE[state.countryCode].dialCode}${parseInt(value, 10) || ''}`,
+                state.countryCode,
+            );
         },
         [onChangePhoneNumber, state.countryCode],
     );
@@ -63,7 +66,7 @@ const PhoneFieldComponent: React.FunctionComponent<PhoneFieldProps> = ({
         (countryCode: string) => {
             onToggle();
             setState((prevState) => ({ ...prevState, countryCode }));
-            onChangePhoneNumber(`${COUNTRY_CODE[countryCode].dialCode}${state.value}`);
+            onChangePhoneNumber(`${COUNTRY_CODE[countryCode].dialCode}${state.value}`, countryCode);
         },
         [onChangePhoneNumber, onToggle, state.value],
     );

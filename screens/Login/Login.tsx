@@ -29,11 +29,13 @@ const Welcome = React.memo<WelcomeProps>(() => {
     const navigation = useNavigation();
     const [state, setState] = React.useState<{
         phoneNumber: string;
+        countryCode: string;
         jwt: Jwt | undefined;
         isRegister: boolean;
         page: number;
     }>({
         isRegister: false,
+        countryCode: 'KH',
         jwt: undefined,
         page: 0,
         phoneNumber: '',
@@ -72,7 +74,7 @@ const Welcome = React.memo<WelcomeProps>(() => {
     }, [state.page]);
 
     const onLogin = React.useCallback(
-        async (phoneNumber: string, jwt: Jwt, isRegister: boolean) => {
+        async (phoneNumber: string, countryCode: string, jwt: Jwt, isRegister: boolean) => {
             setState((prevState) => ({
                 ...prevState,
                 page: isBeta ? (isRegister ? prevState.page + 2 : prevState.page) : prevState.page + 1,
@@ -113,7 +115,7 @@ const Welcome = React.memo<WelcomeProps>(() => {
         <View style={styles.container}>
             <PagerView initialPage={0} scrollEnabled={false} style={styles.viewContainer} ref={pageViewerRef}>
                 <View key="1">
-                    <LoginForm phoneNumber={state.phoneNumber} onNext={onLogin} />
+                    <LoginForm phoneNumber={state.phoneNumber} countryCode={state.countryCode} onNext={onLogin} />
                 </View>
                 <View key="2">
                     <VerifyOTP phoneNumber={state.phoneNumber} jwt={state.jwt} onBack={onBack} onNext={onVerified} />

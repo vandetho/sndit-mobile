@@ -40,7 +40,7 @@ const TopSection = React.memo<TopSectionProps>(({ animatedValue }) => {
                     }),
                 }}
             />
-            <HeaderButtons scrollY={animatedValue} />
+            <HeaderButtons />
         </Animated.View>
     );
 });

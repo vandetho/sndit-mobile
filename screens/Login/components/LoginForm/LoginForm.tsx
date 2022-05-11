@@ -37,22 +37,27 @@ const styles = StyleSheet.create({
 
 interface LoginFormProps {
     phoneNumber: string;
-    onNext: (phoneNumber: string, jwt: Jwt, isRegister: boolean) => void;
+    countryCode: string;
+    onNext: (phoneNumber: string, countryCode: string, jwt: Jwt, isRegister: boolean) => void;
 }
 
-const LoginForm = React.memo<LoginFormProps>(({ phoneNumber, onNext }) => {
+const LoginForm = React.memo<LoginFormProps>(({ countryCode, phoneNumber, onNext }) => {
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const animatedValues = React.useRef(new Animated.Value(1)).current;
-    const [state, setState] = React.useState<FormType<{ phoneNumber: string }>>({
+    const [state, setState] = React.useState<FormType<{ phoneNumber: string; countryCode: string }>>({
         dispatch: false,
         errors: {},
         isValid: false,
         show: {},
         touched: {
             phoneNumber: false,
+            countryCode: false,
         },
-        values: { phoneNumber },
+        values: {
+            phoneNumber: phoneNumber,
+            countryCode: countryCode,
+        },
     });
 
     React.useEffect(() => {
@@ -67,14 +72,16 @@ const LoginForm = React.memo<LoginFormProps>(({ phoneNumber, onNext }) => {
         }));
     }, [state.values, t]);
 
-    const onChangePhoneNumber = React.useCallback((phoneNumber: string) => {
+    const onChangePhoneNumber = React.useCallback((phoneNumber: string, countryCode: string) => {
         setState((prevState) => ({
             ...prevState,
             values: {
                 phoneNumber,
+                countryCode,
             },
             touched: {
                 phoneNumber: true,
+                countryCode: true,
             },
         }));
     }, []);
@@ -93,9 +100,12 @@ const LoginForm = React.memo<LoginFormProps>(({ phoneNumber, onNext }) => {
         let isRegister = false;
         try {
             const response = await request.post<
-                { phoneNumber: string },
+                { phoneNumber: string; countryCode: string },
                 AxiosResponse<{ token: string; refreshToken: string }>
-            >('/api/login_check', { phoneNumber: state.values.phoneNumber.replace('+', '') });
+            >('/api/login_check', {
+                phoneNumber: state.values.phoneNumber.replace('+', ''),
+                countryCode: state.values.countryCode,
+            });
             data = response.data;
         } catch (e) {
             if (!e.response) {
@@ -108,8 +118,8 @@ const LoginForm = React.memo<LoginFormProps>(({ phoneNumber, onNext }) => {
         }
         setState((prevState) => ({ ...prevState, dispatch: !prevState.dispatch }));
         data.createdAt = new Date();
-        onNext(state.values.phoneNumber, data, isRegister);
-    }, [onNext, state.values.phoneNumber]);
+        onNext(state.values.phoneNumber, state.values.countryCode, data, isRegister);
+    }, [onNext, state.values.countryCode, state.values.phoneNumber]);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -181,6 +191,7 @@ const LoginForm = React.memo<LoginFormProps>(({ phoneNumber, onNext }) => {
                             textHelper={displayErrors('phoneNumber', state)}
                             onBlur={onBlur}
                             onFocus={onFocus}
+                            countryCode={state.values.countryCode}
                             value={state.values.phoneNumber}
                             onChangePhoneNumber={onChangePhoneNumber}
                         />

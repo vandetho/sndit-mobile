@@ -56,5 +56,7 @@
     "invalid_qr_code": "Invalid Qr-Code",
     "add_to_company": "Add To Company",
     "account": "Account",
-    "information": "Information"
+    "information": "Information",
+    "update": "Update",
+    "update_user_info": "You can update your information here"
 }

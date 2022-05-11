@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         paddingTop: TOP_SECTION_HEIGHT,
+        paddingBottom: TOP_SECTION_HEIGHT,
         paddingHorizontal: 20,
     },
     textContainer: {
@@ -30,9 +31,10 @@ const styles = StyleSheet.create({
 interface ContentSectionProps {
     user: User;
     onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+    onUpdate: (user: User) => void;
 }
 
-const ContentSection = React.memo<ContentSectionProps>(({ user, onScroll }) => {
+const ContentSection = React.memo<ContentSectionProps>(({ user, onScroll, onUpdate }) => {
     const { t } = useTranslation();
     const [state, setState] = React.useState<
         FormType<{
@@ -90,6 +92,7 @@ const ContentSection = React.memo<ContentSectionProps>(({ user, onScroll }) => {
                 gender: 'U',
             });
             showToast({ type: 'success', text2: message });
+            onUpdate(data);
         } catch (e) {
             if (e.response) {
                 const { data } = e.response;
@@ -98,7 +101,7 @@ const ContentSection = React.memo<ContentSectionProps>(({ user, onScroll }) => {
             console.error(e);
         }
         setState((prevState) => ({ ...prevState, dispatch: false }));
-    }, [state.values.dob, state.values.firstName, state.values.lastName]);
+    }, [onUpdate, state.values.dob, state.values.firstName, state.values.lastName]);
 
     return (
         <Animated.ScrollView onScroll={onScroll} contentContainerStyle={styles.container}>

@@ -3,9 +3,7 @@ import { Animated, StyleSheet, TouchableOpacity, useWindowDimensions, View } fro
 import { GradientIcon, Text } from '@components';
 import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { User } from '@interfaces';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TOP_SECTION_HEIGHT } from '../../TopSection';
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 15;
@@ -67,7 +65,7 @@ const HeaderButtonsComponent: React.FunctionComponent<HeaderButtonsProps> = ({ s
                         },
                         {
                             translateY: scrollY.interpolate({
-                                inputRange: [0, TOP_SECTION_HEIGHT],
+                                inputRange: [0, 250],
                                 outputRange: [0, 150],
                                 extrapolate: 'clamp',
                             }),

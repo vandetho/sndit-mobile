@@ -3,8 +3,8 @@ import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
 import UserAvatar from 'react-native-user-avatar';
 import { User } from '@interfaces';
 import { useTheme } from '@react-navigation/native';
-import { HeaderButtons } from './components';
 import { Text } from '@components';
+import { HeaderButtons } from './components';
 
 export const TOP_SECTION_HEIGHT = 250;
 
@@ -68,7 +68,7 @@ const TopSection = React.memo<TopSectionProps>(({ user, animatedValue }) => {
                     ],
                 }}
             />
-            <HeaderButtons user={user} scrollY={animatedValue} />
+            <HeaderButtons scrollY={animatedValue} />
             <Animated.View
                 style={{
                     width: 100,

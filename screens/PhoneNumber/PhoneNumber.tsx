@@ -10,13 +10,13 @@ import {
     TouchableWithoutFeedback,
     View,
 } from 'react-native';
-import { BarLoader, CustomLinearGradient, Header, PhoneField, Text } from '@components';
+import { BarLoader, CustomLinearGradient, PhoneField, Text } from '@components';
 import { useTranslation } from 'react-i18next';
-import { AxiosResponse } from 'axios';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import isNumeric from 'validator/lib/isNumeric';
 import { displayErrors, hasError, request, showToast } from '@utils';
-import { FormType, Jwt } from '@interfaces';
+import { FormType } from '@interfaces';
+import { useAuthentication } from '@contexts';
 
 const width = Dimensions.get('window').width;
 
@@ -35,24 +35,28 @@ const styles = StyleSheet.create({
     },
 });
 
-interface PhoneNumberProps {
-    phoneNumber: string;
-    onNext: (phoneNumber: string, jwt: Jwt, isRegister: boolean) => void;
-}
+interface PhoneNumberProps {}
 
-const PhoneNumber = React.memo<PhoneNumberProps>(({ phoneNumber, onNext }) => {
+const PhoneNumber = React.memo<PhoneNumberProps>(() => {
     const { t } = useTranslation();
+    const {
+        jwt: { user },
+    } = useAuthentication();
     const insets = useSafeAreaInsets();
     const animatedValues = React.useRef(new Animated.Value(1)).current;
-    const [state, setState] = React.useState<FormType<{ phoneNumber: string }>>({
+    const [state, setState] = React.useState<FormType<{ phoneNumber: string; countryCode: string }>>({
         dispatch: false,
         errors: {},
         isValid: false,
         show: {},
         touched: {
             phoneNumber: false,
+            countryCode: false,
         },
-        values: { phoneNumber },
+        values: {
+            phoneNumber: user.phoneNumber,
+            countryCode: user.countryCode,
+        },
     });
 
     React.useEffect(() => {
@@ -67,14 +71,16 @@ const PhoneNumber = React.memo<PhoneNumberProps>(({ phoneNumber, onNext }) => {
         }));
     }, [state.values, t]);
 
-    const onChangePhoneNumber = React.useCallback((phoneNumber: string) => {
+    const onChangePhoneNumber = React.useCallback((phoneNumber: string, countryCode: string) => {
         setState((prevState) => ({
             ...prevState,
             values: {
                 phoneNumber,
+                countryCode,
             },
             touched: {
                 phoneNumber: true,
+                countryCode: true,
             },
         }));
     }, []);
@@ -87,15 +93,14 @@ const PhoneNumber = React.memo<PhoneNumberProps>(({ phoneNumber, onNext }) => {
         Animated.timing(animatedValues, { toValue: 0, useNativeDriver: true }).start();
     }, [animatedValues]);
 
-    const onLogin = React.useCallback(async () => {
+    const onUpdate = React.useCallback(async () => {
         setState((prevState) => ({ ...prevState, dispatch: !prevState.dispatch }));
         let data: any;
-        let isRegister = false;
         try {
-            const response = await request.post<
-                { phoneNumber: string },
-                AxiosResponse<{ token: string; refreshToken: string }>
-            >('/api/login_check', { phoneNumber: state.values.phoneNumber.replace('+', '') });
+            const response = await request.put<{ phoneNumber: string }>('/api/users/current', {
+                phoneNumber: state.values.phoneNumber.replace('+', ''),
+                countryCode: state.values.countryCode,
+            });
             data = response.data;
         } catch (e) {
             if (!e.response) {
@@ -104,17 +109,14 @@ const PhoneNumber = React.memo<PhoneNumberProps>(({ phoneNumber, onNext }) => {
             }
             data = e.response.data.data;
             showToast({ type: 'error', text2: e.response.data.message || e.response.data.detail });
-            isRegister = true;
         }
         setState((prevState) => ({ ...prevState, dispatch: !prevState.dispatch }));
         data.createdAt = new Date();
-        onNext(state.values.phoneNumber, data, isRegister);
-    }, [onNext, state.values.phoneNumber]);
+    }, [state.values.countryCode, state.values.phoneNumber]);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
-                <Header goBackTitle={t('close')} goBackIcon="times" />
                 <View style={styles.contentContainer}>
                     <Animated.View
                         style={{
@@ -200,7 +202,7 @@ const PhoneNumber = React.memo<PhoneNumberProps>(({ phoneNumber, onNext }) => {
                         <TouchableOpacity
                             disabled={!state.isValid || state.dispatch}
                             style={{ marginTop: 10 }}
-                            onPress={onLogin}
+                            onPress={onUpdate}
                         >
                             <CustomLinearGradient
                                 style={{
@@ -215,7 +217,9 @@ const PhoneNumber = React.memo<PhoneNumberProps>(({ phoneNumber, onNext }) => {
                                 {state.dispatch ? (
                                     <BarLoader color="#000000" />
                                 ) : (
-                                    <RNText style={{ fontFamily: 'Rubik_900Black', fontSize: 16 }}>{t('login')}</RNText>
+                                    <RNText style={{ fontFamily: 'Rubik_900Black', fontSize: 16 }}>
+                                        {t('update')}
+                                    </RNText>
                                 )}
                             </CustomLinearGradient>
                         </TouchableOpacity>

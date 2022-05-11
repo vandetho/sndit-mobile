@@ -4,7 +4,6 @@ import { GradientIcon, Text } from '@components';
 import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TOP_SECTION_HEIGHT } from '@screens/UserInformation/components';
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 15;
@@ -23,11 +22,9 @@ const styles = StyleSheet.create({
     },
 });
 
-interface HeaderButtonsProps {
-    scrollY: Animated.Value;
-}
+interface HeaderButtonsProps {}
 
-const HeaderButtonsComponent: React.FunctionComponent<HeaderButtonsProps> = ({ scrollY }) => {
+const HeaderButtonsComponent: React.FunctionComponent<HeaderButtonsProps> = () => {
     const { colors } = useTheme();
     const insets = useSafeAreaInsets();
     const { t } = useTranslation();
@@ -61,13 +58,6 @@ const HeaderButtonsComponent: React.FunctionComponent<HeaderButtonsProps> = ({ s
                             translateX: animatedValue.interpolate({
                                 inputRange: [0, 1],
                                 outputRange: [100, 0],
-                                extrapolate: 'clamp',
-                            }),
-                        },
-                        {
-                            translateY: scrollY.interpolate({
-                                inputRange: [0, TOP_SECTION_HEIGHT],
-                                outputRange: [0, 150],
                                 extrapolate: 'clamp',
                             }),
                         },
