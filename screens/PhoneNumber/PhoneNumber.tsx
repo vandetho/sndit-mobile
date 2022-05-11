@@ -54,7 +54,7 @@ const PhoneNumber = React.memo<PhoneNumberProps>(() => {
             countryCode: false,
         },
         values: {
-            phoneNumber: user.phoneNumber,
+            phoneNumber: user.phoneNumber.replace('+', ''),
             countryCode: user.countryCode,
         },
     });

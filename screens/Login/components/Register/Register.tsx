@@ -30,11 +30,12 @@ const styles = StyleSheet.create({
 
 interface RegisterProps {
     phoneNumber: string;
+    countryCode: string;
     jwt: Jwt;
     onRegistered: (user: User) => void;
 }
 
-const Register = React.memo<RegisterProps>(({ phoneNumber, jwt, onRegistered }) => {
+const Register = React.memo<RegisterProps>(({ phoneNumber, countryCode, jwt, onRegistered }) => {
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const [state, setState] = React.useState<
@@ -90,6 +91,7 @@ const Register = React.memo<RegisterProps>(({ phoneNumber, jwt, onRegistered }) 
                 '/api/users/current',
                 {
                     phoneNumber: phoneNumber.replace('+', ''),
+                    countryCode,
                     firstName: state.values.firstName,
                     lastName: state.values.lastName,
                     dob: state.values.dob,
@@ -111,7 +113,15 @@ const Register = React.memo<RegisterProps>(({ phoneNumber, jwt, onRegistered }) 
             console.error(e);
         }
         setState((prevState) => ({ ...prevState, dispatch: false }));
-    }, [jwt, onRegistered, phoneNumber, state.values.dob, state.values.firstName, state.values.lastName]);
+    }, [
+        countryCode,
+        jwt.token,
+        onRegistered,
+        phoneNumber,
+        state.values.dob,
+        state.values.firstName,
+        state.values.lastName,
+    ]);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
