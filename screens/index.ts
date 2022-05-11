@@ -1,3 +1,4 @@
+export * from './Account';
 export * from './AppLoading';
 export * from './AuthLoading';
 export * from './Companies';
@@ -14,7 +15,9 @@ export * from './NewPackage';
 export * from './Package';
 export * from './PackageQrCode';
 export * from './Packages';
+export * from './PhoneNumber';
 export * from './Printer';
 export * from './Setting';
 export * from './User';
+export * from './UserInformation';
 export * from './UserQrCode';

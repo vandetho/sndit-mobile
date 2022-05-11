@@ -9,7 +9,7 @@ import { Text } from '@components';
 import Constants from 'expo-constants';
 import { useAuthentication } from '@contexts';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ApplicationStackParamsList } from '@navigations';
+import { ApplicationStackParamsList, SettingStackParamsList } from '@navigations';
 
 type LoginScreenNavigationProps = StackNavigationProp<ApplicationStackParamsList, 'Login' | 'UserQrCode'>;
 
@@ -37,6 +37,12 @@ const Setting = React.memo<SettingProps>(() => {
         (): MenuItem[] => [
             ...(isLogged
                 ? [
+                      {
+                          icon: 'user-circle',
+                          text: t('account'),
+                          key: 'account',
+                          screen: 'AccountStack' as keyof SettingStackParamsList,
+                      },
                       {
                           icon: 'qrcode',
                           text: t('user_qrcode'),

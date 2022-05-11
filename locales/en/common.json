@@ -54,5 +54,7 @@
     "use_sndit_app_scanner": "User Sndit App to Scanner this Qr-Code",
     "employees": "Employees",
     "invalid_qr_code": "Invalid Qr-Code",
-    "add_to_company": "Add To Company"
+    "add_to_company": "Add To Company",
+    "account": "Account",
+    "information": "Information"
 }

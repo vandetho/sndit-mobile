@@ -3,13 +3,13 @@ import { MenuItem } from '@interfaces';
 import { TouchableOpacity, View } from 'react-native';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SettingStackParamsList } from '@navigations';
+import { AccountStackParamsList } from '@navigations';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { GradientIcon, Text } from '@components';
 
 export const ITEM_HEIGHT = 50;
 
-type SettingStackNavigationProps = StackNavigationProp<SettingStackParamsList, keyof SettingStackParamsList>;
+type AccountStackNavigationProps = StackNavigationProp<AccountStackParamsList, keyof AccountStackParamsList>;
 
 interface SettingItemProps {
     item: MenuItem;
@@ -17,11 +17,11 @@ interface SettingItemProps {
 
 const SettingItem = React.memo<SettingItemProps>(({ item }) => {
     const { colors } = useTheme();
-    const navigation = useNavigation<SettingStackNavigationProps>();
+    const navigation = useNavigation<AccountStackNavigationProps>();
 
     const onNavigate = React.useCallback(() => {
         if (item.screen) {
-            navigation.navigate(item.screen as keyof SettingStackParamsList);
+            navigation.navigate(item.screen as keyof AccountStackParamsList);
         }
         if (item.onPress) {
             item.onPress();

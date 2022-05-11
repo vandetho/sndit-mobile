@@ -1,4 +1,4 @@
-import { SettingStackParamsList } from '@navigations';
+import { AccountStackParamsList, SettingStackParamsList } from '@navigations';
 
 export interface MenuItem {
     key: string;
@@ -10,6 +10,6 @@ export interface MenuItem {
     icon?: any;
     animatedIcon?: boolean;
     align?: string;
-    screen?: keyof SettingStackParamsList;
+    screen?: keyof SettingStackParamsList | keyof AccountStackParamsList;
     onPress?: () => void;
 }
