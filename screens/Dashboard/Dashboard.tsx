@@ -1,11 +1,11 @@
 import React from 'react';
-import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { Button, Text } from '@components';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthentication, useCompany } from '@contexts';
+import { useAuthentication } from '@contexts';
 import { HEADER_HEIGHT, HeaderSection, PackageList } from './components';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -27,7 +27,6 @@ interface DashboardProps {}
 const Dashboard = React.memo<DashboardProps>(() => {
     const { isLogged } = useAuthentication();
     const { t } = useTranslation();
-    const { managerCompanies } = useCompany();
     const navigation = useNavigation<LoginScreenNavigationProps>();
     const animatedValue = React.useRef(new Animated.Value(0)).current;
 
@@ -89,21 +88,6 @@ const Dashboard = React.memo<DashboardProps>(() => {
         );
     }, [animatedValue, isLogged, onPressLogin, onPressNewPackage, t]);
 
-    if (managerCompanies.length < 1) {
-        return (
-            <SafeAreaView
-                style={[
-                    styles.container,
-                    {
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    },
-                ]}
-            >
-                <Text>{t('no_package_found')}</Text>
-            </SafeAreaView>
-        );
-    }
     return <View style={styles.container}>{renderContent()}</View>;
 });
 

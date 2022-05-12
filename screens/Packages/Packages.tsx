@@ -1,13 +1,12 @@
 import React from 'react';
-import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
-import { Button, Text } from '@components';
-import { HEADER_HEIGHT, HeaderSection, PackageList } from './components';
+import { Button } from '@components';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { useCompany } from '@contexts';
+import { HEADER_HEIGHT, HeaderSection, PackageList } from './components';
 
 const styles = StyleSheet.create({
     container: {
@@ -21,29 +20,12 @@ interface PackagesProps {}
 
 const Packages = React.memo<PackagesProps>(() => {
     const { t } = useTranslation();
-    const { managerCompanies } = useCompany();
     const navigation = useNavigation<NewPackageNavigationProp>();
     const animatedValue = React.useRef(new Animated.Value(0)).current;
 
     const onPressNewPackage = React.useCallback(() => {
         navigation.navigate('NewPackage');
     }, [navigation]);
-
-    if (managerCompanies.length < 1) {
-        return (
-            <SafeAreaView
-                style={[
-                    styles.container,
-                    {
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    },
-                ]}
-            >
-                <Text>{t('no_package_found')}</Text>
-            </SafeAreaView>
-        );
-    }
 
     return (
         <View style={styles.container}>
