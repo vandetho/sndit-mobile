@@ -84,6 +84,7 @@ const Register = React.memo<RegisterProps>(({ phoneNumber, countryCode, jwt, onR
 
     const onSubmit = React.useCallback(async () => {
         setState((prevState) => ({ ...prevState, dispatch: true }));
+
         try {
             const {
                 data: { data, message },
@@ -99,7 +100,7 @@ const Register = React.memo<RegisterProps>(({ phoneNumber, countryCode, jwt, onR
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${jwt.token}`,
+                        Authorization: `Bearer ${jwt?.token}`,
                     },
                 },
             );
@@ -113,15 +114,7 @@ const Register = React.memo<RegisterProps>(({ phoneNumber, countryCode, jwt, onR
             console.error(e);
         }
         setState((prevState) => ({ ...prevState, dispatch: false }));
-    }, [
-        countryCode,
-        jwt.token,
-        onRegistered,
-        phoneNumber,
-        state.values.dob,
-        state.values.firstName,
-        state.values.lastName,
-    ]);
+    }, [countryCode, jwt, onRegistered, phoneNumber, state.values.dob, state.values.firstName, state.values.lastName]);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

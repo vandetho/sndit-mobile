@@ -12,18 +12,17 @@ import {
 } from 'react-native';
 import { BarLoader, CustomLinearGradient, PhoneField, Text } from '@components';
 import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import isNumeric from 'validator/lib/isNumeric';
 import { displayErrors, hasError, request, showToast } from '@utils';
 import { FormType } from '@interfaces';
 import { useAuthentication } from '@contexts';
+import { HeaderButtons } from './components';
 
 const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width,
         padding: 20,
     },
     contentContainer: {
@@ -42,7 +41,6 @@ const PhoneNumber = React.memo<PhoneNumberProps>(() => {
     const {
         jwt: { user },
     } = useAuthentication();
-    const insets = useSafeAreaInsets();
     const animatedValues = React.useRef(new Animated.Value(1)).current;
     const [state, setState] = React.useState<FormType<{ phoneNumber: string; countryCode: string }>>({
         dispatch: false,
@@ -54,7 +52,7 @@ const PhoneNumber = React.memo<PhoneNumberProps>(() => {
             countryCode: false,
         },
         values: {
-            phoneNumber: user.phoneNumber.replace('+', ''),
+            phoneNumber: user.phoneNumber,
             countryCode: user.countryCode,
         },
     });
@@ -117,10 +115,11 @@ const PhoneNumber = React.memo<PhoneNumberProps>(() => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
+                <HeaderButtons />
                 <View style={styles.contentContainer}>
                     <Animated.View
                         style={{
-                            paddingTop: insets.top + 50,
+                            paddingTop: 30,
                             paddingBottom: 30,
                             opacity: animatedValues,
                             transform: [
@@ -160,10 +159,7 @@ const PhoneNumber = React.memo<PhoneNumberProps>(() => {
                             },
                         ]}
                     >
-                        <Text fontSize={20} bold>
-                            {t('welcome_sndit')}
-                        </Text>
-                        <Text fontSize={14}>{t('enter_phone_number_login_register')}</Text>
+                        <Text fontSize={14}>{t('update_phone_number')}</Text>
                     </Animated.View>
                     <Animated.View
                         style={{
