@@ -58,5 +58,6 @@
     "account": "Account",
     "information": "Information",
     "update": "Update",
-    "update_user_info": "You can update your information here"
+    "update_user_info": "You can update your information here",
+    "employee": "Employee"
 }
