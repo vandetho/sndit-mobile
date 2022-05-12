@@ -11,6 +11,7 @@ import {
     NewCompanyScreen,
     NewPackageScreen,
     PackageQrCodeScreen,
+    PackageScreen,
     PrinterScreen,
     UserQrCodeScreen,
     UserScreen,
@@ -28,6 +29,7 @@ export type ApplicationStackParamsList = {
     EmployeeQrCode: undefined;
     Printer: undefined;
     PackageQrCode: undefined;
+    Package: undefined;
     NewCompany: undefined;
     NewPackage: undefined;
     User: undefined;
@@ -125,6 +127,16 @@ const ApplicationNavigator = React.memo<ApplicationNavigatorProps>(() => {
                             <ApplicationStack.Screen
                                 name="NewCompany"
                                 component={NewCompanyScreen}
+                                options={{
+                                    presentation: 'modal',
+                                    gestureEnabled: true,
+                                    cardOverlayEnabled: true,
+                                    ...TransitionPresets.ModalPresentationIOS,
+                                }}
+                            />
+                            <ApplicationStack.Screen
+                                name="Package"
+                                component={PackageScreen}
                                 options={{
                                     presentation: 'modal',
                                     gestureEnabled: true,

@@ -6,7 +6,7 @@ import { Header, ScannerMask } from '@components';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { CompositeNavigationProp, useNavigation, useTheme } from '@react-navigation/native';
-import { ApplicationStackParamsList, CompanyStackParamList, PackageStackParamList } from '@navigations';
+import { ApplicationStackParamsList, CompanyStackParamList } from '@navigations';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCompany, useEmployee, usePackage, useUser } from '@contexts';
 import { useCompanyFetcher, useEmployeeFetcher, usePackageFetcher, useUserFetcher } from '@fetchers';
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 type RedirectScreenNavigationProps = CompositeNavigationProp<
     CompositeNavigationProp<
         StackNavigationProp<CompanyStackParamList, 'Company' | 'Employee'>,
-        StackNavigationProp<PackageStackParamList, 'Package'>
+        StackNavigationProp<ApplicationStackParamsList, 'Package'>
     >,
     StackNavigationProp<ApplicationStackParamsList, 'User'>
 >;
@@ -53,10 +53,25 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
     const { onSelect: onSelectEmployee } = useEmployee();
     const { onSelect: onSelectPackage } = usePackage();
     const { onSelect: onSelectUser } = useUser();
-    const { fetch: fetchEmployee, isLoading: isLoadingEmployee, employee } = useEmployeeFetcher();
-    const { fetch: fetchPackage, isLoading: isLoadingPackage, item } = usePackageFetcher();
-    const { fetch: fetchCompany, isLoading: isLoadingCompany, company } = useCompanyFetcher();
-    const { fetch: fetchUser, isLoading: isLoadingUser, user } = useUserFetcher();
+    const {
+        fetch: fetchEmployee,
+        isLoading: isLoadingEmployee,
+        employee,
+        errorMessage: employeeErrorMessage,
+    } = useEmployeeFetcher();
+    const {
+        fetch: fetchPackage,
+        isLoading: isLoadingPackage,
+        item,
+        errorMessage: packageErrorMessage,
+    } = usePackageFetcher();
+    const {
+        fetch: fetchCompany,
+        isLoading: isLoadingCompany,
+        company,
+        errorMessage: companyErrorMessage,
+    } = useCompanyFetcher();
+    const { fetch: fetchUser, isLoading: isLoadingUser, user, errorMessage: userErrorMessage } = useUserFetcher();
     const [state, setState] = React.useState<{
         left: number;
         top: number;
@@ -116,6 +131,37 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
         user,
     ]);
 
+    React.useEffect(() => {
+        if (isLoadingCompany || isLoadingEmployee || isLoadingPackage || isLoadingUser) {
+            return;
+        }
+        if (employeeErrorMessage || userErrorMessage || companyErrorMessage || packageErrorMessage) {
+            showToast({
+                type: 'error',
+                text2: employeeErrorMessage || userErrorMessage || companyErrorMessage || packageErrorMessage,
+            });
+        }
+    }, [
+        company,
+        companyErrorMessage,
+        employee,
+        employeeErrorMessage,
+        isLoadingCompany,
+        isLoadingEmployee,
+        isLoadingPackage,
+        isLoadingUser,
+        item,
+        navigation,
+        onSelectCompany,
+        onSelectEmployee,
+        onSelectPackage,
+        onSelectUser,
+        packageErrorMessage,
+        state.type,
+        user,
+        userErrorMessage,
+    ]);
+
     const pointerFunc = React.useCallback(
         async (type: string, code: string) => {
             const func = {
@@ -124,6 +170,7 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
                 employee: fetchEmployee,
                 user: fetchUser,
             };
+
             if (func[type] && code) {
                 await func[type](code);
                 setState((prevState) => ({ ...prevState, type }));

@@ -25,10 +25,12 @@ const UserComponent: React.FunctionComponent<UserProps> = () => {
     const renderButtons = React.useCallback(() => {
         const buttons: JSX.Element[] = [];
         if (managerCompanies.length > 0) {
-            buttons.push(<AddToCompanyButton companies={managerCompanies} key={`user-add-to-company-button`} />);
+            buttons.push(
+                <AddToCompanyButton user={user} companies={managerCompanies} key={`user-add-to-company-button`} />,
+            );
         }
         return buttons;
-    }, [managerCompanies]);
+    }, [managerCompanies, user]);
 
     return (
         <View style={styles.container}>

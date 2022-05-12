@@ -4,7 +4,7 @@ import { Separator, SEPARATOR_HEIGHT, Text } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { Company, ResponseSuccess } from '@interfaces';
+import { Company, ResponseSuccess, User } from '@interfaces';
 import { axios, showToast } from '@utils';
 import { CompanyItem, ITEM_HEIGHT } from './components';
 import { AxiosResponse } from 'axios';
@@ -23,10 +23,11 @@ const styles = StyleSheet.create({
 });
 
 interface AddToCompanyButtonProps {
+    user: User;
     companies: Company[];
 }
 
-const AddToCompanyButtonComponent: React.FunctionComponent<AddToCompanyButtonProps> = ({ companies }) => {
+const AddToCompanyButtonComponent: React.FunctionComponent<AddToCompanyButtonProps> = ({ companies, user }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
     const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
@@ -39,23 +40,27 @@ const AddToCompanyButtonComponent: React.FunctionComponent<AddToCompanyButtonPro
         }
     }, []);
 
-    const onPressCompany = React.useCallback(async (company: Company) => {
-        try {
-            const { data } = await axios.post<{ user: string | number }, AxiosResponse<ResponseSuccess<any>>>(
-                `/api/companies/${company.token}/employees`,
-            );
-            showToast({ type: 'success', text2: data.message });
-            if (bottomSheetModalRef.current) {
-                bottomSheetModalRef.current.dismiss();
+    const onPressCompany = React.useCallback(
+        async (company: Company) => {
+            try {
+                const { data } = await axios.post<{ user: string | number }, AxiosResponse<ResponseSuccess<any>>>(
+                    `/api/companies/${company.token}/employees`,
+                    { user: user.token },
+                );
+                showToast({ type: 'success', text2: data.message });
+                if (bottomSheetModalRef.current) {
+                    bottomSheetModalRef.current.dismiss();
+                }
+            } catch (e) {
+                if (!e.response) {
+                    console.error(e);
+                    return;
+                }
+                showToast({ type: 'error', text2: e.response.data.message || e.response.data.detail });
             }
-        } catch (e) {
-            if (!e.response) {
-                console.error(e);
-                return;
-            }
-            showToast({ type: 'error', text2: e.response.data.message || e.response.data.detail });
-        }
-    }, []);
+        },
+        [user.token],
+    );
 
     const renderItem = React.useCallback(
         ({ item }: { item: Company }) => <CompanyItem company={item} onPress={onPressCompany} />,

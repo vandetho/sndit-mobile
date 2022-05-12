@@ -121,7 +121,12 @@ const Welcome = React.memo<WelcomeProps>(() => {
                     <VerifyOTP phoneNumber={state.phoneNumber} jwt={state.jwt} onBack={onBack} onNext={onVerified} />
                 </View>
                 <View key="3">
-                    <Register phoneNumber={state.phoneNumber} jwt={state.jwt} onRegistered={onRegistered} />
+                    <Register
+                        countryCode={state.countryCode}
+                        phoneNumber={state.phoneNumber}
+                        jwt={state.jwt}
+                        onRegistered={onRegistered}
+                    />
                 </View>
             </PagerView>
         </View>

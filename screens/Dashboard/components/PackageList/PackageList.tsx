@@ -7,11 +7,11 @@ import { Package } from '@interfaces';
 import { HEADER_HEIGHT } from '../HeaderSection';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { BottomTabStackParamsList } from '@navigations';
+import { ApplicationStackParamsList } from '@navigations';
 
 let onEndReachedCalledDuringMomentum = true;
 
-type PackageScreenNavigationProp = StackNavigationProp<BottomTabStackParamsList, 'PackageStack'>;
+type PackageScreenNavigationProp = StackNavigationProp<ApplicationStackParamsList, 'Package'>;
 
 interface PackageListProps {
     onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -31,7 +31,7 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
     const onPress = React.useCallback(
         (item: Package) => {
             onSelect(item);
-            navigation.navigate('PackageStack', { screen: 'Package' });
+            navigation.navigate('Package');
         },
         [navigation, onSelect],
     );

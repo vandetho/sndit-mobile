@@ -55,8 +55,8 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = ({ ite
                     style={[styles.buttonContainer, { backgroundColor: colors.card }]}
                     onPress={handleGoBack}
                 >
-                    <GradientIcon name="chevron-left" />
-                    <Text style={{ marginHorizontal: 10 }}>{t('back')}</Text>
+                    <GradientIcon name="times" />
+                    <Text style={{ marginHorizontal: 10 }}>{t('close')}</Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                     {item.marking[PACKAGE.DELIVERED] && (

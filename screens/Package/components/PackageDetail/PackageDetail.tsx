@@ -4,10 +4,9 @@ import { Button, Text } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HeaderButton } from '../ActionButtons/components';
 
-export const HEADER_HEIGHT = 335;
+export const HEADER_HEIGHT = 310;
 
 const styles = StyleSheet.create({
     container: {
@@ -28,7 +27,6 @@ interface PackageDetailProps {
 
 const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ animatedValue, item, onShowButton }) => {
     const { colors } = useTheme();
-    const insets = useSafeAreaInsets();
     const { t } = useTranslation();
 
     const inputRange = React.useMemo<Array<number>>(() => [0, HEADER_HEIGHT], []);
@@ -42,7 +40,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, height - 25],
+                                outputRange: [0, height],
                                 extrapolate: 'clamp',
                             }),
                         },
@@ -88,7 +86,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                     left: 0,
                     right: 0,
                     backgroundColor: colors.card,
-                    height: HEADER_HEIGHT - 110,
+                    height: HEADER_HEIGHT - 120,
                     opacity: animatedValue.interpolate({
                         inputRange,
                         outputRange: [0, 1],
@@ -98,7 +96,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
             />
             <Animated.View
                 style={{
-                    marginTop: insets.top,
+                    marginTop: 10,
                     marginHorizontal: 10,
                     marginBottom: 10,
                     zIndex: 1,
@@ -195,7 +193,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, height - 440],
+                                outputRange: [0, height - 420],
                                 extrapolate: 'clamp',
                             }),
                         },

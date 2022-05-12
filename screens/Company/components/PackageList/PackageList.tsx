@@ -7,12 +7,12 @@ import { Company, Package } from '@interfaces';
 import { HEADER_HEIGHT } from '../CompanyDetail';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { PackageStackParamList } from '@navigations';
+import { ApplicationStackParamsList } from '@navigations';
 import { useCompanyPackagesFetcher } from '@fetchers';
 
 let onEndReachedCalledDuringMomentum = true;
 
-type CompanyScreenNavigationProp = StackNavigationProp<PackageStackParamList, 'Package'>;
+type CompanyScreenNavigationProp = StackNavigationProp<ApplicationStackParamsList, 'Package'>;
 
 interface PackageListProps {
     company: Company;
