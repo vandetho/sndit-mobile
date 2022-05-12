@@ -39,7 +39,6 @@ const PhoneFieldComponent: React.FunctionComponent<PhoneFieldProps> = ({
     const { t } = useTranslation();
     const { visible, onToggle } = useVisible();
     const countryInputRef = React.useRef<TextFieldRefProps>(null);
-    console.log({ countryCode, dialCode: COUNTRY_CODE[countryCode].dialCode });
     const [state, setState] = React.useState<{ countryCode: string; value: string }>({
         countryCode,
         value: value.replace(COUNTRY_CODE[countryCode].dialCode, ''),
