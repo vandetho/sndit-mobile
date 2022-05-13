@@ -34,7 +34,7 @@ const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, o
     const renderButtons = React.useCallback(() => {
         const buttons: JSX.Element[] = [];
         const keys = Object.keys(item.marking);
-        if (keys.includes(PACKAGE.WAITING_FOR_DELIVERY)) {
+        if (keys.includes(PACKAGE.WAITING_FOR_DELIVERY) && item.roles.includes(ROLES.EMPLOYEE)) {
             if (item.roles.includes(ROLES.MANAGER)) {
                 buttons.push(
                     <GiveToDelivererButton
@@ -77,7 +77,7 @@ const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, o
                 />,
             );
         }
-        return <View>{buttons}</View>;
+        return <React.Fragment>{buttons}</React.Fragment>;
     }, [item, onDone, onPress, user]);
 
     return (
