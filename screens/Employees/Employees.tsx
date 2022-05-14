@@ -1,8 +1,6 @@
 import React from 'react';
 import { Animated, SafeAreaView, StyleSheet } from 'react-native';
-import { EmployeeList, HeaderSection, RolePicker } from './components';
-import { useVisible } from '@hooks';
-import { Employee } from '@interfaces';
+import { EmployeeList, HeaderSection } from './components';
 
 const styles = StyleSheet.create({
     container: {
@@ -13,9 +11,7 @@ const styles = StyleSheet.create({
 interface EmployeesProps {}
 
 const Employees = React.memo<EmployeesProps>(() => {
-    const [state, setState] = React.useState<Employee>(undefined);
     const animatedValue = React.useRef(new Animated.Value(0)).current;
-    const { visible, onToggle } = useVisible();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -25,7 +21,6 @@ const Employees = React.memo<EmployeesProps>(() => {
                     useNativeDriver: true,
                 })}
             />
-            <RolePicker onValueChange={onValueChange} visible={visible} onClose={onToggle} />
         </SafeAreaView>
     );
 });

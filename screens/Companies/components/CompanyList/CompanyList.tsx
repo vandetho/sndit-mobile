@@ -19,7 +19,7 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({
     onPressAddCompany,
 }) => {
     const { t } = useTranslation();
-    const { companies, isLoading } = useCompany();
+    const { companies, onFetch, isLoading } = useCompany();
 
     const renderItem = React.useCallback(
         ({ item }: { item: Company }) => {
@@ -50,6 +50,7 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({
     return (
         <Animated.FlatList
             refreshing={isLoading}
+            onRefresh={onFetch}
             data={data}
             onScroll={onScroll}
             renderItem={renderItem}

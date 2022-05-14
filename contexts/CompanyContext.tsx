@@ -10,11 +10,15 @@ export const CompanyContext = React.createContext<{
     company: Company;
     isLoading: boolean;
     onSelect: (company: Company) => void;
+    onFetch: () => void;
 }>({
     isLoading: false,
     managerCompanies: [],
     companies: [],
     company: undefined,
+    onFetch: () => {
+        console.log({ name: 'onFetch' });
+    },
     onSelect: (company: Company) => {
         console.log({ name: 'onSelect', company });
     },
@@ -35,11 +39,13 @@ export const CompanyProvider: React.FunctionComponent = ({ children }) => {
     });
     const { companies, isLoading, fetch } = useCompaniesFetcher();
 
+    const onFetch = React.useCallback(async () => await fetch(), [fetch]);
+
     React.useEffect(() => {
         if (isLogged) {
-            (async () => await fetch())();
+            (async () => await onFetch())();
         }
-    }, [fetch, isLogged]);
+    }, [isLogged, onFetch]);
 
     React.useEffect(() => {
         setState((prevState) => ({
@@ -54,7 +60,7 @@ export const CompanyProvider: React.FunctionComponent = ({ children }) => {
         setState((prevState) => ({ ...prevState, company }));
     }, []);
 
-    return <CompanyContext.Provider value={{ ...state, onSelect }}>{children}</CompanyContext.Provider>;
+    return <CompanyContext.Provider value={{ ...state, onSelect, onFetch }}>{children}</CompanyContext.Provider>;
 };
 
 export const useCompany = () => {

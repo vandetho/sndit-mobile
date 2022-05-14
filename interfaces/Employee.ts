@@ -6,4 +6,5 @@ export interface Employee {
     fullName: string;
     locale: string;
     roles: string[];
+    marking: { [key: string]: number };
 }

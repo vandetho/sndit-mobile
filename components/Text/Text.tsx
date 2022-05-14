@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@react-navigation/native';
-import { Animated, Text as RNText, TextProps as NSTextProps } from 'react-native';
+import { Text as RNText, TextProps as NSTextProps } from 'react-native';
 
 interface TextProps extends NSTextProps {
     color?: string;
@@ -45,7 +45,5 @@ const Text = React.memo<TextProps>((props) => {
         </RNText>
     );
 });
-
-export const AnimatedText = Animated.createAnimatedComponent(Text);
 
 export default Text;
