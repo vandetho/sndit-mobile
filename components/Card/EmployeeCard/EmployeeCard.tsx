@@ -52,21 +52,27 @@ const EmployeeCard = React.memo<EmployeeCardProps>(({ company, employee, onPress
                 const {
                     response: { data },
                 } = error;
-                showToast({ type: 'success', text2: data.message || data.detail });
+                showToast({ type: 'error', text2: data.message || data.detail });
             }
         },
         [employee.token],
     );
 
     const renderSwitch = React.useCallback(() => {
-        if (company.roles.includes(ROLES.OWNER)) {
+        if (company.roles.includes(ROLES.OWNER) && !employee.roles.includes(ROLES.OWNER)) {
             if (state.dispatch) {
                 return <BarLoader />;
             }
-            return <Switch value={!!employee.marking[EMPLOYEE.ACTIVE]} onValueChange={onSwitch} />;
+            return (
+                <Switch
+                    labels={[t('inactive'), t('active')]}
+                    value={!!employee.marking[EMPLOYEE.ACTIVE]}
+                    onValueChange={onSwitch}
+                />
+            );
         }
         return null;
-    }, [company.roles, employee.marking, onSwitch, state.dispatch]);
+    }, [company.roles, employee.marking, employee.roles, onSwitch, state.dispatch, t]);
 
     return (
         <TouchableWithoutFeedback onPress={handlePres}>
@@ -78,6 +84,7 @@ const EmployeeCard = React.memo<EmployeeCardProps>(({ company, employee, onPress
                     backgroundColor: colors.card,
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    flexDirection: 'row',
                 }}
             >
                 <View>

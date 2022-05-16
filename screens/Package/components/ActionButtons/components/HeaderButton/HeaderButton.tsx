@@ -68,7 +68,7 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = ({ ite
                         </TouchableOpacity>
                     )}
                     <TouchableOpacity
-                        style={[styles.buttonContainer, { backgroundColor: colors.card }]}
+                        style={[styles.buttonContainer, { backgroundColor: colors.card, marginLeft: 10 }]}
                         onPress={onPressQrCode}
                     >
                         <GradientIcon name="qrcode" />

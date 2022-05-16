@@ -27,11 +27,15 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ compa
     const { onSelect } = usePackage();
     const { fetch, fetchMore, packages, isLoading, isLoadingMore } = useCompanyPackagesFetcher();
 
-    React.useEffect(() => {
+    const onFetch = React.useCallback(async () => {
         if (company) {
-            (async () => await fetch(company))();
+            await fetch(company);
         }
     }, [company, fetch]);
+
+    React.useEffect(() => {
+        (async () => await onFetch())();
+    }, [onFetch]);
 
     const data = React.useMemo<Array<Package>>(
         () => [{ id: 0, name: t('new_package'), token: '', roles: [] }, ...packages],
@@ -89,6 +93,7 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ compa
     return (
         <Animated.FlatList
             refreshing={isLoading}
+            onRefresh={onFetch}
             data={data}
             renderItem={renderItem}
             keyExtractor={keyExtractor}

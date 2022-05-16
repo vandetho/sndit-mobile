@@ -1,13 +1,14 @@
 import React from 'react';
 import { Animated, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { useCompany, useEmployee } from '@contexts';
-import { EmployeeCard, PACKAGE_ITEM_HEIGHT, Separator, SEPARATOR_HEIGHT } from '@components';
+import { EMPLOYEE_ITEM_HEIGHT, EmployeeCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Employee, ResponseSuccess } from '@interfaces';
 import { HEADER_HEIGHT } from '../HeaderSection';
-import { RolePicker } from '@screens/Employees/components';
 import { useVisible } from '@hooks';
 import { axios, showToast } from '@utils';
 import { AxiosResponse } from 'axios';
+import { RolePicker } from './components';
+import { ROLES } from '@config';
 
 interface EmployeeListProps {
     onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -23,7 +24,7 @@ const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onS
         async (role: string) => {
             try {
                 const { data } = await axios.post<{ role: string }, AxiosResponse<ResponseSuccess<any>>>(
-                    `/api/employees/${employee.token}/change-roles`,
+                    `/api/employees/${employee?.token}/change-roles`,
                     {
                         role,
                     },
@@ -40,12 +41,22 @@ const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onS
                 showToast({ type: 'success', text2: data.message || data.detail });
             }
         },
-        [employee.token],
+        [employee],
+    );
+
+    const onPressEmployee = React.useCallback(
+        (employee: Employee) => {
+            if (company.roles.includes(ROLES.OWNER) && !employee.roles.includes(ROLES.OWNER)) {
+                setEmployee(employee);
+                onToggle();
+            }
+        },
+        [company.roles, onToggle],
     );
 
     const renderItem = React.useCallback(
-        ({ item }: { item: Employee }) => <EmployeeCard company={company} employee={item} onPress={setEmployee} />,
-        [company],
+        ({ item }: { item: Employee }) => <EmployeeCard company={company} employee={item} onPress={onPressEmployee} />,
+        [company, onPressEmployee],
     );
 
     const keyExtractor = React.useCallback((_, index: number) => `employees-item-${index}`, []);
@@ -53,8 +64,8 @@ const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onS
     const getItemLayout = React.useCallback(
         (_, index: number) => ({
             index,
-            length: PACKAGE_ITEM_HEIGHT + SEPARATOR_HEIGHT,
-            offset: (PACKAGE_ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
+            length: EMPLOYEE_ITEM_HEIGHT + SEPARATOR_HEIGHT,
+            offset: (EMPLOYEE_ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
         }),
         [],
     );
@@ -75,7 +86,7 @@ const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onS
                     paddingHorizontal: 10,
                 }}
             />
-            <RolePicker onValueChange={onValueChange} visible={visible} onClose={onToggle} />
+            <RolePicker onValueChange={onValueChange} visible={visible} />
         </React.Fragment>
     );
 };

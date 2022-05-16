@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
 import { HeaderButton } from '../ActionButtons/components';
 
-export const HEADER_HEIGHT = 310;
+export const HEADER_HEIGHT = 300;
 
 const styles = StyleSheet.create({
     container: {
@@ -40,14 +40,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, height],
-                                extrapolate: 'clamp',
-                            }),
-                        },
-                        {
-                            translateX: animatedValue.interpolate({
-                                inputRange,
-                                outputRange: [0, 210],
+                                outputRange: [0, height + 120],
                                 extrapolate: 'clamp',
                             }),
                         },
@@ -71,7 +64,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, -50],
+                                outputRange: [0, -120],
                                 extrapolate: 'clamp',
                             }),
                         },
@@ -86,7 +79,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                     left: 0,
                     right: 0,
                     backgroundColor: colors.card,
-                    height: HEADER_HEIGHT - 120,
+                    height: HEADER_HEIGHT,
                     opacity: animatedValue.interpolate({
                         inputRange,
                         outputRange: [0, 1],
@@ -104,7 +97,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, 50],
+                                outputRange: [0, 120],
                                 extrapolate: 'clamp',
                             }),
                         },
@@ -140,7 +133,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                             {
                                 translateY: animatedValue.interpolate({
                                     inputRange,
-                                    outputRange: [0, 380],
+                                    outputRange: [0, height + 150],
                                     extrapolate: 'clamp',
                                 }),
                             },
@@ -193,7 +186,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, height - 420],
+                                outputRange: [0, 10],
                                 extrapolate: 'clamp',
                             }),
                         },

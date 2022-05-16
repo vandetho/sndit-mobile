@@ -28,7 +28,7 @@ export const useCompanyPackagesFetcher = () => {
                 const {
                     data: { data },
                 } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(
-                    `/api/${company.id}/packages`,
+                    `/api/companies/${company.token}/packages`,
                     {
                         params: {
                             offset: 0,
@@ -44,6 +44,7 @@ export const useCompanyPackagesFetcher = () => {
                     offset: prevState.limit,
                 }));
             } catch ({ response: { data } }) {
+                console.error(data);
                 setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
             }
         },
@@ -58,7 +59,7 @@ export const useCompanyPackagesFetcher = () => {
                     const {
                         data: { data },
                     } = await axios.get<ResponseSuccess<{ packages: Package[]; totalRows: number }>>(
-                        `/api/${company.id}/packages`,
+                        `/api/companies/${company.token}/packages`,
                         {
                             params: {
                                 offset: state.offset,
@@ -74,6 +75,7 @@ export const useCompanyPackagesFetcher = () => {
                         offset: prevState.limit + prevState.offset,
                     }));
                 } catch ({ response: { data } }) {
+                    console.error(data);
                     setState((prevState) => ({ ...prevState, isLoadingMore: false, errorMessage: data.message }));
                 }
             }

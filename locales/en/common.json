@@ -60,5 +60,10 @@
     "update": "Update",
     "update_user_info": "You can update your information here",
     "employee": "Employee",
-    "update_phone_number": "Update your phone number"
+    "update_phone_number": "Update your phone number",
+    "inactive": "Inactive",
+    "active": "Active",
+    "ROLE_OWNER": "Owner",
+    "ROLE_MANAGER": "Manager",
+    "ROLE_EMPLOYEE": "Employee"
 }

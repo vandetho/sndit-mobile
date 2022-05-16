@@ -32,7 +32,8 @@ const Package = React.memo<PackageProps>(() => {
 
     const onPress = React.useCallback(() => {
         setDispatch(true);
-    }, []);
+        onToggle();
+    }, [onToggle]);
 
     const onDone = React.useCallback(async () => {
         onRefreshSelect();
