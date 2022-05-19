@@ -1,6 +1,6 @@
 import React from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { Template } from '@interfaces';
+import { City, Template } from '@interfaces';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { Button, CityPicker, Header, Text, TextField } from '@components';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -20,6 +20,13 @@ const TemplateForm = React.memo<TemplateFormProps>(({ visible, template }) => {
     const { t } = useTranslation();
     const { colors } = useTheme();
     const bottomSheetRef = React.useRef<BottomSheetModal>(null);
+    const [state, setState] = React.useState<{
+        name: string;
+        phoneNumber: string;
+        address: string;
+        city: City | undefined;
+        dispatch: boolean;
+    }>({ address: '', city: undefined, dispatch: false, name: '', phoneNumber: '' });
 
     const snapPoints = React.useMemo(() => ['65%', '90%'], []);
 
@@ -30,15 +37,6 @@ const TemplateForm = React.memo<TemplateFormProps>(({ visible, template }) => {
                     <TextField label={t('name')} name="name" value={state.name} onChangeText={onChangeText} />
                     <TextField label={t('address')} name="address" value={state.address} onChangeText={onChangeText} />
                     <CityPicker selected={state.city} onValueChange={onChangeCity} />
-                    <View>
-                        <Text>{t('note')}</Text>
-                        <TextInput
-                            value={state.note}
-                            multiline
-                            onChangeText={onChangeNote}
-                            style={{ minHeight: 100, borderBottomWidth: 1, color: colors.text }}
-                        />
-                    </View>
                 </View>
                 <Button
                     isLoading={state.dispatch}
