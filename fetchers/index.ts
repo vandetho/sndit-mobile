@@ -10,5 +10,6 @@ export * from './useOnDeliveryPackagesFetcher';
 export * from './usePackageFetcher';
 export * from './usePackageHistoriesFetcher';
 export * from './usePackagesFetcher';
+export * from './useTemplatesFetcher';
 export * from './useUserFetcher';
 export * from './useWaitingForDeliveryPackagesFetcher';

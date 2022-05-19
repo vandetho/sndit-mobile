@@ -10,4 +10,5 @@ export * from './Response';
 export * from './ResponseError';
 export * from './ResponseSuccess';
 export * from './SearchParam';
+export * from './Template';
 export * from './User';
