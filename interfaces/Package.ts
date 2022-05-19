@@ -8,6 +8,8 @@ export interface Package {
     token: string;
     marking?: { [key: string]: number };
     address?: string;
+    createdAt?: string;
+    updatedAt?: string;
     note?: string;
     latitude?: number;
     longitude?: number;

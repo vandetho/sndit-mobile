@@ -2,9 +2,10 @@
     "expo": {
         "name": "Sndit",
         "slug": "sndit",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
+        "userInterfaceStyle": "automatic",
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "contain",
@@ -17,10 +18,13 @@
             "**/*"
         ],
         "ios": {
+            "jsEngine": "jsc",
+            "userInterfaceStyle": "automatic",
             "bundleIdentifier": "io.sndit.mobile.release",
-            "supportsTablet": true
+            "supportsTablet": false
         },
         "android": {
+            "package": "io.sndit.mobile.release",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#FFFFFF"
@@ -30,7 +34,7 @@
             "favicon": "./assets/favicon.png"
         },
         "extra": {
-            "beta": "true",
+            "beta": "false",
             "host": "http://139.99.47.109:8080",
             "eas": {
                 "projectId": "02089a8c-de21-49b2-9d89-c0bacf5a4a97"

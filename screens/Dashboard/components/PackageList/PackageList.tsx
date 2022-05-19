@@ -2,12 +2,15 @@ import React from 'react';
 import { Animated, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { usePackage } from '@contexts';
-import { BarLoader, NewPackageCard, PACKAGE_ITEM_HEIGHT, PackageCard, Separator, SEPARATOR_HEIGHT } from '@components';
+import { BarLoader, PACKAGE_ITEM_HEIGHT, PackageCard, Separator, SEPARATOR_HEIGHT, Text } from '@components';
 import { Package } from '@interfaces';
 import { HEADER_HEIGHT } from '../HeaderSection';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
+import { useOnDeliveryPackagesFetcher, useWaitingForDeliveryPackagesFetcher } from '@fetchers';
+import { showToast } from '@utils';
+import { EmptyOnDelivery, EmptyWaitingForDelivery } from './components';
 
 let onEndReachedCalledDuringMomentum = true;
 
@@ -15,17 +18,47 @@ type PackageScreenNavigationProp = StackNavigationProp<ApplicationStackParamsLis
 
 interface PackageListProps {
     onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
-    onPressNewPackage: () => void;
 }
 
-const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScroll, onPressNewPackage }) => {
+const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScroll }) => {
     const { t } = useTranslation();
     const navigation = useNavigation<PackageScreenNavigationProp>();
-    const { packages, isLoading, isLoadingMore, fetchMorePackages, fetchPackages, onSelect } = usePackage();
+    const { errorMessage, packages, isLoading, isLoadingMore, fetchMore, fetch } = useOnDeliveryPackagesFetcher();
+    const {
+        errorMessage: errorMessageWaitingForDelivery,
+        packages: packagesWaitingForDelivery,
+        isLoading: isLoadingWaitingForDelivery,
+        isLoadingMore: isLoadingMoreWaitingForDelivery,
+        fetchMore: fetchMoreWaitingForDelivery,
+        fetch: fetchWaitingForDelivery,
+    } = useWaitingForDeliveryPackagesFetcher();
+    const { onSelect } = usePackage();
 
-    const data = React.useMemo<Array<Package>>(
-        () => [{ id: 0, name: t('new_package'), token: '', roles: [] }, ...packages],
-        [packages, t],
+    const handleFetch = React.useCallback(() => {
+        fetch();
+        fetchWaitingForDelivery();
+    }, [fetch, fetchWaitingForDelivery]);
+
+    React.useEffect(() => {
+        handleFetch();
+    }, [handleFetch]);
+
+    React.useEffect(() => {
+        if (errorMessage || errorMessageWaitingForDelivery) {
+            showToast({ type: 'error', text2: errorMessage || errorMessageWaitingForDelivery });
+        }
+    }, [errorMessage, errorMessageWaitingForDelivery]);
+
+    const data = React.useMemo(
+        () => [
+            { id: 1, title: t('on_delivery'), data: packages },
+            {
+                id: 2,
+                title: t('waiting_for_delivery'),
+                data: packagesWaitingForDelivery,
+            },
+        ],
+        [packages, packagesWaitingForDelivery, t],
     );
 
     const onPress = React.useCallback(
@@ -36,14 +69,17 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
         [navigation, onSelect],
     );
 
+    const renderSectionHeader = React.useCallback(({ section }) => {
+        return (
+            <Text bold fontSize={18}>
+                {section.title}
+            </Text>
+        );
+    }, []);
+
     const renderItem = React.useCallback(
-        ({ item }: { item: Package }) => {
-            if (item.id === 0) {
-                return <NewPackageCard item={item} onPressNewPackage={onPressNewPackage} />;
-            }
-            return <PackageCard item={item} onPress={onPress} />;
-        },
-        [onPress, onPressNewPackage],
+        ({ item }: { item: Package }) => <PackageCard item={item} onPress={onPress} />,
+        [onPress],
     );
 
     const keyExtractor = React.useCallback((_, index: number) => `packages-item-${index}`, []);
@@ -57,31 +93,44 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
         [],
     );
 
+    const renderSectionFooter = React.useCallback(({ section }) => {
+        if (section.data.length === 0 && section.id === 1) {
+            return <EmptyOnDelivery />;
+        }
+        if (section.data.length === 0 && section.id === 2) {
+            return <EmptyWaitingForDelivery />;
+        }
+        return null;
+    }, []);
+
     const renderFooter = React.useCallback(
         () =>
-            isLoadingMore && (
+            (isLoadingMore || isLoadingMoreWaitingForDelivery) && (
                 <View style={{ height: 50, justifyContent: 'center', alignItems: 'center' }}>
                     <BarLoader />
                 </View>
             ),
-        [isLoadingMore],
+        [isLoadingMore, isLoadingMoreWaitingForDelivery],
     );
 
-    const handleFetchMore = React.useCallback(async () => {
+    const handleFetchMore = React.useCallback(() => {
         if (onEndReachedCalledDuringMomentum) {
-            await fetchMorePackages();
+            fetchMore();
+            fetchMoreWaitingForDelivery();
         }
-    }, [fetchMorePackages]);
+    }, [fetchMore, fetchMoreWaitingForDelivery]);
 
     const onMomentumScrollBegin = React.useCallback(() => {
         onEndReachedCalledDuringMomentum = false;
     }, []);
 
     return (
-        <Animated.FlatList
-            onRefresh={fetchPackages}
-            refreshing={isLoading}
-            data={data}
+        <Animated.SectionList
+            onRefresh={handleFetch}
+            refreshing={isLoading || isLoadingWaitingForDelivery}
+            sections={data}
+            renderSectionHeader={renderSectionHeader}
+            renderSectionFooter={renderSectionFooter}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             getItemLayout={getItemLayout}
@@ -93,6 +142,7 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
             onMomentumScrollBegin={onMomentumScrollBegin}
+            stickySectionHeadersEnabled
             contentContainerStyle={{
                 flexGrow: 1,
                 paddingTop: HEADER_HEIGHT,

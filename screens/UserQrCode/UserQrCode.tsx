@@ -39,6 +39,10 @@ const UserQrCode = React.memo<UserQrCodeProps>(() => {
 
     return (
         <View style={styles.container}>
+            <View style={{ marginVertical: 30, justifyContent: 'center', alignItems: 'center' }}>
+                <Text bold>{t('user')}</Text>
+                <Text>{t('use_app_scanner')}</Text>
+            </View>
             <QRCode
                 value={`user:${user.token}`}
                 logoSize={30}

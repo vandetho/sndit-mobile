@@ -2,7 +2,7 @@
     "expo": {
         "name": "Sndit Beta",
         "slug": "sndit_beta",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "automatic",
@@ -21,7 +21,7 @@
             "jsEngine": "jsc",
             "userInterfaceStyle": "automatic",
             "bundleIdentifier": "io.sndit.mobile.beta",
-            "supportsTablet": true
+            "supportsTablet": false
         },
         "android": {
             "package": "io.sndit.mobile.beta",

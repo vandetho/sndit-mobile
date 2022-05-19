@@ -7,6 +7,7 @@ import { Button } from '@components';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { HEADER_HEIGHT, HeaderSection, PackageList } from './components';
+import { useCompany } from '@contexts';
 
 const styles = StyleSheet.create({
     container: {
@@ -20,12 +21,14 @@ interface PackagesProps {}
 
 const Packages = React.memo<PackagesProps>(() => {
     const { t } = useTranslation();
+    const { onSelect } = useCompany();
     const navigation = useNavigation<NewPackageNavigationProp>();
     const animatedValue = React.useRef(new Animated.Value(0)).current;
 
     const onPressNewPackage = React.useCallback(() => {
+        onSelect(undefined);
         navigation.navigate('NewPackage');
-    }, [navigation]);
+    }, [navigation, onSelect]);
 
     return (
         <View style={styles.container}>
@@ -60,7 +63,7 @@ const Packages = React.memo<PackagesProps>(() => {
             >
                 <Button
                     label={t('new_package')}
-                    startIcon={<FontAwesome5 name="plus" color="#FFFFFF" />}
+                    startIcon={<FontAwesome5 name="plus" color="#FFFFFF" size={20} />}
                     onPress={onPressNewPackage}
                 />
             </Animated.View>

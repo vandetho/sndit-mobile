@@ -74,8 +74,8 @@ const Companies = React.memo<CompaniesProps>(() => {
                         }}
                     >
                         <Button
-                            label={t('new_package')}
-                            startIcon={<FontAwesome5 name="plus" color="#FFFFFF" />}
+                            label={t('add_company')}
+                            startIcon={<FontAwesome5 name="plus" color="#FFFFFF" size={20} />}
                             onPress={onPressAddCompany}
                         />
                     </Animated.View>

@@ -1,12 +1,20 @@
 import React from 'react';
 import { Package } from '@interfaces';
-import { TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Text } from '@components/Text';
 import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
+import { DISPLAY_DATE_FORMAT } from '@config';
 
-export const PACKAGE_ITEM_HEIGHT = 175;
+export const PACKAGE_ITEM_HEIGHT = 200;
 
+const styles = StyleSheet.create({
+    nameContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+});
 interface PackageCardProps {
     item: Package;
     onPress?: (item: Package) => void;
@@ -47,6 +55,11 @@ const PackageCard = React.memo<PackageCardProps>(({ item, onPress }) => {
                 <Text>{item.address}</Text>
                 {item.city && <Text>{item.city.name}</Text>}
                 {renderMarking()}
+                <View style={styles.nameContainer}>
+                    <Text>{item.company.name}</Text>
+                    <Text>{format(new Date(item.createdAt), DISPLAY_DATE_FORMAT)}</Text>
+                    <Text>{format(new Date(item.updatedAt), DISPLAY_DATE_FORMAT)}</Text>
+                </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View>
                         <Text bold fontSize={12} style={{ marginVertical: 5 }}>

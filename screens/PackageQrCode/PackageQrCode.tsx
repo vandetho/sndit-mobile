@@ -37,8 +37,8 @@ const PackageQrCode = React.memo<PackageQrCodeProps>(() => {
 
     return (
         <View style={styles.container}>
-            <View style={{ marginVertical: 30 }}>
-                <Text>{t('package')}</Text>
+            <View style={{ marginVertical: 30, justifyContent: 'center', alignItems: 'center' }}>
+                <Text bold>{t('package')}</Text>
                 <Text>{t('use_app_scanner')}</Text>
             </View>
             <QRCode

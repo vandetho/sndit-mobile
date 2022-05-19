@@ -65,5 +65,9 @@
     "active": "Active",
     "ROLE_OWNER": "Owner",
     "ROLE_MANAGER": "Manager",
-    "ROLE_EMPLOYEE": "Employee"
+    "ROLE_EMPLOYEE": "Employee",
+    "user": "User",
+    "use_app_scanner": "User app Sndit to scan this qr-code",
+    "no_on_delivery_package": "You do not have any packages on delivery",
+    "no_waiting_for_delivery_package": "You do not have any packages waiting for delivery"
 }

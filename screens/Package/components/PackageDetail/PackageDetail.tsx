@@ -5,8 +5,10 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
 import { HeaderButton } from '../ActionButtons/components';
+import { format } from 'date-fns';
+import { DISPLAY_DATE_FORMAT } from '@config';
 
-export const HEADER_HEIGHT = 300;
+export const HEADER_HEIGHT = 325;
 
 const styles = StyleSheet.create({
     container: {
@@ -16,6 +18,10 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 1,
+    },
+    nameContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
 });
 
@@ -145,6 +151,11 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                 <Text>{item.address}</Text>
                 {item.city && <Text>{item.city.name}</Text>}
                 {renderMarking()}
+                <View style={styles.nameContainer}>
+                    <Text>{item.company.name}</Text>
+                    <Text>{format(new Date(item.createdAt), DISPLAY_DATE_FORMAT)}</Text>
+                    <Text>{format(new Date(item.updatedAt), DISPLAY_DATE_FORMAT)}</Text>
+                </View>
                 <Animated.View
                     style={{
                         flexDirection: 'row',

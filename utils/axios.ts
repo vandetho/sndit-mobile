@@ -23,18 +23,18 @@ const ResponseHandler = (response: AxiosResponse) => {
 };
 
 const ResponseErrorHandler = async (error) => {
-    const refreshToken = await AuthStorage.getRefreshToken();
     const {
-        response,
+        response: { status, data },
         config: { originalRequest = { _retry: false } },
     } = error;
-
+    console.log({ status, data, originalRequest });
     if (
-        response.status === 401 &&
-        ['Invalid JWT Token', 'Expired JWT Token'].includes(response.data.message) &&
+        status === 401 &&
+        ['Invalid JWT Token', 'Expired JWT Token'].includes(data.message) &&
         !originalRequest._retry
     ) {
         originalRequest._retry = true;
+        const refreshToken = await AuthStorage.getRefreshToken();
         request
             .post<{ refreshToken: string }, AxiosResponse<{ refreshToken: string; token: string }>>(
                 '/api/token/refresh',

@@ -2,7 +2,7 @@ import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-export const HEADER_HEIGHT = 100;
+export const HEADER_HEIGHT = 120;
 
 const styles = StyleSheet.create({
     container: {

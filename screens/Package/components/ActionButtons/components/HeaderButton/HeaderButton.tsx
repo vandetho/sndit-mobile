@@ -7,6 +7,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
 import { Package } from '@interfaces';
 import { PACKAGE } from '@workflows';
+import { NoteButton } from './components';
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 15;
@@ -67,6 +68,7 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = ({ ite
                             <GradientIcon name="map-marker-alt" />
                         </TouchableOpacity>
                     )}
+                    <NoteButton item={item} />
                     <TouchableOpacity
                         style={[styles.buttonContainer, { backgroundColor: colors.card, marginLeft: 10 }]}
                         onPress={onPressQrCode}
