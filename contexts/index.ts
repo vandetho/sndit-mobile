@@ -6,4 +6,5 @@ export * from './EmployeeContext';
 export * from './MapContext';
 export * from './NotificationContext';
 export * from './PackageContext';
+export * from './TemplateContext';
 export * from './UserContext';

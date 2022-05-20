@@ -1,14 +1,17 @@
 import React from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Keyboard, StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { Button, CityPicker, Header, Text, TextField } from '@components';
+import { Button, CityPicker, Header, Switch, Text, TextField } from '@components';
 import { usePackage } from '@contexts';
-import { City, Company } from '@interfaces';
+import { City, Company, Template } from '@interfaces';
 import { axios, showToast } from '@utils';
 import { ApplicationStackParamsList } from '@navigations';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Templates } from './components';
+import { useVisible } from '@hooks';
 
 const styles = StyleSheet.create({
     container: {
@@ -39,22 +42,37 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
     const { t } = useTranslation();
     const { colors } = useTheme();
     const { onSelect } = usePackage();
+    const { visible, onToggle } = useVisible();
     const navigation = useNavigation<PackageScreenNavigationProp>();
     const [state, setState] = React.useState<{
         name: string;
+        phoneNumber: string;
         address: string;
         note: string;
         city: City;
         image: string | undefined;
+        createTemplate: boolean;
         dispatch: boolean;
     }>({
         name: '',
+        phoneNumber: '',
         address: '',
         note: '',
         image: '',
         city: undefined,
+        createTemplate: false,
         dispatch: false,
     });
+
+    const onPressTemplate = React.useCallback((template: Template) => {
+        setState((prevState) => ({
+            ...prevState,
+            name: template.name,
+            phoneNumber: template.phoneNumber,
+            address: template.address,
+            city: template.city,
+        }));
+    }, []);
 
     const onChangeText = React.useCallback((value: string, name: string) => {
         setState((prevState) => ({ ...prevState, [name]: value }));
@@ -62,6 +80,10 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
 
     const onChangeNote = React.useCallback((value: string) => {
         setState((prevState) => ({ ...prevState, note: value }));
+    }, []);
+
+    const onSwitch = React.useCallback((checked: boolean) => {
+        setState((prevState) => ({ ...prevState, createTemplate: checked }));
     }, []);
 
     const onChangeCity = React.useCallback((value: City) => {
@@ -74,6 +96,10 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
             const formData: { [key: string]: any } = {};
             formData.name = state.name;
             formData.company = company.id;
+            formData.createTemplate = state.createTemplate;
+            if (state.phoneNumber) {
+                formData.address = state.phoneNumber;
+            }
             if (state.address) {
                 formData.address = state.address;
             }
@@ -99,35 +125,67 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
             console.error(e);
             setState((prevState) => ({ ...prevState, dispatch: false }));
         }
-    }, [company, navigation, onSelect, state.address, state.city, state.name, state.note]);
+    }, [
+        company.id,
+        navigation,
+        onSelect,
+        state.address,
+        state.city,
+        state.createTemplate,
+        state.name,
+        state.note,
+        state.phoneNumber,
+    ]);
 
     return (
-        <View style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Header goBackTitle={t('back')} onGoBack={onBack} />
-            </View>
-            <View style={[styles.formContainer, { backgroundColor: colors.card }]}>
-                <TextField label={t('name')} name="name" value={state.name} onChangeText={onChangeText} />
-                <TextField label={t('address')} name="address" value={state.address} onChangeText={onChangeText} />
-                <CityPicker selected={state.city} onValueChange={onChangeCity} />
-                <View>
-                    <Text>{t('note')}</Text>
-                    <TextInput
-                        value={state.note}
-                        multiline
-                        onChangeText={onChangeNote}
-                        style={{ minHeight: 100, borderBottomWidth: 1, color: colors.text }}
-                    />
-                </View>
-            </View>
-            <Button
-                isLoading={state.dispatch}
-                label={t('save')}
-                endIcon={<FontAwesome5 name="save" color="#FFFFFF" size={20} />}
-                onPress={onPressSave}
-                style={styles.saveButton}
-            />
-        </View>
+        <React.Fragment>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <KeyboardAwareScrollView>
+                    <View style={styles.container}>
+                        <View style={styles.headerContainer}>
+                            <Header goBackTitle={t('back')} onGoBack={onBack} onRightButtonPress={onToggle} />
+                        </View>
+                        <View style={[styles.formContainer, { backgroundColor: colors.card }]}>
+                            <TextField label={t('name')} name="name" value={state.name} onChangeText={onChangeText} />
+                            <TextField
+                                label={t('phone_number')}
+                                name="phone_number"
+                                value={state.name}
+                                onChangeText={onChangeText}
+                            />
+                            <TextField
+                                label={t('address')}
+                                name="address"
+                                value={state.address}
+                                onChangeText={onChangeText}
+                            />
+                            <CityPicker selected={state.city} onValueChange={onChangeCity} />
+                            <View>
+                                <Text>{t('note')}</Text>
+                                <TextInput
+                                    value={state.note}
+                                    multiline
+                                    onChangeText={onChangeNote}
+                                    style={{ minHeight: 100, borderBottomWidth: 1, color: colors.text }}
+                                />
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10 }}>
+                            <Text>{t('create_template')}</Text>
+                            <Switch value={state.createTemplate} onValueChange={onSwitch} />
+                        </View>
+                        <Button
+                            isLoading={state.dispatch}
+                            label={t('save')}
+                            endIcon={<FontAwesome5 name="save" color="#FFFFFF" size={20} />}
+                            onPress={onPressSave}
+                            style={styles.saveButton}
+                        />
+                    </View>
+                </KeyboardAwareScrollView>
+            </TouchableWithoutFeedback>
+            <Templates visible={visible} onPress={onPressTemplate} />
+        </React.Fragment>
     );
 });
 

@@ -5,7 +5,7 @@ import { Company } from '@interfaces/Company';
 export interface Package {
     id: number;
     name: string;
-    phoneNumber: string;
+    phoneNumber?: string;
     token: string;
     marking?: { [key: string]: number };
     address?: string;

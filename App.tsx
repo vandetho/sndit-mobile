@@ -19,6 +19,7 @@ import {
     MapProvider,
     NotificationProvider,
     PackageProvider,
+    TemplateProvider,
     UserProvider,
 } from '@contexts';
 import { AppLoadingScreen } from '@screens';
@@ -71,14 +72,16 @@ export default function App() {
                                 <AuthenticationProvider>
                                     <NotificationProvider>
                                         <CompanyProvider>
-                                            <EmployeeProvider>
-                                                <UserProvider>
-                                                    <PackageProvider>
-                                                        <ApplicationNavigator />
-                                                        <Toast />
-                                                    </PackageProvider>
-                                                </UserProvider>
-                                            </EmployeeProvider>
+                                            <TemplateProvider>
+                                                <EmployeeProvider>
+                                                    <UserProvider>
+                                                        <PackageProvider>
+                                                            <ApplicationNavigator />
+                                                            <Toast />
+                                                        </PackageProvider>
+                                                    </UserProvider>
+                                                </EmployeeProvider>
+                                            </TemplateProvider>
                                         </CompanyProvider>
                                     </NotificationProvider>
                                 </AuthenticationProvider>
