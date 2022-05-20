@@ -1,8 +1,7 @@
 import React from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { FlatList, View } from 'react-native';
-import { BarLoader, Separator, SEPARATOR_HEIGHT, TEMPLATE_ITEM_HEIGHT, TemplateCard } from '@components';
-import { HEADER_HEIGHT } from '@screens/Packages/components';
+import { BarLoader, EmptyTemplate, Separator, SEPARATOR_HEIGHT, TEMPLATE_ITEM_HEIGHT, TemplateCard } from '@components';
 import { useTemplate } from '@contexts';
 import { Template } from '@interfaces';
 
@@ -78,6 +77,7 @@ const Templates = React.memo<TemplatesProps>(({ visible, onPress }) => {
                 keyExtractor={keyExtractor}
                 getItemLayout={getItemLayout}
                 ItemSeparatorComponent={Separator}
+                ListEmptyComponent={EmptyTemplate}
                 ListFooterComponent={renderFooter}
                 onEndReached={handleFetchMore}
                 onEndReachedThreshold={0.5}

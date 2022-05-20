@@ -126,7 +126,7 @@ const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onSave
                         <Text bold style={{ marginHorizontal: 10 }}>
                             {t('save')}
                         </Text>
-                        <GradientIcon name="times" />
+                        <GradientIcon name="check" />
                     </TouchableOpacity>
                 </View>
                 <FlatList

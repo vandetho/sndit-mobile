@@ -69,5 +69,6 @@
     "user": "User",
     "use_app_scanner": "User app Sndit to scan this qr-code",
     "no_on_delivery_package": "You do not have any packages on delivery",
-    "no_waiting_for_delivery_package": "You do not have any packages waiting for delivery"
+    "no_waiting_for_delivery_package": "You do not have any packages waiting for delivery",
+    "no_template_found": "No Templates Found"
 }
