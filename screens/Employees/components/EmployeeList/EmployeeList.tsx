@@ -3,12 +3,12 @@ import { Animated, NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import { useCompany, useEmployee } from '@contexts';
 import { EMPLOYEE_ITEM_HEIGHT, EmployeeCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Employee, ResponseSuccess } from '@interfaces';
-import { HEADER_HEIGHT } from '../HeaderSection';
 import { useVisible } from '@hooks';
 import { axios, showToast } from '@utils';
 import { AxiosResponse } from 'axios';
-import { RolePicker } from './components';
 import { ROLES } from '@config';
+import { RolePicker } from './components';
+import { HEADER_HEIGHT } from '../HeaderSection';
 
 interface EmployeeListProps {
     onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -16,20 +16,25 @@ interface EmployeeListProps {
 
 const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onScroll }) => {
     const { visible, onToggle } = useVisible();
-    const [employee, setEmployee] = React.useState<Employee>(undefined);
+    const [state, setState] = React.useState<{ employee: Employee; role: string }>({ employee: undefined, role: '' });
     const { employees, isLoading } = useEmployee();
     const { company } = useCompany();
 
     const onValueChange = React.useCallback(
         async (role: string) => {
             try {
-                const { data } = await axios.post<{ role: string }, AxiosResponse<ResponseSuccess<any>>>(
+                const { employee } = state;
+                const {
+                    data: { message, data },
+                } = await axios.post<{ role: string }, AxiosResponse<ResponseSuccess<Employee>>>(
                     `/api/employees/${employee?.token}/change-roles`,
                     {
                         role,
                     },
                 );
-                showToast({ type: 'success', text2: data.message });
+                setState((prevState) => ({ ...prevState, employee: data }));
+                showToast({ type: 'success', text2: message });
+                onToggle();
             } catch (error) {
                 if (!error.response) {
                     console.error(error);
@@ -41,13 +46,17 @@ const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onS
                 showToast({ type: 'success', text2: data.message || data.detail });
             }
         },
-        [employee],
+        [onToggle, state],
     );
 
     const onPressEmployee = React.useCallback(
         (employee: Employee) => {
             if (company.roles.includes(ROLES.OWNER) && !employee.roles.includes(ROLES.OWNER)) {
-                setEmployee(employee);
+                setState((prevState) => ({
+                    ...prevState,
+                    employee,
+                    role: employee.roles.includes(ROLES.MANAGER) ? ROLES.MANAGER : ROLES.EMPLOYEE,
+                }));
                 onToggle();
             }
         },
@@ -86,7 +95,7 @@ const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onS
                     paddingHorizontal: 10,
                 }}
             />
-            <RolePicker onValueChange={onValueChange} visible={visible} />
+            <RolePicker role={state.role} onValueChange={onValueChange} visible={visible} onClose={onToggle} />
         </React.Fragment>
     );
 };

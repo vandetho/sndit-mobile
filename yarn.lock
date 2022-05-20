@@ -6115,33 +6115,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-dev-client@npm:~0.9.5":
-  version: 0.9.5
-  resolution: "expo-dev-client@npm:0.9.5"
+"expo-dev-client@npm:~0.9.6":
+  version: 0.9.6
+  resolution: "expo-dev-client@npm:0.9.6"
   dependencies:
     "@expo/config-plugins": ^4.0.14
-    expo-dev-launcher: 0.11.5
-    expo-dev-menu: 0.10.6
+    expo-dev-launcher: 0.11.6
+    expo-dev-menu: 0.10.7
     expo-dev-menu-interface: 0.6.0
     expo-manifests: ~0.3.0
     expo-updates-interface: ~0.6.0
   peerDependencies:
     expo: "*"
-  checksum: cea2f2d0b7835710affd1d1508873dd450866d614ba970391ed372098b599b4a9b1c0605c128aee3c663dae8751a6cb269f66cc7bd0fe78930b47ac45d8b8cdf
+  checksum: ddc7cf9b8f7679d28cf123485a59fdd5df439d995278a14565e4fe8876f971dbaf03dd925ca406a1d3afecebb77ee86f989f0ceaef84c9536e7a4e4a16fb7c35
   languageName: node
   linkType: hard
 
-"expo-dev-launcher@npm:0.11.5":
-  version: 0.11.5
-  resolution: "expo-dev-launcher@npm:0.11.5"
+"expo-dev-launcher@npm:0.11.6":
+  version: 0.11.6
+  resolution: "expo-dev-launcher@npm:0.11.6"
   dependencies:
     "@expo/config-plugins": ^4.0.14
-    expo-dev-menu: 0.10.6
+    expo-dev-menu: 0.10.7
     resolve-from: ^5.0.0
     semver: ^7.3.5
   peerDependencies:
     expo: "*"
-  checksum: bdd2e90fc145d427910c57aa0cb58974c77a8bae75e85450d954e90e095a31620f54206ddda35994e4f643c3b3ae080a55c59f8f778e5ffa9ffaa2ca9e7070e7
+  checksum: 2af8731c06d59e56c624ade36cbaca9892dd60244dc3606eaa8a21382eb42a1d8add32489f0104579d936b997b4996d427815f2fb34eebb650ab57e9d29abc25
   languageName: node
   linkType: hard
 
@@ -6154,16 +6154,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-dev-menu@npm:0.10.6":
-  version: 0.10.6
-  resolution: "expo-dev-menu@npm:0.10.6"
+"expo-dev-menu@npm:0.10.7":
+  version: 0.10.7
+  resolution: "expo-dev-menu@npm:0.10.7"
   dependencies:
     "@expo/config-plugins": ^4.0.14
     expo-dev-menu-interface: 0.6.0
     semver: ^7.3.5
   peerDependencies:
     expo: "*"
-  checksum: 1bbef846e5480125736f1a13c1aa44d0206249c0d15a32a6b23bdb1f7ae95e87d814c63795193b93df78ba1189bbc8838c42a2ea72d4369bd728abd0748f1887
+  checksum: a1dbb82b7c1ba2f0b3eacab678c8da2b9af5493454e0269a687a425dfcf474e95869ff8748a3efe243c58344293a8d4cfe78b15c25531dfe11ee6563431eef21
   languageName: node
   linkType: hard
 
@@ -10707,16 +10707,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-maps@npm:0.30.1":
-  version: 0.30.1
-  resolution: "react-native-maps@npm:0.30.1"
+"react-native-maps@npm:0.30.2":
+  version: 0.30.2
+  resolution: "react-native-maps@npm:0.30.2"
   dependencies:
     "@types/geojson": ^7946.0.7
+    deprecated-react-native-prop-types: ^2.3.0
   peerDependencies:
     react: ">= 16.0 || < 18.0"
     react-native: ">= 0.51"
     react-native-web: ">= 0.11"
-  checksum: df2ca0c637c1016fd40dfe1d688c8b80f66270851962cfd0fd0cde9386d7224e76bc455584dce252122de3d662905e08f359afdf7618fb97ffa27a0b64291630
+  checksum: 42fe532c2c9b2044d383a2bb2704d96095dd9926dbb73f04dd5149ed322deb1eb04cbe1419ccac8775018185099032012866291b0f8232e06d8385bfd3812ca8
   languageName: node
   linkType: hard
 
@@ -11460,7 +11461,7 @@ __metadata:
     expo: ^45.0.3
     expo-barcode-scanner: ~11.3.0
     expo-constants: ~13.1.1
-    expo-dev-client: ~0.9.5
+    expo-dev-client: ~0.9.6
     expo-device: ~4.2.0
     expo-font: ~10.1.0
     expo-linear-gradient: ~11.3.0
@@ -11484,7 +11485,7 @@ __metadata:
     react-native-countdown-component: ^2.7.1
     react-native-gesture-handler: ~2.2.1
     react-native-keyboard-aware-scroll-view: ^0.9.5
-    react-native-maps: 0.30.1
+    react-native-maps: 0.30.2
     react-native-modal: ^13.0.1
     react-native-pager-view: 5.4.15
     react-native-qrcode-svg: ^6.1.2

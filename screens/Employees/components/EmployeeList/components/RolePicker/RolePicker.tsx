@@ -1,6 +1,6 @@
 import React from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ROLES } from '@config';
 import { useTheme } from '@react-navigation/native';
 import { GradientIcon, Separator, SEPARATOR_HEIGHT, Text } from '@components';
@@ -26,11 +26,13 @@ const styles = StyleSheet.create({
 });
 
 interface RolePickerProps {
+    role: string;
     visible: boolean;
     onValueChange: (role: string) => void;
+    onClose: () => void;
 }
 
-const RolePicker = React.memo<RolePickerProps>(({ visible }) => {
+const RolePicker = React.memo<RolePickerProps>(({ role, visible, onValueChange, onClose }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
     const bottomSheetRef = React.useRef<BottomSheetModal>(null);
@@ -45,23 +47,23 @@ const RolePicker = React.memo<RolePickerProps>(({ visible }) => {
         }
     }, [visible]);
 
-    const onPress = React.useCallback(() => {
-        if (bottomSheetRef.current) {
-            bottomSheetRef.current.close();
-        }
-    }, []);
-
     const snapPoints = React.useMemo(() => ['50%', '75%'], []);
 
     const roles = React.useMemo(() => Object.values(ROLES), []);
 
     const renderItem = React.useCallback(
-        ({ item }: { item: string }) => (
-            <TouchableOpacity style={[styles.itemContainer, { backgroundColor: colors.background }]}>
-                <Text>{t(item)}</Text>
-            </TouchableOpacity>
-        ),
-        [colors.background, t],
+        ({ item }: { item: string }) =>
+            item === ROLES.OWNER ? null : (
+                <TouchableOpacity
+                    disabled={role === item}
+                    onPress={() => onValueChange(item)}
+                    style={[styles.itemContainer, { backgroundColor: colors.background }]}
+                >
+                    <Text>{t(item)}</Text>
+                    {role === item && <GradientIcon name="check" />}
+                </TouchableOpacity>
+            ),
+        [colors.background, onValueChange, role, t],
     );
     const keyExtractor = React.useCallback((_, index: number) => `roles-item-${index}`, []);
 
@@ -87,12 +89,17 @@ const RolePicker = React.memo<RolePickerProps>(({ visible }) => {
                 keyExtractor={keyExtractor}
                 getItemLayout={getItemLayout}
                 ItemSeparatorComponent={Separator}
+                ListFooterComponent={() => (
+                    <TouchableOpacity
+                        style={[styles.closeButton, { backgroundColor: colors.background }]}
+                        onPress={onClose}
+                    >
+                        <Text style={{ marginHorizontal: 10 }}>{t('close')}</Text>
+                        <GradientIcon name="times" />
+                    </TouchableOpacity>
+                )}
                 contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 20 }}
             />
-            <TouchableOpacity style={[styles.closeButton, { backgroundColor: colors.card }]} onPress={onPress}>
-                <Text style={{ marginHorizontal: 10 }}>{t('close')}</Text>
-                <GradientIcon name="times" />
-            </TouchableOpacity>
         </BottomSheetModal>
     );
 });

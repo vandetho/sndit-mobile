@@ -1,5 +1,5 @@
 import React from 'react';
-import { Company, Employee } from '@interfaces';
+import { Company, Employee, ResponseSuccess } from '@interfaces';
 import { TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Text } from '@components/Text';
@@ -9,6 +9,7 @@ import { Switch } from '@components/Switch';
 import { EMPLOYEE } from '@workflows';
 import { ROLES } from '@config';
 import { BarLoader } from '@components/Loader';
+import { AxiosResponse } from 'axios';
 
 export const EMPLOYEE_ITEM_HEIGHT = 75;
 
@@ -34,15 +35,20 @@ const EmployeeCard = React.memo<EmployeeCardProps>(({ company, employee, onPress
             setState((prevState) => ({ ...prevState, dispatch: true }));
             try {
                 const status = checked ? EMPLOYEE.ACTIVE : EMPLOYEE.INACTIVE;
-                const { data } = await axios.post(`/api/employees/${employee.token}/status`, {
-                    status,
-                });
+                const {
+                    data: { message, data },
+                } = await axios.post<{ status: string }, AxiosResponse<ResponseSuccess<Employee>>>(
+                    `/api/employees/${employee.token}/status`,
+                    {
+                        status,
+                    },
+                );
                 setState((prevState) => ({
                     ...prevState,
                     dispatch: false,
-                    employee: { ...prevState.employee, marking: { [status]: 1 } },
+                    employee: data,
                 }));
-                showToast({ type: 'success', text2: data.message });
+                showToast({ type: 'success', text2: message });
             } catch (error) {
                 setState((prevState) => ({ ...prevState, dispatch: false }));
                 if (!error.response) {

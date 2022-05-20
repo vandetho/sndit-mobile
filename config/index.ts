@@ -11,9 +11,9 @@ export const DISPLAY_TIME_FORMAT = 'HH:mm';
 export const HOST = Constants.manifest.extra.host;
 
 export enum ROLES {
-    EMPLOYEE = 'ROLE_EMPLOYEE',
-    MANAGER = 'ROLE_MANAGER',
     OWNER = 'ROLE_OWNER',
+    MANAGER = 'ROLE_MANAGER',
+    EMPLOYEE = 'ROLE_EMPLOYEE',
 }
 
 export const COUNTRY_CODE = {

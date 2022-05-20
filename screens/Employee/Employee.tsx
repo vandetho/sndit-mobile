@@ -3,7 +3,7 @@ import { Animated, StyleSheet, View } from 'react-native';
 import { HISTORY_ITEM_HEIGHT, PackageCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Package } from '@interfaces';
 import { useEmployee } from '@contexts';
-import { usePackagesFetcher } from '@fetchers';
+import { useEmployeePackagesFetcher } from '@fetchers';
 import { EmployeeDetail, HEADER_HEIGHT } from './components';
 
 const styles = StyleSheet.create({
@@ -17,13 +17,13 @@ interface EmployeeProps {}
 const Employee = React.memo<EmployeeProps>(() => {
     const { employee } = useEmployee();
     const animatedValue = React.useRef(new Animated.Value(0)).current;
-    const { packages, fetchEmployee, isLoading } = usePackagesFetcher();
+    const { packages, fetch, fetchMore, isLoading } = useEmployeePackagesFetcher();
 
     React.useEffect(() => {
         if (employee) {
-            (async () => await fetchEmployee(employee))();
+            (async () => await fetch(employee))();
         }
-    }, [employee, fetchEmployee]);
+    }, [employee, fetch]);
 
     const renderItem = React.useCallback(({ item }: { item: Package }) => <PackageCard item={item} />, []);
 
