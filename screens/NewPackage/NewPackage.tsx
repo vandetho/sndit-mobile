@@ -8,11 +8,17 @@ import { Company } from '@interfaces';
 interface NewPackageProps {}
 
 const NewPackage = React.memo<NewPackageProps>(() => {
-    const { company } = useCompany();
+    const { company, managerCompanies } = useCompany();
     const viewerRef = React.useRef<PagerView>(null);
-    const [state, setState] = React.useState({
-        company,
-        page: company ? 1 : 0,
+    const [state, setState] = React.useState<{ company: Company | undefined; page: number }>(() => {
+        let item = company;
+        if (item === undefined && managerCompanies.length === 1) {
+            item = managerCompanies[0];
+        }
+        return {
+            company: item,
+            page: item ? 1 : 0,
+        };
     });
 
     React.useEffect(() => {

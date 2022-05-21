@@ -16,8 +16,12 @@ interface EmployeeListProps {
 
 const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onScroll }) => {
     const { visible, onToggle } = useVisible();
-    const [state, setState] = React.useState<{ employee: Employee; role: string }>({ employee: undefined, role: '' });
-    const { employees, isLoading } = useEmployee();
+    const [state, setState] = React.useState<{ employee: Employee; role: string; index: number }>({
+        employee: undefined,
+        role: '',
+        index: 0,
+    });
+    const { employees, isLoading, onUpdate } = useEmployee();
     const { company } = useCompany();
 
     const onValueChange = React.useCallback(
@@ -33,8 +37,9 @@ const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onS
                     },
                 );
                 setState((prevState) => ({ ...prevState, employee: data }));
-                showToast({ type: 'success', text2: message });
                 onToggle();
+                onUpdate(data, state.index);
+                showToast({ type: 'success', text2: message });
             } catch (error) {
                 if (!error.response) {
                     console.error(error);
@@ -46,7 +51,7 @@ const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onS
                 showToast({ type: 'success', text2: data.message || data.detail });
             }
         },
-        [onToggle, state],
+        [onToggle, onUpdate, state],
     );
 
     const onPressEmployee = React.useCallback(
@@ -64,8 +69,16 @@ const EmployeeListComponent: React.FunctionComponent<EmployeeListProps> = ({ onS
     );
 
     const renderItem = React.useCallback(
-        ({ item }: { item: Employee }) => <EmployeeCard company={company} employee={item} onPress={onPressEmployee} />,
-        [company, onPressEmployee],
+        ({ item, index }: { item: Employee; index: number }) => (
+            <EmployeeCard
+                index={index}
+                company={company}
+                employee={item}
+                onPress={onPressEmployee}
+                onUpdate={onUpdate}
+            />
+        ),
+        [company, onPressEmployee, onUpdate],
     );
 
     const keyExtractor = React.useCallback((_, index: number) => `employees-item-${index}`, []);

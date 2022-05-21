@@ -42,7 +42,7 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
     const { t } = useTranslation();
     const { colors } = useTheme();
     const { onSelect } = usePackage();
-    const { visible, onToggle } = useVisible();
+    const { visible, onToggle, onClose } = useVisible();
     const navigation = useNavigation<PackageScreenNavigationProp>();
     const [state, setState] = React.useState<{
         name: string;
@@ -64,15 +64,19 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
         dispatch: false,
     });
 
-    const onPressTemplate = React.useCallback((template: Template) => {
-        setState((prevState) => ({
-            ...prevState,
-            name: template.name,
-            phoneNumber: template.phoneNumber,
-            address: template.address,
-            city: template.city,
-        }));
-    }, []);
+    const onPressTemplate = React.useCallback(
+        (template: Template) => {
+            setState((prevState) => ({
+                ...prevState,
+                name: template.name,
+                phoneNumber: template.phoneNumber,
+                address: template.address,
+                city: template.city,
+            }));
+            onClose();
+        },
+        [onClose],
+    );
 
     const onChangeText = React.useCallback((value: string, name: string) => {
         setState((prevState) => ({ ...prevState, [name]: value }));
@@ -95,10 +99,10 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
         try {
             const formData: { [key: string]: any } = {};
             formData.name = state.name;
-            formData.company = company.id;
+            formData.company = company?.id;
             formData.createTemplate = state.createTemplate;
             if (state.phoneNumber) {
-                formData.address = state.phoneNumber;
+                formData.phoneNumber = state.phoneNumber;
             }
             if (state.address) {
                 formData.address = state.address;
@@ -126,7 +130,7 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
             setState((prevState) => ({ ...prevState, dispatch: false }));
         }
     }, [
-        company.id,
+        company,
         navigation,
         onSelect,
         state.address,
@@ -137,20 +141,31 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
         state.phoneNumber,
     ]);
 
+    const onShowTemplates = React.useCallback(() => {
+        onToggle();
+        Keyboard.dismiss();
+    }, [onToggle]);
+
     return (
         <React.Fragment>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <KeyboardAwareScrollView>
-                    <View style={styles.container}>
-                        <View style={styles.headerContainer}>
-                            <Header goBackTitle={t('back')} onGoBack={onBack} onRightButtonPress={onToggle} />
-                        </View>
+                <View style={styles.container}>
+                    <View style={styles.headerContainer}>
+                        <Header
+                            goBackTitle={t('back')}
+                            onGoBack={onBack}
+                            onRightButtonPress={onShowTemplates}
+                            headerRightIcon="file-alt"
+                            headerRightTitle={t('templates')}
+                        />
+                    </View>
+                    <KeyboardAwareScrollView>
                         <View style={[styles.formContainer, { backgroundColor: colors.card }]}>
                             <TextField label={t('name')} name="name" value={state.name} onChangeText={onChangeText} />
                             <TextField
                                 label={t('phone_number')}
-                                name="phone_number"
-                                value={state.name}
+                                name="phoneNumber"
+                                value={state.phoneNumber}
                                 onChangeText={onChangeText}
                             />
                             <TextField
@@ -166,11 +181,23 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
                                     value={state.note}
                                     multiline
                                     onChangeText={onChangeNote}
-                                    style={{ minHeight: 100, borderBottomWidth: 1, color: colors.text }}
+                                    style={{
+                                        minHeight: 100,
+                                        borderBottomWidth: 1,
+                                        color: colors.text,
+                                        borderBottomColor: colors.text,
+                                    }}
                                 />
                             </View>
                         </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10 }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                padding: 10,
+                            }}
+                        >
                             <Text>{t('create_template')}</Text>
                             <Switch value={state.createTemplate} onValueChange={onSwitch} />
                         </View>
@@ -181,10 +208,10 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
                             onPress={onPressSave}
                             style={styles.saveButton}
                         />
-                    </View>
-                </KeyboardAwareScrollView>
+                    </KeyboardAwareScrollView>
+                </View>
             </TouchableWithoutFeedback>
-            <Templates visible={visible} onPress={onPressTemplate} />
+            <Templates company={company} visible={visible} onPress={onPressTemplate} onClose={onClose} />
         </React.Fragment>
     );
 });

@@ -35,8 +35,14 @@ export const useTemplatesFetcher = () => {
                     },
                 });
                 setState((prevState) => ({ ...prevState, ...data, offset: prevState.limit, isLoading: false }));
-            } catch ({ response: { data } }) {
-                setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
+            } catch (error) {
+                if (error.response) {
+                    const {
+                        response: { data },
+                    } = error;
+                    setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
+                }
+                console.error(error);
             }
         },
         [state.limit],
@@ -66,8 +72,14 @@ export const useTemplatesFetcher = () => {
                         isLoadingMore: false,
                         offset: prevState.limit + prevState.offset,
                     }));
-                } catch ({ response: { data } }) {
-                    setState((prevState) => ({ ...prevState, isLoadingMore: false, errorMessage: data.message }));
+                } catch (error) {
+                    if (error.response) {
+                        const {
+                            response: { data },
+                        } = error;
+                        setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
+                    }
+                    console.error(error);
                 }
             }
         },

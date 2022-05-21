@@ -28,7 +28,7 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onPre
     const { t } = useTranslation();
     const { colors } = useTheme();
     const animatedValue = React.useRef(new Animated.Value(0)).current;
-    const { companies, isLoading } = useCompany();
+    const { managerCompanies, isLoading } = useCompany();
 
     const renderItem = React.useCallback(
         ({ item }: { item: Company }) => {
@@ -68,7 +68,7 @@ const CompanyListComponent: React.FunctionComponent<CompanyListProps> = ({ onPre
             </Animated.View>
             <Animated.FlatList
                 refreshing={isLoading}
-                data={companies}
+                data={managerCompanies}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
                 ListEmptyComponent={EmptyCompany}

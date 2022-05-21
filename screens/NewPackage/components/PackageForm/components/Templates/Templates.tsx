@@ -1,21 +1,44 @@
 import React from 'react';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { FlatList, View } from 'react-native';
-import { BarLoader, EmptyTemplate, Separator, SEPARATOR_HEIGHT, TEMPLATE_ITEM_HEIGHT, TemplateCard } from '@components';
-import { useTemplate } from '@contexts';
-import { Template } from '@interfaces';
+import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { TouchableOpacity, View } from 'react-native';
+import {
+    BarLoader,
+    EmptyTemplate,
+    GradientIcon,
+    Separator,
+    SEPARATOR_HEIGHT,
+    TEMPLATE_ITEM_HEIGHT,
+    TemplateCard,
+    Text,
+} from '@components';
+import { Company, Template } from '@interfaces';
+import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import { useTemplatesFetcher } from '@fetchers';
 
 let onEndReachedCalledDuringMomentum = true;
 
 interface TemplatesProps {
+    company: Company;
     visible: boolean;
     onPress: (template: Template) => void;
+    onClose: () => void;
 }
 
-const Templates = React.memo<TemplatesProps>(({ visible, onPress }) => {
-    const { templates, isLoading, isLoadingMore, onFetch, onFetchMore } = useTemplate();
+const Templates = React.memo<TemplatesProps>(({ company, visible, onPress, onClose }) => {
+    const { t } = useTranslation();
+    const { colors } = useTheme();
+    const { templates, isLoading, isLoadingMore, fetch, fetchMore } = useTemplatesFetcher();
 
     const bottomSheetRef = React.useRef<BottomSheetModal>(null);
+
+    const handleFetch = React.useCallback(async () => {
+        await fetch(company);
+    }, [company, fetch]);
+
+    React.useEffect(() => {
+        handleFetch();
+    }, [handleFetch]);
 
     React.useEffect(() => {
         if (bottomSheetRef.current) {
@@ -27,7 +50,7 @@ const Templates = React.memo<TemplatesProps>(({ visible, onPress }) => {
         }
     }, [visible]);
 
-    const snapPoints = React.useMemo(() => ['60%', '80%'], []);
+    const snapPoints = React.useMemo(() => ['70%', '90%'], []);
 
     const renderItem = React.useCallback(
         ({ item }: { item: Template }) => {
@@ -59,18 +82,42 @@ const Templates = React.memo<TemplatesProps>(({ visible, onPress }) => {
 
     const handleFetchMore = React.useCallback(async () => {
         if (onEndReachedCalledDuringMomentum) {
-            await onFetchMore();
+            await fetchMore(company);
         }
-    }, [onFetchMore]);
+    }, [company, fetchMore]);
 
     const onMomentumScrollBegin = React.useCallback(() => {
         onEndReachedCalledDuringMomentum = false;
     }, []);
 
     return (
-        <BottomSheetModal snapPoints={snapPoints} ref={bottomSheetRef}>
-            <FlatList
-                onRefresh={onFetch}
+        <BottomSheetModal
+            backgroundStyle={{ backgroundColor: colors.card }}
+            handleIndicatorStyle={{ backgroundColor: colors.text }}
+            snapPoints={snapPoints}
+            ref={bottomSheetRef}
+            onDismiss={onClose}
+        >
+            <TouchableOpacity
+                onPress={onClose}
+                style={{
+                    marginRight: 10,
+                    marginBottom: 10,
+                    borderRadius: 20,
+                    paddingHorizontal: 20,
+                    height: 40,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    alignSelf: 'flex-end',
+                    backgroundColor: colors.card,
+                }}
+            >
+                <Text style={{ marginRight: 10 }}>{t('close')}</Text>
+                <GradientIcon name="times" />
+            </TouchableOpacity>
+            <BottomSheetFlatList
+                onRefresh={handleFetch}
                 refreshing={isLoading}
                 data={templates}
                 renderItem={renderItem}
@@ -81,13 +128,14 @@ const Templates = React.memo<TemplatesProps>(({ visible, onPress }) => {
                 ListFooterComponent={renderFooter}
                 onEndReached={handleFetchMore}
                 onEndReachedThreshold={0.5}
-                scrollEventThrottle={16}
                 showsVerticalScrollIndicator={false}
                 onMomentumScrollBegin={onMomentumScrollBegin}
                 contentContainerStyle={{
                     flexGrow: 1,
+                    paddingTop: 20,
                     paddingHorizontal: 10,
                     paddingBottom: 75,
+                    backgroundColor: colors.background,
                 }}
             />
         </BottomSheetModal>

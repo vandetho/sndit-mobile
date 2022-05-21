@@ -14,12 +14,14 @@ import { AxiosResponse } from 'axios';
 export const EMPLOYEE_ITEM_HEIGHT = 75;
 
 interface EmployeeCardProps {
+    index: number;
     company: Company;
     employee: Employee;
     onPress?: (employee: Employee) => void;
+    onUpdate?: (employee: Employee, index: number) => void;
 }
 
-const EmployeeCard = React.memo<EmployeeCardProps>(({ company, employee, onPress }) => {
+const EmployeeCard = React.memo<EmployeeCardProps>(({ index, company, employee, onUpdate, onPress }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
     const [state, setState] = React.useState({ employee, dispatch: false });
@@ -49,6 +51,9 @@ const EmployeeCard = React.memo<EmployeeCardProps>(({ company, employee, onPress
                     employee: data,
                 }));
                 showToast({ type: 'success', text2: message });
+                if (onUpdate) {
+                    onUpdate(data, index);
+                }
             } catch (error) {
                 setState((prevState) => ({ ...prevState, dispatch: false }));
                 if (!error.response) {
@@ -61,7 +66,7 @@ const EmployeeCard = React.memo<EmployeeCardProps>(({ company, employee, onPress
                 showToast({ type: 'error', text2: data.message || data.detail });
             }
         },
-        [employee.token],
+        [employee.token, index, onUpdate],
     );
 
     const renderSwitch = React.useCallback(() => {
