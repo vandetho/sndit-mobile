@@ -18,6 +18,7 @@ export * from './Packages';
 export * from './PhoneNumber';
 export * from './Printer';
 export * from './Setting';
+export * from './Templates';
 export * from './User';
 export * from './UserInformation';
 export * from './UserQrCode';

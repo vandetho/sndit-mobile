@@ -5,7 +5,6 @@ import { Text } from '@components/Text';
 import { Company, Employee } from '@interfaces';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 import { useEmployeesFetcher } from '@fetchers';
 import { BarLoader } from '@components';
@@ -34,7 +33,6 @@ interface EmployeeModalProps {
 const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onSave, onClose }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
-    const insets = useSafeAreaInsets();
     const { height } = useWindowDimensions();
     const [state, setState] = React.useState<{ employee: Employee | undefined }>({ employee: undefined });
     const { employees, fetch, fetchMore, isLoading, isLoadingMore } = useEmployeesFetcher();
@@ -104,7 +102,7 @@ const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onSave
                 <View
                     style={{
                         height: 80,
-                        paddingTop: insets.top,
+                        paddingTop: 50,
                         paddingHorizontal: 20,
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -144,7 +142,7 @@ const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onSave
                     onMomentumScrollBegin={onMomentumScrollBegin}
                     contentContainerStyle={{
                         flexGrow: 1,
-                        paddingBottom: insets.bottom + 20,
+                        paddingBottom: 50,
                     }}
                 />
             </View>

@@ -5,7 +5,6 @@ import { Text } from '@components/Text';
 import { City } from '@interfaces';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCity } from '@contexts';
 import Modal from 'react-native-modal';
 
@@ -30,7 +29,6 @@ interface CityModalProps {
 const CityModal = React.memo<CityModalProps>(({ visible, onChange, onClose }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
-    const insets = useSafeAreaInsets();
     const { cities } = useCity();
     const { height } = useWindowDimensions();
 
@@ -65,7 +63,7 @@ const CityModal = React.memo<CityModalProps>(({ visible, onChange, onClose }) =>
                     backgroundColor: colors.card,
                 }}
             >
-                <View style={{ height: 80, paddingTop: insets.top, paddingHorizontal: 20 }}>
+                <View style={{ height: 80, paddingTop: 50, paddingHorizontal: 20 }}>
                     <TouchableOpacity onPress={onClose} style={{ flexDirection: 'row', width: 100 }}>
                         <GradientIcon name="times" />
                         <Text bold style={{ marginHorizontal: 10 }}>
@@ -79,7 +77,7 @@ const CityModal = React.memo<CityModalProps>(({ visible, onChange, onClose }) =>
                     keyExtractor={keyExtractor}
                     getItemLayout={getItemLayout}
                     ItemSeparatorComponent={Separator}
-                    contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 20 }}
+                    contentContainerStyle={{ flexGrow: 1, paddingBottom: 50 }}
                 />
             </View>
         </Modal>

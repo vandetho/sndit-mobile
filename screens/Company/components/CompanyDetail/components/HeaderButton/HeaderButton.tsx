@@ -11,7 +11,7 @@ const PADDING = 15;
 
 type CompanyScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<ApplicationStackParamsList, 'CompanyQrCode'>,
-    StackNavigationProp<CompanyStackParamList, 'Employees'>
+    StackNavigationProp<CompanyStackParamList, 'Employees' | 'Templates'>
 >;
 
 const styles = StyleSheet.create({
@@ -47,6 +47,10 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => 
         navigation.navigate('Employees');
     }, [navigation]);
 
+    const onPressTemplates = React.useCallback(() => {
+        navigation.navigate('Templates');
+    }, [navigation]);
+
     return (
         <React.Fragment>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -58,6 +62,12 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => 
                     <Text style={{ marginHorizontal: 10 }}>{t('back')}</Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                    <TouchableOpacity
+                        style={[styles.buttonContainer, { backgroundColor: colors.card, marginRight: 10 }]}
+                        onPress={onPressTemplates}
+                    >
+                        <GradientIcon name="file-alt" />
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.buttonContainer, { backgroundColor: colors.card, marginRight: 10 }]}
                         onPress={onPressEmployees}

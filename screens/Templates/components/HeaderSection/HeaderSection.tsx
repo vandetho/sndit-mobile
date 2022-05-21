@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HeaderButton } from './components';
 
-export const HEADER_HEIGHT = 100;
+export const HEADER_HEIGHT = 130;
 
 const styles = StyleSheet.create({
     container: {
@@ -20,9 +20,10 @@ const styles = StyleSheet.create({
 
 interface HeaderSectionProps {
     animatedValue: Animated.Value;
+    onPressNew: () => void;
 }
 
-const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ animatedValue }) => {
+const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ animatedValue, onPressNew }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
     const insets = useSafeAreaInsets();
@@ -44,6 +45,15 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                         outputRange: [0, 1],
                         extrapolate: 'clamp',
                     }),
+                    transform: [
+                        {
+                            translateY: animatedValue.interpolate({
+                                inputRange,
+                                outputRange: [0, -35],
+                                extrapolate: 'clamp',
+                            }),
+                        },
+                    ],
                 }}
             />
             <Animated.View
@@ -53,11 +63,11 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                     marginBottom: 10,
                 }}
             >
-                <HeaderButton />
+                <HeaderButton onPressNew={onPressNew} />
             </Animated.View>
             <Animated.Text
                 style={{
-                    color: colors.text,
+                    color: colors.primary,
                     fontFamily: 'Rubik_900Black',
                     fontSize: 24,
                     transform: [
@@ -85,7 +95,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                     ],
                 }}
             >
-                {t('employees')}
+                {t('templates')}
             </Animated.Text>
         </View>
     );

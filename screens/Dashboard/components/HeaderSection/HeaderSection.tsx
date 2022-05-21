@@ -1,6 +1,10 @@
 import React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { useCompany } from '@contexts';
+import { GradientIcon } from '@components';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ApplicationStackParamsList } from '@navigations';
 
 export const HEADER_HEIGHT = 120;
 
@@ -18,6 +22,7 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
 });
+type NewPackageNavigationProp = StackNavigationProp<ApplicationStackParamsList, 'NewPackage'>;
 
 interface HeaderSectionProps {
     animatedValue: Animated.Value;
@@ -25,7 +30,42 @@ interface HeaderSectionProps {
 
 const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ animatedValue }) => {
     const { colors } = useTheme();
+    const { managerCompanies } = useCompany();
+    const { onSelect } = useCompany();
+    const navigation = useNavigation<NewPackageNavigationProp>();
+
     const inputRange = React.useMemo(() => [0, HEADER_HEIGHT], []);
+
+    const onPressNewPackage = React.useCallback(() => {
+        onSelect(undefined);
+        navigation.navigate('NewPackage');
+    }, [navigation, onSelect]);
+
+    const renderNewPackageButton = React.useCallback(() => {
+        if (managerCompanies.length > 0) {
+            return (
+                <Animated.View
+                    style={{
+                        marginRight: 10,
+                        transform: [
+                            {
+                                translateY: animatedValue.interpolate({
+                                    inputRange,
+                                    outputRange: [0, -30],
+                                    extrapolate: 'clamp',
+                                }),
+                            },
+                        ],
+                    }}
+                >
+                    <TouchableOpacity onPress={onPressNewPackage}>
+                        <GradientIcon name="plus" />
+                    </TouchableOpacity>
+                </Animated.View>
+            );
+        }
+        return null;
+    }, [animatedValue, inputRange, managerCompanies.length, onPressNewPackage]);
 
     return (
         <View style={styles.container}>
@@ -46,7 +86,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
             />
             <Animated.Text
                 style={{
-                    color: colors.text,
+                    color: colors.primary,
                     fontFamily: 'Rubik_900Black',
                     fontSize: 24,
                     transform: [
@@ -76,6 +116,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
             >
                 Sndit
             </Animated.Text>
+            {renderNewPackageButton()}
         </View>
     );
 };

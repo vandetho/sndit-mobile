@@ -1,26 +1,11 @@
-import React, { useState } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Backdrop, BarLoader, GradientIcon, ScannerMask, Text } from '@components';
-import { CompositeNavigationProp, useNavigation, useTheme } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { GradientIcon, Text } from '@components';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { ApplicationStackParamsList, CompanyStackParamList } from '@navigations';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { BarCodeEvent, BarCodeScanner } from 'expo-barcode-scanner';
-import { showToast } from '@utils';
-import { useUserFetcher } from '@fetchers';
-import { useUser } from '@contexts';
-import { Template } from '@interfaces';
-import { useVisible } from '@hooks';
-import { TemplateForm } from '@screens/Templates/components/HeaderSection/components/HeaderButton/components';
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 15;
-
-type CompanyScreenNavigationProps = CompositeNavigationProp<
-    StackNavigationProp<ApplicationStackParamsList, 'CompanyQrCode' | 'User'>,
-    StackNavigationProp<CompanyStackParamList, 'Employees'>
->;
 
 const styles = StyleSheet.create({
     buttonContainer: {
@@ -44,23 +29,19 @@ const styles = StyleSheet.create({
     },
 });
 
-interface HeaderButtonProps {}
+interface HeaderButtonProps {
+    onPressNew: () => void;
+}
 
-const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => {
+const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = ({ onPressNew }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
-    const { visible, onToggle } = useVisible();
-    const [template, setTemplate] = React.useState<Template>(undefined);
-    const navigation = useNavigation<CompanyScreenNavigationProps>();
+    const navigation = useNavigation();
 
     const handleGoBack = React.useCallback(() => {
         navigation.goBack();
     }, [navigation]);
 
-    const handleNewTemplate = React.useCallback(() => {
-        setTemplate(undefined);
-        onToggle();
-    }, [onToggle]);
     return (
         <React.Fragment>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -73,12 +54,11 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = () => 
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.buttonContainer, { backgroundColor: colors.card }]}
-                    onPress={handleNewTemplate}
+                    onPress={onPressNew}
                 >
-                    <GradientIcon name="plus" size={20} />
+                    <GradientIcon name="file-medical" size={20} />
                 </TouchableOpacity>
             </View>
-            <TemplateForm visible={visible} template={template} />
         </React.Fragment>
     );
 };

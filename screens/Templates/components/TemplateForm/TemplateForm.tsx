@@ -1,9 +1,8 @@
 import React from 'react';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { City, Company, Template } from '@interfaces';
-import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import { Button, CityPicker, TextField } from '@components';
+import { Keyboard, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Button, CityPicker, GradientIcon, Text, TextField } from '@components';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -29,9 +28,10 @@ interface TemplateFormProps {
     template: Template;
     visible: boolean;
     onSave: () => void;
+    onClose: () => void;
 }
 
-const TemplateForm = React.memo<TemplateFormProps>(({ company, visible, template, onSave }) => {
+const TemplateForm = React.memo<TemplateFormProps>(({ company, visible, template, onSave, onClose }) => {
     const { t } = useTranslation();
     const { colors } = useTheme();
     const bottomSheetRef = React.useRef<BottomSheetModal>(null);
@@ -83,9 +83,11 @@ const TemplateForm = React.memo<TemplateFormProps>(({ company, visible, template
         try {
             const formData: { [key: string]: any } = {};
             formData.name = state.name;
-            formData.company = company.id;
+            if (company) {
+                formData.company = company.id;
+            }
             if (state.phoneNumber) {
-                formData.address = state.phoneNumber;
+                formData.phoneNumber = state.phoneNumber;
             }
             if (state.address) {
                 formData.address = state.address;
@@ -93,9 +95,12 @@ const TemplateForm = React.memo<TemplateFormProps>(({ company, visible, template
             if (state.city) {
                 formData.city = state.city.id;
             }
+
             const {
                 data: { message },
-            } = await axios.post('/api/templates', formData);
+            } = template
+                ? await axios.put(`/api/templates/${template.id}`, formData)
+                : await axios.post('/api/templates', formData);
             setState((prevState) => ({ ...prevState, dispatch: false }));
             showToast({ type: 'success', text2: message });
             onSave();
@@ -109,37 +114,59 @@ const TemplateForm = React.memo<TemplateFormProps>(({ company, visible, template
             console.error(e);
             setState((prevState) => ({ ...prevState, dispatch: false }));
         }
-    }, [company.id, onSave, state.address, state.city, state.name, state.phoneNumber]);
+    }, [company, onSave, state.address, state.city, state.name, state.phoneNumber, template]);
+
+    const handleClose = React.useCallback(() => {
+        Keyboard.dismiss();
+        onClose();
+    }, [onClose]);
 
     return (
-        <BottomSheetModal snapPoints={snapPoints} ref={bottomSheetRef}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <KeyboardAwareScrollView>
-                    <View style={[styles.formContainer, { backgroundColor: colors.card }]}>
-                        <TextField label={t('name')} name="name" value={state.name} onChangeText={onChangeText} />
-                        <TextField
-                            label={t('phone_number')}
-                            name="phone_number"
-                            value={state.name}
-                            onChangeText={onChangeText}
-                        />
-                        <TextField
-                            label={t('address')}
-                            name="address"
-                            value={state.address}
-                            onChangeText={onChangeText}
-                        />
-                        <CityPicker selected={state.city} onValueChange={onChangeCity} />
-                    </View>
-                    <Button
-                        isLoading={state.dispatch}
-                        label={t('save')}
-                        endIcon={<FontAwesome5 name="save" color="#FFFFFF" size={20} />}
-                        onPress={onPressSave}
-                        style={styles.saveButton}
+        <BottomSheetModal
+            snapPoints={snapPoints}
+            backgroundStyle={{ backgroundColor: colors.card }}
+            handleIndicatorStyle={{ backgroundColor: colors.text }}
+            ref={bottomSheetRef}
+            onDismiss={onClose}
+        >
+            <TouchableOpacity
+                onPress={handleClose}
+                style={{
+                    marginRight: 10,
+                    marginBottom: 10,
+                    borderRadius: 20,
+                    paddingHorizontal: 20,
+                    height: 40,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    alignSelf: 'flex-end',
+                    backgroundColor: colors.card,
+                }}
+            >
+                <Text style={{ marginRight: 10 }}>{t('close')}</Text>
+                <GradientIcon name="times" />
+            </TouchableOpacity>
+            <BottomSheetScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <View style={[styles.formContainer, { backgroundColor: colors.card }]}>
+                    <TextField label={t('name')} name="name" value={state.name} onChangeText={onChangeText} />
+                    <TextField
+                        label={t('phone_number')}
+                        name="phoneNumber"
+                        value={state.phoneNumber}
+                        onChangeText={onChangeText}
                     />
-                </KeyboardAwareScrollView>
-            </TouchableWithoutFeedback>
+                    <TextField label={t('address')} name="address" value={state.address} onChangeText={onChangeText} />
+                    <CityPicker selected={state.city} onValueChange={onChangeCity} />
+                </View>
+                <Button
+                    isLoading={state.dispatch}
+                    label={t('save')}
+                    endIcon={<FontAwesome5 name="save" color="#FFFFFF" size={20} />}
+                    onPress={onPressSave}
+                    style={styles.saveButton}
+                />
+            </BottomSheetScrollView>
         </BottomSheetModal>
     );
 });

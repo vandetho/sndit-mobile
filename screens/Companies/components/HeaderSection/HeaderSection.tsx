@@ -63,7 +63,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
             />
             <Animated.Text
                 style={{
-                    color: colors.text,
+                    color: colors.primary,
                     fontFamily: 'Rubik_900Black',
                     fontSize: 24,
                     transform: [

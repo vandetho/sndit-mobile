@@ -22,7 +22,7 @@ const Package = React.memo<PackageProps>(() => {
     const animatedValue = React.useRef(new Animated.Value(0)).current;
     const { histories, isLoading, fetch, fetchMore, isLoadingMore } = usePackageHistoriesFetcher(item);
     const [dispatch, setDispatch] = React.useState(false);
-    const { visible, onToggle } = useVisible();
+    const { visible, onOpen, onClose } = useVisible();
 
     React.useEffect(() => {
         if (item) {
@@ -32,8 +32,8 @@ const Package = React.memo<PackageProps>(() => {
 
     const onPress = React.useCallback(() => {
         setDispatch(true);
-        onToggle();
-    }, [onToggle]);
+        onOpen();
+    }, [onOpen]);
 
     const onDone = React.useCallback(async () => {
         onRefreshSelect();
@@ -103,7 +103,7 @@ const Package = React.memo<PackageProps>(() => {
 
     return (
         <View style={styles.container}>
-            <PackageDetail item={item} animatedValue={animatedValue} onShowButton={onToggle} />
+            <PackageDetail item={item} animatedValue={animatedValue} onShowButton={onOpen} />
             <Animated.FlatList
                 onRefresh={fetch}
                 refreshing={isLoading}
@@ -127,7 +127,7 @@ const Package = React.memo<PackageProps>(() => {
                     paddingHorizontal: 10,
                 }}
             />
-            <ActionButtons item={item} visible={visible} onPress={onPress} onDone={onDone} onClose={onToggle} />
+            <ActionButtons item={item} visible={visible} onPress={onPress} onDone={onDone} onClose={onClose} />
             {renderLoader()}
         </View>
     );

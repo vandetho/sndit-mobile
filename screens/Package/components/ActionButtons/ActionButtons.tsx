@@ -1,20 +1,14 @@
 import React from 'react';
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { TouchableWithoutFeedback, View } from 'react-native';
 import { PACKAGE } from '@workflows';
 import { ROLES } from '@config';
-import { DeliveredButton, GiveToDelivererButton, PrintButton, TakePackageButton } from './components';
+import { DeliveredButton, GiveToDelivererButton, TakePackageButton } from './components';
 import { Package } from '@interfaces';
 import { useAuthentication } from '@contexts';
-import Modal from 'react-native-modal';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { GradientIcon, Text } from '@components';
-
-const styles = StyleSheet.create({
-    container: {
-        height: 400,
-    },
-});
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 interface ActionButtonsProps {
     item: Package;
@@ -26,10 +20,23 @@ interface ActionButtonsProps {
 
 const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, onPress, onClose }) => {
     const { colors } = useTheme();
+    const bottomSheetRef = React.useRef<BottomSheetModal>(null);
     const { t } = useTranslation();
     const {
         jwt: { user },
     } = useAuthentication();
+
+    React.useEffect(() => {
+        if (bottomSheetRef.current) {
+            if (visible) {
+                bottomSheetRef.current.present();
+                return;
+            }
+            bottomSheetRef.current.close();
+        }
+    }, [visible]);
+
+    const snapPoints = React.useMemo(() => ['50%', '75%'], []);
 
     const renderButtons = React.useCallback(() => {
         const buttons: JSX.Element[] = [];
@@ -67,6 +74,7 @@ const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, o
                 />,
             );
         }
+        /*
         if (item.roles.includes(ROLES.MANAGER)) {
             buttons.push(
                 <PrintButton
@@ -77,51 +85,40 @@ const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, o
                 />,
             );
         }
+        */
         return <React.Fragment>{buttons}</React.Fragment>;
     }, [item, onDone, onPress, user]);
 
     return (
-        <Modal
-            isVisible={visible}
-            hideModalContentWhileAnimating
-            swipeDirection="down"
-            onBackdropPress={onClose}
-            onSwipeComplete={onClose}
-            style={{ justifyContent: 'flex-end', margin: 0 }}
+        <BottomSheetModal
+            snapPoints={snapPoints}
+            backgroundStyle={{ backgroundColor: colors.card }}
+            handleIndicatorStyle={{ backgroundColor: colors.text }}
+            ref={bottomSheetRef}
+            onDismiss={onClose}
         >
-            <View style={[styles.container, { backgroundColor: colors.card, borderRadius: 15 }]}>
+            {renderButtons()}
+
+            <TouchableWithoutFeedback onPress={onClose}>
                 <View
                     style={{
-                        marginVertical: 10,
-                        borderRadius: 2,
-                        height: 4,
-                        backgroundColor: colors.text,
-                        width: 75,
+                        position: 'absolute',
+                        bottom: '50%',
+                        width: 150,
+                        height: 50,
+                        borderRadius: 20,
+                        backgroundColor: colors.background,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row',
                         alignSelf: 'center',
                     }}
-                />
-                {renderButtons()}
-                <TouchableWithoutFeedback onPress={onClose}>
-                    <View
-                        style={{
-                            position: 'absolute',
-                            bottom: 50,
-                            width: 150,
-                            height: 50,
-                            borderRadius: 20,
-                            backgroundColor: colors.background,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                            alignSelf: 'center',
-                        }}
-                    >
-                        <Text style={{ marginHorizontal: 10 }}>{t('close')}</Text>
-                        <GradientIcon name="times" />
-                    </View>
-                </TouchableWithoutFeedback>
-            </View>
-        </Modal>
+                >
+                    <Text style={{ marginHorizontal: 10 }}>{t('close')}</Text>
+                    <GradientIcon name="times" />
+                </View>
+            </TouchableWithoutFeedback>
+        </BottomSheetModal>
     );
 });
 

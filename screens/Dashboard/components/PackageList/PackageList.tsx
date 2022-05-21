@@ -71,7 +71,7 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScr
 
     const renderSectionHeader = React.useCallback(({ section }) => {
         return (
-            <Text bold fontSize={18}>
+            <Text bold fontSize={18} style={{ paddingVertical: 10 }}>
                 {section.title}
             </Text>
         );
