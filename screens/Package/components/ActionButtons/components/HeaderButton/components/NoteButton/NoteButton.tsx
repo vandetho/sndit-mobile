@@ -23,7 +23,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalTopContainer: {
-        flex: 1,
+        height: 50,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
 });
@@ -36,7 +38,7 @@ const NoteButton = React.memo<NoteButtonProps>(({ item }) => {
     const { t } = useTranslation();
     const { colors } = useTheme();
     const bottomSheetRef = React.useRef<BottomSheetModal>(null);
-    const { visible, onToggle } = useVisible();
+    const { visible, onToggle, onClose } = useVisible();
 
     React.useEffect(() => {
         if (bottomSheetRef.current) {
@@ -57,21 +59,22 @@ const NoteButton = React.memo<NoteButtonProps>(({ item }) => {
                     style={[styles.buttonContainer, { backgroundColor: colors.card, marginLeft: 10 }]}
                     onPress={onToggle}
                 >
-                    <GradientIcon name="map-marker-alt" />
+                    <GradientIcon name="sticky-note" />
                 </TouchableOpacity>
                 <BottomSheetModal
                     backgroundStyle={{ backgroundColor: colors.card }}
                     handleIndicatorStyle={{ backgroundColor: colors.text }}
                     snapPoints={snapPoint}
                     ref={bottomSheetRef}
+                    onDismiss={onClose}
                 >
                     <View style={styles.modalTopContainer}>
                         <Text>{t('note')}</Text>
                         <TouchableOpacity
                             style={[styles.buttonContainer, { backgroundColor: colors.background }]}
-                            onPress={onToggle}
+                            onPress={onClose}
                         >
-                            <GradientIcon name="close" />
+                            <GradientIcon name="times" />
                         </TouchableOpacity>
                     </View>
                     <Text>{item.note}</Text>

@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
 import { Package } from '@interfaces';
-import { PACKAGE } from '@workflows';
-import { NoteButton } from './components';
+import { MapButton, NoteButton } from './components';
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 15;
@@ -41,10 +40,6 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = ({ ite
         navigation.goBack();
     }, [navigation]);
 
-    const onPressLocation = React.useCallback(() => {
-        navigation.navigate('Map', { latitude: item.latitude, longitude: item.longitude, draggable: true });
-    }, [item.latitude, item.longitude, navigation]);
-
     const onPressQrCode = React.useCallback(() => {
         navigation.navigate('PackageQrCode');
     }, [navigation]);
@@ -60,14 +55,7 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = ({ ite
                     <Text style={{ marginHorizontal: 10 }}>{t('close')}</Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                    {item.marking[PACKAGE.DELIVERED] && (
-                        <TouchableOpacity
-                            style={[styles.buttonContainer, { backgroundColor: colors.card }]}
-                            onPress={onPressLocation}
-                        >
-                            <GradientIcon name="map-marker-alt" />
-                        </TouchableOpacity>
-                    )}
+                    <MapButton item={item} />
                     <NoteButton item={item} />
                     <TouchableOpacity
                         style={[styles.buttonContainer, { backgroundColor: colors.card, marginLeft: 10 }]}

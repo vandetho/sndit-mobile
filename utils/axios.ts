@@ -49,7 +49,12 @@ const ResponseErrorHandler = async (error) => {
                     axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
                     return axios(originalRequest);
                 }
+            })
+            .catch((error) => {
+                console.warn(error);
+                return Promise.reject(error);
             });
+        return;
     }
     return Promise.reject(error);
 };
