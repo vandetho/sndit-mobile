@@ -4,8 +4,7 @@ import { BarLoader, HISTORY_ITEM_HEIGHT, HistoryCard } from '@components';
 import { PackageHistory } from '@interfaces';
 import { usePackage } from '@contexts';
 import { usePackageHistoriesFetcher } from '@fetchers';
-import { useVisible } from '@hooks';
-import { ActionButtons, HEADER_HEIGHT, PackageDetail } from './components';
+import { HEADER_HEIGHT, PackageDetail } from './components';
 
 const styles = StyleSheet.create({
     container: {
@@ -21,8 +20,6 @@ const Package = React.memo<PackageProps>(() => {
     const { item, onRefreshSelect, fetchPackages } = usePackage();
     const animatedValue = React.useRef(new Animated.Value(0)).current;
     const { histories, isLoading, fetch, fetchMore, isLoadingMore } = usePackageHistoriesFetcher(item);
-    const [dispatch, setDispatch] = React.useState(false);
-    const { visible, onOpen, onClose } = useVisible();
 
     React.useEffect(() => {
         if (item) {
@@ -30,16 +27,10 @@ const Package = React.memo<PackageProps>(() => {
         }
     }, [fetch, item]);
 
-    const onPress = React.useCallback(() => {
-        setDispatch(true);
-        onOpen();
-    }, [onOpen]);
-
     const onDone = React.useCallback(async () => {
         onRefreshSelect();
         fetchPackages();
         await fetch();
-        setDispatch(false);
     }, [fetch, fetchPackages, onRefreshSelect]);
 
     const renderItem = React.useCallback(({ item }: { item: PackageHistory }) => <HistoryCard history={item} />, []);
@@ -75,35 +66,11 @@ const Package = React.memo<PackageProps>(() => {
         onEndReachedCalledDuringMomentum = false;
     }, []);
 
-    const renderLoader = React.useCallback(() => {
-        if (dispatch) {
-            return (
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        position: 'absolute',
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        zIndex: 2,
-                        backgroundColor: 'rgba(0,0,0,0.6)',
-                    }}
-                >
-                    <BarLoader />
-                </View>
-            );
-        }
-        return null;
-    }, [dispatch]);
-
     const Separator = React.useCallback(() => <View style={{ height: 5 }} />, []);
 
     return (
         <View style={styles.container}>
-            <PackageDetail item={item} animatedValue={animatedValue} onShowButton={onOpen} />
+            <PackageDetail item={item} animatedValue={animatedValue} onDone={onDone} />
             <Animated.FlatList
                 onRefresh={fetch}
                 refreshing={isLoading}
@@ -127,8 +94,6 @@ const Package = React.memo<PackageProps>(() => {
                     paddingHorizontal: 10,
                 }}
             />
-            <ActionButtons item={item} visible={visible} onPress={onPress} onDone={onDone} onClose={onClose} />
-            {renderLoader()}
         </View>
     );
 });

@@ -44,7 +44,6 @@ export const useCompanyPackagesFetcher = () => {
                     offset: prevState.limit,
                 }));
             } catch ({ response: { data } }) {
-                console.error(data);
                 setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
             }
         },
@@ -75,7 +74,6 @@ export const useCompanyPackagesFetcher = () => {
                         offset: prevState.limit + prevState.offset,
                     }));
                 } catch ({ response: { data } }) {
-                    console.error(data);
                     setState((prevState) => ({ ...prevState, isLoadingMore: false, errorMessage: data.message }));
                 }
             }

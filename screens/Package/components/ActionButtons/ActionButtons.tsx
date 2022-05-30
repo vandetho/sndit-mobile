@@ -14,11 +14,10 @@ interface ActionButtonsProps {
     item: Package;
     visible: boolean;
     onDone: () => void;
-    onPress: () => void;
     onClose: () => void;
 }
 
-const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, onPress, onClose }) => {
+const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, onClose }) => {
     const { colors } = useTheme();
     const bottomSheetRef = React.useRef<BottomSheetModal>(null);
     const { t } = useTranslation();
@@ -46,19 +45,13 @@ const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, o
                 buttons.push(
                     <GiveToDelivererButton
                         item={item}
-                        onPress={onPress}
                         onDone={onDone}
                         key={`package-${item.id}-detail-button-give-to-deliverer`}
                     />,
                 );
             }
             buttons.push(
-                <TakePackageButton
-                    item={item}
-                    onPress={onPress}
-                    onDone={onDone}
-                    key={`package-${item.id}-detail-button-take-package`}
-                />,
+                <TakePackageButton item={item} onDone={onDone} key={`package-${item.id}-detail-button-take-package`} />,
             );
         }
         if (
@@ -66,12 +59,7 @@ const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, o
             (item.roles.includes(ROLES.MANAGER) || (item.deliverer && user && item.deliverer.id === user.id))
         ) {
             buttons.push(
-                <DeliveredButton
-                    item={item}
-                    onPress={onPress}
-                    onDone={onDone}
-                    key={`package-${item.id}-detail-button-delivered`}
-                />,
+                <DeliveredButton item={item} onDone={onDone} key={`package-${item.id}-detail-button-delivered`} />,
             );
         }
         /*
@@ -87,7 +75,7 @@ const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, o
         }
         */
         return <React.Fragment>{buttons}</React.Fragment>;
-    }, [item, onDone, onPress, user]);
+    }, [item, onDone, user]);
 
     return (
         <BottomSheetModal
@@ -98,7 +86,6 @@ const ActionButtons = React.memo<ActionButtonsProps>(({ item, visible, onDone, o
             onDismiss={onClose}
         >
             {renderButtons()}
-
             <TouchableWithoutFeedback onPress={onClose}>
                 <View
                     style={{

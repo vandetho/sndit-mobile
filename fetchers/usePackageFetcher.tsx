@@ -16,7 +16,6 @@ export const usePackageFetcher = () => {
     const fetch = React.useCallback(async (idOrToken: string | number) => {
         setState((prevState) => ({ ...prevState, isLoading: true }));
         try {
-            console.log({ idOrToken });
             const {
                 data: { data },
             } = await axios.get<ResponseSuccess<Package>>(`/api/packages/${idOrToken}`);

@@ -39,7 +39,6 @@ export const useEmployeesFetcher = () => {
                     );
                     setState((prevState) => ({ ...prevState, ...data, isLoading: false, offset: prevState.limit }));
                 } catch ({ response: { data } }) {
-                    console.error({ data });
                     setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
                 }
             }

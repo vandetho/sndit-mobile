@@ -12,9 +12,17 @@ const PADDING = 15;
 
 const styles = StyleSheet.create({
     buttonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: PADDING,
+        height: BUTTON_HEIGHT,
+        borderRadius: BUTTON_HEIGHT,
+    },
+    modalButtonContainer: {
         position: 'absolute',
         top: 10,
         right: 10,
+        zIndex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: PADDING,
@@ -75,7 +83,7 @@ const MapButton = React.memo<MapButtonProps>(({ item }) => {
                     onDismiss={onClose}
                 >
                     <TouchableOpacity
-                        style={[styles.buttonContainer, { backgroundColor: colors.background }]}
+                        style={[styles.modalButtonContainer, { backgroundColor: colors.background }]}
                         onPress={onClose}
                     >
                         <GradientIcon name="times" />
@@ -93,7 +101,7 @@ const MapButton = React.memo<MapButtonProps>(({ item }) => {
                         zoomEnabled
                         pitchEnabled
                         rotateEnabled
-                        onRegionChange={setMapRegion}
+                        onRegionChangeComplete={setMapRegion}
                         //provider={PROVIDER_GOOGLE}
                         ref={mapRef}
                     >

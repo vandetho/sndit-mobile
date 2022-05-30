@@ -6,16 +6,12 @@ import { axios, showToast } from '@utils';
 
 interface TakePackageButtonProps {
     item: Package;
-    onPress?: () => void;
     onDone?: () => void;
 }
 
-const TakePackageButtonComponent: React.FunctionComponent<TakePackageButtonProps> = ({ item, onPress, onDone }) => {
+const TakePackageButtonComponent: React.FunctionComponent<TakePackageButtonProps> = ({ item, onDone }) => {
     const { t } = useTranslation();
     const onPressTakePackage = React.useCallback(async () => {
-        if (onPress) {
-            onPress();
-        }
         try {
             const { data } = await axios.post(`/api/packages/${item.token}/take-package`);
             showToast({ type: 'success', text2: data.message });
@@ -31,7 +27,7 @@ const TakePackageButtonComponent: React.FunctionComponent<TakePackageButtonProps
         if (onDone) {
             onDone();
         }
-    }, [item.token, onDone, onPress]);
+    }, [item.token, onDone]);
 
     return (
         <Button

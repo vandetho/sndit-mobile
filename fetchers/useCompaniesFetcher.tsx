@@ -24,7 +24,6 @@ export const useCompaniesFetcher = () => {
             setState((prevState) => ({ ...prevState, ...data, isLoading: false }));
         } catch ({ response: { data } }) {
             setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
-            console.log({ data });
         }
     }, []);
 

@@ -8,23 +8,15 @@ import { axios, showToast } from '@utils';
 
 interface GiveToDelivererButtonProps {
     item: Package;
-    onPress?: () => void;
     onDone?: () => void;
 }
 
-const GiveToDelivererButtonComponent: React.FunctionComponent<GiveToDelivererButtonProps> = ({
-    item,
-    onPress,
-    onDone,
-}) => {
+const GiveToDelivererButtonComponent: React.FunctionComponent<GiveToDelivererButtonProps> = ({ item, onDone }) => {
     const { t } = useTranslation();
-    const { visible, onToggle } = useVisible();
+    const { visible, onToggle, onClose } = useVisible();
 
     const onSave = React.useCallback(
         async (employee: Employee) => {
-            if (onPress) {
-                onPress();
-            }
             try {
                 const { data } = await axios.post(`/api/packages/${item.token}/give-to-deliverer`, {
                     employee: employee.token,
@@ -42,13 +34,13 @@ const GiveToDelivererButtonComponent: React.FunctionComponent<GiveToDelivererBut
                 onDone();
             }
         },
-        [item.token, onDone, onPress],
+        [item.token, onDone],
     );
 
     return (
         <React.Fragment>
             <Button label={t('give_to_deliverer')} style={{ margin: 10, borderRadius: 15 }} onPress={onToggle} />
-            <EmployeeModal company={item.company} visible={visible} onSave={onSave} onClose={onToggle} />
+            <EmployeeModal company={item.company} visible={visible} onSave={onSave} onClose={onClose} />
         </React.Fragment>
     );
 };
