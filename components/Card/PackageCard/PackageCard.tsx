@@ -5,12 +5,20 @@ import { useTheme } from '@react-navigation/native';
 import { Text } from '@components/Text';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
-import { DISPLAY_DATE_FORMAT } from '@config';
+import { DISPLAY_DATETIME_FORMAT } from '@config';
 
 export const PACKAGE_ITEM_HEIGHT = 200;
 
 const styles = StyleSheet.create({
     nameContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    markingContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    dateContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
@@ -54,11 +62,19 @@ const PackageCard = React.memo<PackageCardProps>(({ item, onPress }) => {
                 </Text>
                 <Text>{item.address}</Text>
                 {item.city && <Text>{item.city.name}</Text>}
-                {renderMarking()}
-                <View style={styles.nameContainer}>
+                <View style={styles.markingContainer}>
+                    {renderMarking()}
                     <Text>{item.company.name}</Text>
-                    <Text>{format(new Date(item.createdAt), DISPLAY_DATE_FORMAT)}</Text>
-                    <Text>{format(new Date(item.updatedAt), DISPLAY_DATE_FORMAT)}</Text>
+                </View>
+                <View style={styles.dateContainer}>
+                    <View>
+                        <Text>{t('created_at')}</Text>
+                        <Text>{format(new Date(item.createdAt), DISPLAY_DATETIME_FORMAT)}</Text>
+                    </View>
+                    <View>
+                        <Text>{t('last_updated_at')}</Text>
+                        <Text>{format(new Date(item.updatedAt), DISPLAY_DATETIME_FORMAT)}</Text>
+                    </View>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View>
