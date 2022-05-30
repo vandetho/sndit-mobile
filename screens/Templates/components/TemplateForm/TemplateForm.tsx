@@ -64,7 +64,7 @@ const TemplateForm = React.memo<TemplateFormProps>(({ company, visible, template
                 bottomSheetRef.current.present();
                 return;
             }
-            bottomSheetRef.current.close();
+            bottomSheetRef.current.dismiss();
         }
     }, [visible]);
 

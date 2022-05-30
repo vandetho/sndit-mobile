@@ -43,7 +43,7 @@ const RolePicker = React.memo<RolePickerProps>(({ role, visible, onValueChange, 
                 bottomSheetRef.current.present();
                 return;
             }
-            bottomSheetRef.current.close();
+            bottomSheetRef.current.dismiss();
         }
     }, [visible]);
 

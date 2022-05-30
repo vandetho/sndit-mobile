@@ -46,7 +46,7 @@ const Templates = React.memo<TemplatesProps>(({ company, visible, onPress, onClo
                 bottomSheetRef.current.present();
                 return;
             }
-            bottomSheetRef.current.close();
+            bottomSheetRef.current.dismiss();
         }
     }, [visible]);
 

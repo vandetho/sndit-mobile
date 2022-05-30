@@ -63,7 +63,7 @@ const MapButton = React.memo<MapButtonProps>(({ item }) => {
                 bottomSheetRef.current.present();
                 return;
             }
-            bottomSheetRef.current.close();
+            bottomSheetRef.current.dismiss();
         }
     }, [visible]);
 

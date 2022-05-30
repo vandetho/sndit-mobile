@@ -46,7 +46,7 @@ const NoteButton = React.memo<NoteButtonProps>(({ item }) => {
                 bottomSheetRef.current.present();
                 return;
             }
-            bottomSheetRef.current.close();
+            bottomSheetRef.current.dismiss();
         }
     }, [visible]);
 

@@ -1,14 +1,13 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { Button, Text } from '@components';
+import { Text } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
-import { HeaderButton } from '../ActionButtons/components';
+import { HeaderButton } from './components/ShowButtons/components/ActionButtons/components';
 import { format } from 'date-fns';
 import { DISPLAY_DATETIME_FORMAT } from '@config';
-import { ActionButtons } from '@screens/Package/components';
-import { useVisible } from '@hooks';
+import { ShowButtons } from './components';
 
 export const HEADER_HEIGHT = 350;
 
@@ -38,18 +37,12 @@ const styles = StyleSheet.create({
 interface PackageDetailProps {
     animatedValue: Animated.Value;
     item: Package;
-    onDone: () => void;
+    onPress: () => void;
 }
 
-const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ animatedValue, item, onDone }) => {
+const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ animatedValue, item, onPress }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
-    const { visible, onOpen, onClose } = useVisible();
-
-    const handleDone = React.useCallback(() => {
-        onDone();
-        onClose();
-    }, [onClose, onDone]);
 
     const inputRange = React.useMemo<Array<number>>(() => [0, HEADER_HEIGHT], []);
     const height = React.useMemo(() => (item.address ? HEADER_HEIGHT : HEADER_HEIGHT + 10), [item.address]);
@@ -216,23 +209,8 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                         )}
                     </Animated.View>
                 </Animated.View>
-                <Animated.View
-                    style={{
-                        transform: [
-                            {
-                                translateY: animatedValue.interpolate({
-                                    inputRange,
-                                    outputRange: [0, 10],
-                                    extrapolate: 'clamp',
-                                }),
-                            },
-                        ],
-                    }}
-                >
-                    <Button label={t('show_buttons')} onPress={onOpen} style={{ margin: 10, borderRadius: 15 }} />
-                </Animated.View>
+                <ShowButtons animatedValue={animatedValue} item={item} onPress={onPress} />
             </Animated.View>
-            <ActionButtons item={item} visible={visible} onDone={handleDone} onClose={onClose} />
         </React.Fragment>
     );
 };
