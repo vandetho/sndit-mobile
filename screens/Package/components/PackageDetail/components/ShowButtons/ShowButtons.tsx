@@ -3,9 +3,8 @@ import { Animated } from 'react-native';
 import { Button } from '@components';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
-import { ActionButtons } from './components';
+import { ActionButtons, ActionButtonRefProps } from './components';
 import { HEADER_HEIGHT } from '../../PackageDetail';
-import { ActionButtonRefProps } from '@screens/Package/components';
 
 interface ShowButtonsProps {
     animatedValue: Animated.Value;
@@ -16,6 +15,12 @@ interface ShowButtonsProps {
 const ShowButtons = React.memo<ShowButtonsProps>(({ animatedValue, item, onDone }) => {
     const { t } = useTranslation();
     const actionButtonsRef = React.useRef<ActionButtonRefProps>(null);
+
+    const onPress = React.useCallback(() => {
+        if (actionButtonsRef.current) {
+            actionButtonsRef.current.present();
+        }
+    }, []);
 
     const inputRange = React.useMemo<Array<number>>(() => [0, HEADER_HEIGHT], []);
     return (
@@ -35,7 +40,7 @@ const ShowButtons = React.memo<ShowButtonsProps>(({ animatedValue, item, onDone 
             >
                 <Button label={t('show_buttons')} onPress={onPress} style={{ margin: 10, borderRadius: 15 }} />
             </Animated.View>
-            <ActionButtons onDone={onDone} item={item} />
+            <ActionButtons onDone={onDone} item={item} ref={actionButtonsRef} />
         </React.Fragment>
     );
 });

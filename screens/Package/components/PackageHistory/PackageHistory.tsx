@@ -12,72 +12,90 @@ interface PackageHistoryProps {
     onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }
 
-const PackageHistory = React.memo<PackageHistoryProps>(({ item, onScroll }) => {
-    const { histories, isLoading, fetch, fetchMore, isLoadingMore } = usePackageHistoriesFetcher(item);
+export interface PackageHistoryRefProps {
+    refresh: () => void;
+}
 
-    React.useEffect(() => {
-        if (item) {
-            (async () => await fetch())();
-        }
-    }, [fetch, item]);
+const PackageHistory = React.memo(
+    React.forwardRef<PackageHistoryRefProps, PackageHistoryProps>(({ item, onScroll }, ref) => {
+        const { histories, isLoading, fetch, fetchMore, isLoadingMore } = usePackageHistoriesFetcher(item);
 
-    const renderItem = React.useCallback(({ item }) => <HistoryCard history={item} />, []);
+        React.useEffect(() => {
+            if (item) {
+                (async () => await fetch())();
+            }
+        }, [fetch, item]);
 
-    const keyExtractor = React.useCallback((_, index: number) => `package-histories-item-${index}`, []);
+        React.useImperativeHandle(
+            ref,
+            () => ({
+                refresh: () => {
+                    if (item) {
+                        (async () => await fetch())();
+                    }
+                },
+            }),
+            [fetch, item],
+        );
 
-    const getItemLayout = React.useCallback(
-        (_, index: number) => ({
-            index,
-            length: HISTORY_ITEM_HEIGHT + 5,
-            offset: (HISTORY_ITEM_HEIGHT + 5) * index,
-        }),
-        [],
-    );
+        const renderItem = React.useCallback(({ item }) => <HistoryCard history={item} />, []);
 
-    const renderFooter = React.useCallback(
-        () =>
-            isLoadingMore && (
-                <View style={{ height: 50, justifyContent: 'center', alignItems: 'center' }}>
-                    <BarLoader />
-                </View>
-            ),
-        [isLoadingMore],
-    );
+        const keyExtractor = React.useCallback((_, index: number) => `package-histories-item-${index}`, []);
 
-    const handleFetchMore = React.useCallback(async () => {
-        if (onEndReachedCalledDuringMomentum) {
-            await fetchMore();
-        }
-    }, [fetchMore]);
+        const getItemLayout = React.useCallback(
+            (_, index: number) => ({
+                index,
+                length: HISTORY_ITEM_HEIGHT + 5,
+                offset: (HISTORY_ITEM_HEIGHT + 5) * index,
+            }),
+            [],
+        );
 
-    const onMomentumScrollBegin = React.useCallback(() => {
-        onEndReachedCalledDuringMomentum = false;
-    }, []);
+        const renderFooter = React.useCallback(
+            () =>
+                isLoadingMore && (
+                    <View style={{ height: 50, justifyContent: 'center', alignItems: 'center' }}>
+                        <BarLoader />
+                    </View>
+                ),
+            [isLoadingMore],
+        );
 
-    const Separator = React.useCallback(() => <View style={{ height: 5 }} />, []);
-    return (
-        <Animated.FlatList
-            onRefresh={fetch}
-            refreshing={isLoading}
-            data={histories}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            getItemLayout={getItemLayout}
-            ItemSeparatorComponent={Separator}
-            ListFooterComponent={renderFooter}
-            onEndReached={handleFetchMore}
-            onEndReachedThreshold={0.5}
-            scrollEventThrottle={16}
-            onMomentumScrollBegin={onMomentumScrollBegin}
-            onScroll={onScroll}
-            contentContainerStyle={{
-                flexGrow: 1,
-                paddingTop: HEADER_HEIGHT - 10,
-                paddingBottom: 10,
-                paddingHorizontal: 10,
-            }}
-        />
-    );
-});
+        const handleFetchMore = React.useCallback(async () => {
+            if (onEndReachedCalledDuringMomentum) {
+                await fetchMore();
+            }
+        }, [fetchMore]);
+
+        const onMomentumScrollBegin = React.useCallback(() => {
+            onEndReachedCalledDuringMomentum = false;
+        }, []);
+
+        const Separator = React.useCallback(() => <View style={{ height: 5 }} />, []);
+        return (
+            <Animated.FlatList
+                onRefresh={fetch}
+                refreshing={isLoading}
+                data={histories}
+                renderItem={renderItem}
+                keyExtractor={keyExtractor}
+                getItemLayout={getItemLayout}
+                ItemSeparatorComponent={Separator}
+                ListFooterComponent={renderFooter}
+                onEndReached={handleFetchMore}
+                onEndReachedThreshold={0.5}
+                scrollEventThrottle={16}
+                onMomentumScrollBegin={onMomentumScrollBegin}
+                onScroll={onScroll}
+                contentContainerStyle={{
+                    flexGrow: 1,
+                    paddingTop: HEADER_HEIGHT - 10,
+                    paddingBottom: 10,
+                    paddingHorizontal: 10,
+                }}
+            />
+        );
+    }),
+);
 
 export default PackageHistory;

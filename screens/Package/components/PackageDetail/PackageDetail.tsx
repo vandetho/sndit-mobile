@@ -209,7 +209,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                         )}
                     </Animated.View>
                 </Animated.View>
-                <ShowButtons animatedValue={animatedValue} item={item} onPress={onPress} />
+                <ShowButtons animatedValue={animatedValue} item={item} onDone={onPress} />
             </Animated.View>
         </React.Fragment>
     );

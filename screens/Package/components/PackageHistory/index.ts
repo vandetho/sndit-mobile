@@ -1,1 +1,1 @@
-export { default as PackageHistory } from './PackageHistory';
+export { default as PackageHistory, PackageHistoryRefProps } from './PackageHistory';
