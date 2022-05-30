@@ -74,5 +74,6 @@
     "create_template": "Create Template",
     "no": "No",
     "yes": "Yes",
-    "templates": "Templates"
+    "templates": "Templates",
+    "last_updated_at": "Last Updated At"
 }

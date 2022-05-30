@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { DISPLAY_DATETIME_FORMAT } from '@config';
 
-export const PACKAGE_ITEM_HEIGHT = 200;
+export const PACKAGE_ITEM_HEIGHT = 250;
 
 const styles = StyleSheet.create({
     nameContainer: {
@@ -52,7 +52,7 @@ const PackageCard = React.memo<PackageCardProps>(({ item, onPress }) => {
                 style={{
                     height: PACKAGE_ITEM_HEIGHT,
                     borderRadius: 15,
-                    padding: 10,
+                    padding: 20,
                     backgroundColor: colors.card,
                     justifyContent: 'space-between',
                 }}
@@ -64,24 +64,24 @@ const PackageCard = React.memo<PackageCardProps>(({ item, onPress }) => {
                 {item.city && <Text>{item.city.name}</Text>}
                 <View style={styles.markingContainer}>
                     {renderMarking()}
-                    <Text>{item.company.name}</Text>
+                    <Text bold>{item.company.name}</Text>
                 </View>
                 <View style={styles.dateContainer}>
                     <View>
-                        <Text>{t('created_at')}</Text>
+                        <Text fontSize={12}>{t('created_at')}</Text>
                         <Text>{format(new Date(item.createdAt), DISPLAY_DATETIME_FORMAT)}</Text>
                     </View>
                     <View>
-                        <Text>{t('last_updated_at')}</Text>
+                        <Text fontSize={12}>{t('last_updated_at')}</Text>
                         <Text>{format(new Date(item.updatedAt), DISPLAY_DATETIME_FORMAT)}</Text>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View>
-                        <Text bold fontSize={12} style={{ marginVertical: 5 }}>
+                        <Text fontSize={12} style={{ marginVertical: 5 }}>
                             {t('created_by')}
                         </Text>
-                        <Text>
+                        <Text bold>
                             {item.creator.lastName} {item.creator.firstName}
                         </Text>
                     </View>

@@ -33,7 +33,7 @@ const AuthLoading: React.FunctionComponent<AuthLoadingProps> = () => {
                     token: data.token,
                     refreshToken: data.refreshToken,
                     createdAt: new Date(),
-                    user: JSON.parse(await AuthStorage.getUser()),
+                    user: await AuthStorage.getUser(),
                 });
                 return;
             } catch (e) {
