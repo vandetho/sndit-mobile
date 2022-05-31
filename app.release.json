@@ -24,6 +24,7 @@
             "supportsTablet": false
         },
         "android": {
+            "googleServicesFile": "./google-services-release.json",
             "package": "io.sndit.mobile.release",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",

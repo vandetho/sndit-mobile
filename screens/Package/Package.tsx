@@ -19,6 +19,9 @@ const Package = React.memo<PackageProps>(() => {
     const onDone = React.useCallback(async () => {
         onRefreshSelect();
         fetchPackages();
+        if (packageHistoryRef.current) {
+            packageHistoryRef.current.refresh();
+        }
     }, [fetchPackages, onRefreshSelect]);
 
     return (

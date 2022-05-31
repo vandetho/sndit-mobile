@@ -7,6 +7,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
 import { Package } from '@interfaces';
 import { MapButton, NoteButton } from './components';
+import { useVisible } from '@hooks';
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 15;
@@ -35,6 +36,7 @@ const HeaderButtonComponent: React.FunctionComponent<HeaderButtonProps> = ({ ite
     const { colors } = useTheme();
     const { t } = useTranslation();
     const navigation = useNavigation<PackageQrCodeScreenNavigationProps>();
+    const { visible, onToggle, onClose } = useVisible();
 
     const handleGoBack = React.useCallback(() => {
         navigation.goBack();

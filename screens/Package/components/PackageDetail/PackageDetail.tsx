@@ -4,7 +4,7 @@ import { Text } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
-import { HeaderButton } from './components/ShowButtons/components/ActionButtons/components';
+import { HeaderButton } from './components/ShowButtons/components';
 import { format } from 'date-fns';
 import { DISPLAY_DATETIME_FORMAT } from '@config';
 import { ShowButtons } from './components';
@@ -133,7 +133,7 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                             {
                                 translateY: animatedValue.interpolate({
                                     inputRange,
-                                    outputRange: [0, -HEADER_HEIGHT - 25],
+                                    outputRange: [0, -HEADER_HEIGHT - 40],
                                     extrapolate: 'clamp',
                                 }),
                             },

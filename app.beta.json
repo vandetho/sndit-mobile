@@ -25,6 +25,7 @@
         },
         "android": {
             "package": "io.sndit.mobile.beta",
+            "googleServicesFile": "./google-services-beta.json",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#FFFFFF"
