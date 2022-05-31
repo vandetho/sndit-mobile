@@ -2,7 +2,7 @@
     "expo": {
         "name": "Sndit Beta",
         "slug": "sndit_beta",
-        "version": "1.0.6",
+        "version": "1.0.7",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "automatic",
@@ -40,7 +40,7 @@
             "eas": {
                 "projectId": "02089a8c-de21-49b2-9d89-c0bacf5a4a97"
             },
-            "experienceId": "@bangkeut/sndit_beta"
+            "experienceId": "@vandetho/sndit_beta"
         }
     }
 }

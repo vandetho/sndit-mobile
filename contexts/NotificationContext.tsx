@@ -22,7 +22,7 @@ interface NotificationProviderProps {}
 
 export const NotificationProvider = React.memo<NotificationProviderProps>(({ children }) => {
     const { isLogged } = useAuthentication();
-    const experienceId = Constants.manifest.extra.experienceId || '@bangkeut/sndit_beta';
+    const experienceId = Constants.manifest.extra.experienceId || '@vandetho/sndit_beta';
     const [state, setState] = React.useState<{ expoPushToken: string; notification: Notification }>({
         expoPushToken: '',
         notification: undefined,

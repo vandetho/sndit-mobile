@@ -162,7 +162,9 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                     {item.city && <Text>{item.city.name}</Text>}
                     <View style={styles.markingContainer}>
                         {renderMarking()}
-                        <Text bold>{item.company.name}</Text>
+                        <Text bold color={colors.primary}>
+                            {item.company.name}
+                        </Text>
                     </View>
                     <View style={styles.dateContainer}>
                         <View>
@@ -190,19 +192,19 @@ const PackageDetailComponent: React.FunctionComponent<PackageDetailProps> = ({ a
                         }}
                     >
                         <View>
-                            <Text bold fontSize={12} style={{ marginVertical: 5 }}>
+                            <Text fontSize={12} style={{ marginVertical: 5 }}>
                                 {t('created_by')}
                             </Text>
-                            <Text>
+                            <Text bold>
                                 {item.creator.lastName} {item.creator.firstName}
                             </Text>
                         </View>
                         {item.deliverer && (
                             <View>
-                                <Text bold fontSize={12} style={{ marginVertical: 5 }}>
+                                <Text fontSize={12} style={{ marginVertical: 5 }}>
                                     {t('delivered_by')}
                                 </Text>
-                                <Text>
+                                <Text bold>
                                     {item.deliverer.lastName} {item.deliverer.firstName}
                                 </Text>
                             </View>
