@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Button, GradientIcon, Text } from '@components';
 import { useTranslation } from 'react-i18next';
 import { Package } from '@interfaces';
@@ -11,6 +11,17 @@ import { useAuthentication } from '@contexts';
 import { useTheme } from '@react-navigation/native';
 import { useVisible } from '@hooks';
 import Modal from 'react-native-modal';
+
+const styles = StyleSheet.create({
+    modalButtonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+        marginVertical: 10,
+        height: 50,
+        borderRadius: 50,
+    },
+});
 
 interface ShowButtonsProps {
     animatedValue: Animated.Value;
@@ -134,22 +145,15 @@ const ShowButtons = React.memo<ShowButtonsProps>(({ animatedValue, item, onDone 
                             alignSelf: 'center',
                         }}
                     />
-                    <View
-                        style={{
-                            height: 150,
-                            paddingTop: 10,
-                            paddingHorizontal: 20,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                        }}
+                    <TouchableOpacity
+                        onPress={onToggle}
+                        style={[styles.modalButtonContainer, { backgroundColor: colors.background }]}
                     >
-                        <TouchableOpacity onPress={onToggle} style={{ flexDirection: 'row' }}>
-                            <GradientIcon name="times" />
-                            <Text bold style={{ marginHorizontal: 10 }}>
-                                {t('close')}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                        <GradientIcon name="times" />
+                        <Text bold style={{ marginHorizontal: 10 }}>
+                            {t('close')}
+                        </Text>
+                    </TouchableOpacity>
                     {renderButtons()}
                 </View>
             </Modal>

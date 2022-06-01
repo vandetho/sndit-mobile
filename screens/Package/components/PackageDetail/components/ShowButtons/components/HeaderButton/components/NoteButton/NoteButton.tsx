@@ -6,6 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import { useVisible } from '@hooks';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTranslation } from 'react-i18next';
+import Modal from 'react-native-modal';
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 15;
@@ -27,6 +28,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        paddingHorizontal: PADDING,
+        borderRadius: 50,
+        marginVertical: 10,
     },
 });
 
@@ -39,16 +43,6 @@ const NoteButton = React.memo<NoteButtonProps>(({ item }) => {
     const { colors } = useTheme();
     const bottomSheetRef = React.useRef<BottomSheetModal>(null);
     const { visible, onToggle, onClose } = useVisible();
-
-    React.useEffect(() => {
-        if (bottomSheetRef.current) {
-            if (visible) {
-                bottomSheetRef.current.present();
-                return;
-            }
-            bottomSheetRef.current.dismiss();
-        }
-    }, [visible]);
 
     const snapPoint = React.useMemo(() => ['25%', '50%'], []);
 
@@ -77,8 +71,49 @@ const NoteButton = React.memo<NoteButtonProps>(({ item }) => {
                             <GradientIcon name="times" />
                         </TouchableOpacity>
                     </View>
-                    <Text>{item.note}</Text>
                 </BottomSheetModal>
+                <Modal
+                    isVisible={visible}
+                    onBackdropPress={onToggle}
+                    swipeDirection={['down']}
+                    onSwipeComplete={onToggle}
+                    useNativeDriver
+                    hideModalContentWhileAnimating
+                    style={{
+                        margin: 0,
+                        justifyContent: 'flex-end',
+                    }}
+                >
+                    <View
+                        style={{
+                            height: '70%',
+                            backgroundColor: colors.card,
+                            borderRadius: 25,
+                        }}
+                    >
+                        <View
+                            style={{
+                                width: 75,
+                                height: 5,
+                                borderRadius: 3,
+                                backgroundColor: colors.text,
+                                marginVertical: 10,
+                                alignSelf: 'center',
+                            }}
+                        />
+                        <TouchableOpacity
+                            onPress={onToggle}
+                            style={[styles.buttonContainer, { backgroundColor: colors.background }]}
+                        >
+                            <GradientIcon name="times" />
+                            <Text bold style={{ marginHorizontal: 10 }}>
+                                {t('close')}
+                            </Text>
+                        </TouchableOpacity>
+                        <Text>{t('note')}</Text>
+                        <Text>{item.note}</Text>
+                    </View>
+                </Modal>
             </React.Fragment>
         );
     }
