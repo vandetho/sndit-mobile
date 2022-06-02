@@ -1,17 +1,15 @@
 import React from 'react';
 import { Package } from '@interfaces';
-import { useCompanyPackagesFetcher, usePackageFetcher, usePackagesFetcher } from '@fetchers';
-import { useCompany } from './CompanyContext';
+import { usePackageFetcher, usePackagesFetcher } from '@fetchers';
 import { useAuthentication } from './AuthenticationContext';
 
 export const PackageContext = React.createContext<{
     packages: Package[];
-    companiesPackages: Package[];
     isLoading: boolean;
     isLoadingMore: boolean;
-    isLoadingCompany: boolean;
     item: Package;
     onSelect: (pkg: Package) => void;
+    onAddPackage: (pkg: Package) => void;
     onRefreshSelect: () => void;
     fetchPackages: () => void;
     fetchMorePackages: () => void;
@@ -19,10 +17,11 @@ export const PackageContext = React.createContext<{
     item: undefined,
     isLoading: false,
     isLoadingMore: false,
-    isLoadingCompany: false,
     packages: [],
-    companiesPackages: [],
     onSelect: (pkg: Package) => {
+        console.log({ name: 'onSelect', pkg });
+    },
+    onAddPackage: (pkg: Package) => {
         console.log({ name: 'onSelect', pkg });
     },
     onRefreshSelect: () => {
@@ -37,7 +36,6 @@ export const PackageContext = React.createContext<{
 });
 
 export const PackageProvider: React.FunctionComponent = ({ children }) => {
-    const { company } = useCompany();
     const { isLogged } = useAuthentication();
     const [state, setState] = React.useState<{
         item: Package;
@@ -45,6 +43,7 @@ export const PackageProvider: React.FunctionComponent = ({ children }) => {
         item: undefined,
     });
     const {
+        addPackage,
         packages,
         fetch: fetchPackages,
         isLoading,
@@ -52,12 +51,6 @@ export const PackageProvider: React.FunctionComponent = ({ children }) => {
         isLoadingMore,
     } = usePackagesFetcher();
     const { item, fetch: fetchPackage } = usePackageFetcher();
-
-    const {
-        packages: companiesPackages,
-        fetch: fetchCompany,
-        isLoading: isLoadingCompany,
-    } = useCompanyPackagesFetcher();
 
     React.useEffect(() => {
         if (isLogged) {
@@ -71,15 +64,16 @@ export const PackageProvider: React.FunctionComponent = ({ children }) => {
         }
     }, [item]);
 
-    React.useEffect(() => {
-        if (company) {
-            (async () => await fetchCompany(company))();
-        }
-    }, [company, fetchCompany]);
-
     const onSelect = React.useCallback((pkg: Package) => {
         setState((prevState) => ({ ...prevState, item: pkg }));
     }, []);
+
+    const onAddPackage = React.useCallback(
+        (pkg: Package) => {
+            addPackage(pkg);
+        },
+        [addPackage],
+    );
 
     const onRefreshSelect = React.useCallback(async () => {
         if (state.item) {
@@ -91,11 +85,10 @@ export const PackageProvider: React.FunctionComponent = ({ children }) => {
         <PackageContext.Provider
             value={{
                 ...state,
-                companiesPackages,
+                onAddPackage,
                 packages,
                 isLoading,
                 isLoadingMore,
-                isLoadingCompany,
                 onSelect,
                 onRefreshSelect,
                 fetchPackages,

@@ -41,7 +41,7 @@ interface PackageFormProps {
 const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
     const { t } = useTranslation();
     const { colors } = useTheme();
-    const { onSelect } = usePackage();
+    const { onSelect, onAddPackage } = usePackage();
     const { visible, onToggle, onClose } = useVisible();
     const navigation = useNavigation<PackageScreenNavigationProp>();
     const [state, setState] = React.useState<{
@@ -118,6 +118,7 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
             } = await axios.post('/api/packages', formData);
             setState((prevState) => ({ ...prevState, dispatch: false }));
             onSelect(data);
+            onAddPackage(data);
             navigation.replace('Package');
         } catch (e) {
             if (e.response) {
@@ -130,8 +131,9 @@ const PackageForm = React.memo<PackageFormProps>(({ company, onBack }) => {
             setState((prevState) => ({ ...prevState, dispatch: false }));
         }
     }, [
-        company,
+        company?.id,
         navigation,
+        onAddPackage,
         onSelect,
         state.address,
         state.city,

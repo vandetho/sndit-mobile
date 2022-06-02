@@ -5,7 +5,7 @@ import { usePackage } from '@contexts';
 import { BarLoader, NewPackageCard, PACKAGE_ITEM_HEIGHT, PackageCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Company, Package } from '@interfaces';
 import { HEADER_HEIGHT } from '../CompanyDetail';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
 import { useCompanyPackagesFetcher } from '@fetchers';
@@ -23,7 +23,7 @@ interface PackageListProps {
 const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ company, onScroll, onPressNewPackage }) => {
     const { t } = useTranslation();
     const navigation = useNavigation<CompanyScreenNavigationProp>();
-
+    const isFocused = useIsFocused();
     const { onSelect } = usePackage();
     const { fetch, fetchMore, packages, isLoading, isLoadingMore } = useCompanyPackagesFetcher();
 
@@ -34,8 +34,10 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ compa
     }, [company, fetch]);
 
     React.useEffect(() => {
-        (async () => await onFetch())();
-    }, [onFetch]);
+        if (isFocused) {
+            (async () => await onFetch())();
+        }
+    }, [isFocused, onFetch]);
 
     const data = React.useMemo<Array<Package>>(
         () => [{ id: 0, name: t('new_package'), token: '', roles: [] }, ...packages],

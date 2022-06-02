@@ -15,12 +15,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    headerContainer: {
-        position: 'absolute',
-        zIndex: 1,
-        top: 10,
-        left: 10,
-    },
     maskViewContainer: {
         ...StyleSheet.absoluteFillObject,
         alignItems: 'center',
@@ -233,9 +227,17 @@ const ScannerModalComponent: React.FunctionComponent<ScannerModalProps> = ({ vis
     }
 
     return (
-        <Modal isVisible={visible} onBackdropPress={onClose} style={{ margin: 0, justifyContent: 'flex-end' }}>
+        <Modal
+            isVisible={visible}
+            swipeDirection={['down']}
+            onSwipeComplete={onClose}
+            useNativeDriver
+            hideModalContentWhileAnimating
+            onBackdropPress={onClose}
+            style={{ margin: 0, justifyContent: 'flex-end' }}
+        >
             <View style={{ height: height * 0.9, backgroundColor: colors.card, borderRadius: 20 }}>
-                <View style={styles.headerContainer}>
+                <View style={{ height: 60, paddingTop: 10 }}>
                     <Header goBackIcon="times" goBackTitle={t('close')} onGoBack={onClose} />
                 </View>
                 <View style={styles.container}>

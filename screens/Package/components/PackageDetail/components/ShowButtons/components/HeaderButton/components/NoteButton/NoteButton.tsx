@@ -32,6 +32,15 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         marginVertical: 10,
     },
+    modalButtonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 15,
+        margin: 10,
+        height: 50,
+        borderRadius: 15,
+    },
 });
 
 interface NoteButtonProps {
@@ -103,15 +112,19 @@ const NoteButton = React.memo<NoteButtonProps>(({ item }) => {
                         />
                         <TouchableOpacity
                             onPress={onToggle}
-                            style={[styles.buttonContainer, { backgroundColor: colors.background }]}
+                            style={[styles.modalButtonContainer, { backgroundColor: colors.background }]}
                         >
                             <GradientIcon name="times" />
                             <Text bold style={{ marginHorizontal: 10 }}>
                                 {t('close')}
                             </Text>
                         </TouchableOpacity>
-                        <Text>{t('note')}</Text>
-                        <Text>{item.note}</Text>
+                        <View style={{ padding: 10 }}>
+                            <Text bold style={{ marginVertical: 10 }}>
+                                {t('note')}
+                            </Text>
+                            <Text>{item.note}</Text>
+                        </View>
                     </View>
                 </Modal>
             </React.Fragment>

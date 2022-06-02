@@ -14,6 +14,7 @@ export * from './Progress';
 export * from './ReadMore';
 export * from './Separator';
 export * from './ScannerMask';
+export * from './ScannerModal';
 export * from './Slider';
 export * from './Switch';
 export * from './Text';

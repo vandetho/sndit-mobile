@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableWithoutFeedback, View } from 'react-native';
 import { useVisible } from '@hooks';
 import { MaterialIcons } from '@expo/vector-icons';
-import { ScannerModal } from './components';
+import { ScannerModal } from '@components';
 import { useTheme } from '@react-navigation/native';
 
 const ICON_SIZE = 36;

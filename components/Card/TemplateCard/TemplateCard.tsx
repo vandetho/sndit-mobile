@@ -16,10 +16,11 @@ const styles = StyleSheet.create({
 });
 interface TemplateCardProps {
     template: Template;
+    withEdit?: boolean;
     onPress?: (template: Template) => void;
 }
 
-const TemplateCard = React.memo<TemplateCardProps>(({ template, onPress }) => {
+const TemplateCard = React.memo<TemplateCardProps>(({ template, withEdit = true, onPress }) => {
     const { colors } = useTheme();
     const { t } = useTranslation();
 
@@ -68,7 +69,7 @@ const TemplateCard = React.memo<TemplateCardProps>(({ template, onPress }) => {
                             </View>
                         </View>
                     </View>
-                    <GradientIcon name="edit" />
+                    {withEdit && <GradientIcon name="edit" />}
                 </View>
             </View>
         </TouchableWithoutFeedback>

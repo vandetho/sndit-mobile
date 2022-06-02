@@ -63,5 +63,9 @@ export const usePackagesFetcher = () => {
         }
     }, [state.isLoadingMore, state.limit, state.offset, state.totalRows]);
 
-    return { ...state, fetch, fetchMore };
+    const addPackage = React.useCallback((pkg: Package) => {
+        setState((prevState) => ({ ...prevState, packages: [...prevState.packages, pkg] }));
+    }, []);
+
+    return { ...state, fetch, fetchMore, addPackage };
 };

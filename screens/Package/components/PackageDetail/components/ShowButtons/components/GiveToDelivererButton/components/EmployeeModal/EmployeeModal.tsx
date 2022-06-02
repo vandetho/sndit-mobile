@@ -89,6 +89,10 @@ const EmployeeModal = React.memo<EmployeeModalProps>(({ company, visible, onSave
     return (
         <Modal
             isVisible={visible}
+            swipeDirection={['down']}
+            onSwipeComplete={onClose}
+            useNativeDriver
+            hideModalContentWhileAnimating
             style={{
                 margin: 0,
             }}

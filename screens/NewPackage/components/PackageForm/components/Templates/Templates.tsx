@@ -54,7 +54,7 @@ const Templates = React.memo<TemplatesProps>(({ company, visible, onPress, onClo
 
     const renderItem = React.useCallback(
         ({ item }: { item: Template }) => {
-            return <TemplateCard template={item} onPress={onPress} />;
+            return <TemplateCard template={item} withEdit={false} onPress={onPress} />;
         },
         [onPress],
     );

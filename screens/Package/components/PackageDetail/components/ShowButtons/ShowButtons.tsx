@@ -16,10 +16,11 @@ const styles = StyleSheet.create({
     modalButtonContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         paddingHorizontal: 15,
-        marginVertical: 10,
+        margin: 10,
         height: 50,
-        borderRadius: 50,
+        borderRadius: 15,
     },
 });
 
