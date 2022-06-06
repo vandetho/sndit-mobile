@@ -20,6 +20,8 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { BottomTabNavigator, BottomTabStackParamsList } from '@navigations/BottomTabNavigator';
 import { darkTheme, lightTheme } from '@theme';
 import { useAuthentication } from '@contexts';
+import * as Linking from 'expo-linking';
+import { LinkingOptions } from '@react-navigation/native/lib/typescript/src/types';
 
 export type ApplicationStackParamsList = {
     AuthLoading: undefined;
@@ -35,6 +37,17 @@ export type ApplicationStackParamsList = {
     User: undefined;
     Login: undefined;
     Map: { draggable: boolean; latitude?: number; longitude?: number };
+};
+
+const prefix = Linking.createURL('/');
+
+const linking: LinkingOptions<ApplicationStackParamsList> = {
+    prefixes: [prefix],
+    config: {
+        screens: {
+            Package: 'package',
+        },
+    },
 };
 
 const ApplicationStack = createStackNavigator<ApplicationStackParamsList>();
@@ -173,7 +186,7 @@ const ApplicationNavigator = React.memo<ApplicationNavigatorProps>(() => {
     );
 
     return (
-        <NavigationContainer theme={scheme === 'dark' ? darkTheme : lightTheme}>
+        <NavigationContainer linking={linking} theme={scheme === 'dark' ? darkTheme : lightTheme}>
             <BottomSheetModalProvider>
                 <ApplicationStack.Navigator screenOptions={{ headerShown: false }}>
                     {renderScreens()}
