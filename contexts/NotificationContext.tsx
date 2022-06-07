@@ -38,12 +38,12 @@ export const NotificationProvider = React.memo<NotificationProviderProps>(({ chi
     const responseListener = React.useRef<Subscription>();
 
     const schedulePushNotification = React.useCallback(async () => {
-        const schema = isBeta ? 'snditbeta' : 'sndit';
+        const scheme = isBeta ? 'snditbeta' : 'sndit';
         await Notifications.scheduleNotificationAsync({
             content: {
                 title: "You've got mail! 📬",
                 body: 'Here is the notification body',
-                data: { url: `${schema}://packages/aa45e6cd-4d5b-41b7-b575-16a1f8c350e6` },
+                data: { url: `${scheme}://packages/aa45e6cd-4d5b-41b7-b575-16a1f8c350e6` },
             },
             trigger: { seconds: 2 },
         });

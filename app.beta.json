@@ -2,7 +2,7 @@
     "expo": {
         "name": "Sndit Beta",
         "slug": "sndit_beta",
-        "schema": "snditbeta",
+        "scheme": "snditbeta",
         "version": "1.0.9",
         "orientation": "portrait",
         "icon": "./assets/icon.png",

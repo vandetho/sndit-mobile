@@ -72,7 +72,6 @@ const linking: LinkingOptions<ApplicationStackParamsList> = {
         });
 
         return () => {
-            Linking.removeEventListener('url', onReceiveURL);
             subscription.remove();
         };
     },

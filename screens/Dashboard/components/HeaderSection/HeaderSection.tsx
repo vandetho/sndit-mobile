@@ -61,7 +61,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                         }}
                     >
                         <TouchableOpacity onPress={schedulePushNotification}>
-                            <GradientIcon name="note" />
+                            <GradientIcon name="bell" />
                         </TouchableOpacity>
                     </Animated.View>
                     <Animated.View
