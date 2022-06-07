@@ -24,35 +24,13 @@ import {
 } from '@contexts';
 import { AppLoadingScreen } from '@screens';
 import { ApplicationNavigator } from '@navigations';
-import { Platform, View } from 'react-native';
-import * as Linking from 'expo-linking';
+import { View } from 'react-native';
 import './i18n';
-import { ParsedURL } from 'expo-linking/src/Linking.types';
 
 enableScreens();
 
 export default function App() {
     const [appIsReady, setAppIsReady] = React.useState(false);
-    const [data, setData] = React.useState<ParsedURL>();
-
-    const handleDeepLink = React.useCallback((event: Linking.EventType) => {
-        const data = Linking.parse(event.url);
-        console.log({ data });
-        setData(data);
-    }, []);
-
-    React.useEffect(() => {
-        if (Platform.OS === 'android') {
-            Linking.getInitialURL().then((url) => {
-                this.navigate(url);
-            });
-        } else {
-            Linking.addEventListener('url', this.handleOpenURL);
-        }
-        return () => {
-            Linking.removeEventListener('url', handleDeepLink);
-        };
-    }, [handleDeepLink]);
 
     React.useEffect(() => {
         async function prepare() {

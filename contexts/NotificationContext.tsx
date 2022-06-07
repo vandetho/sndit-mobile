@@ -7,8 +7,13 @@ import { Notification } from 'expo-notifications';
 import Constants from 'expo-constants';
 import { axios } from '@utils';
 import { useAuthentication } from './AuthenticationContext';
+import { useApplication } from './ApplicationContext';
 
-const NotificationContext = React.createContext({});
+const NotificationContext = React.createContext({
+    schedulePushNotification: () => {
+        console.log({ name: 'schedulePushNotification' });
+    },
+});
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -21,6 +26,7 @@ Notifications.setNotificationHandler({
 interface NotificationProviderProps {}
 
 export const NotificationProvider = React.memo<NotificationProviderProps>(({ children }) => {
+    const { isBeta } = useApplication();
     const { isLogged } = useAuthentication();
     const experienceId = Constants.manifest.extra.experienceId || '@vandetho/sndit_beta';
     const [state, setState] = React.useState<{ expoPushToken: string; notification: Notification }>({
@@ -32,15 +38,16 @@ export const NotificationProvider = React.memo<NotificationProviderProps>(({ chi
     const responseListener = React.useRef<Subscription>();
 
     const schedulePushNotification = React.useCallback(async () => {
+        const schema = isBeta ? 'snditbeta' : 'sndit';
         await Notifications.scheduleNotificationAsync({
             content: {
                 title: "You've got mail! 📬",
                 body: 'Here is the notification body',
-                data: { data: 'goes here' },
+                data: { url: `${schema}://packages/aa45e6cd-4d5b-41b7-b575-16a1f8c350e6` },
             },
             trigger: { seconds: 2 },
         });
-    }, []);
+    }, [isBeta]);
 
     const registerForPushNotificationsAsync = React.useCallback(async () => {
         let token;
@@ -91,7 +98,8 @@ export const NotificationProvider = React.memo<NotificationProviderProps>(({ chi
 
             if (responseListener.current) {
                 responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-                    console.log(response);
+                    const url = response.notification.request.content.data.url;
+                    console.log({ response, url });
                 });
             }
         }

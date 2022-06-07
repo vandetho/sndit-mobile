@@ -21,6 +21,7 @@ import { BottomTabNavigator, BottomTabStackParamsList } from '@navigations/Botto
 import { darkTheme, lightTheme } from '@theme';
 import { useAuthentication } from '@contexts';
 import * as Linking from 'expo-linking';
+import * as Notifications from 'expo-notifications';
 import { LinkingOptions } from '@react-navigation/native/lib/typescript/src/types';
 
 export type ApplicationStackParamsList = {
@@ -47,6 +48,33 @@ const linking: LinkingOptions<ApplicationStackParamsList> = {
         screens: {
             Package: 'package',
         },
+    },
+    async getInitialURL() {
+        let url = await Linking.getInitialURL();
+
+        if (url != null) {
+            return url;
+        }
+
+        const response = await Notifications.getLastNotificationResponseAsync();
+        url = response?.notification.request.content.data.url as string;
+
+        return url;
+    },
+    subscribe(listener) {
+        const onReceiveURL = ({ url }: { url: string }) => listener(url);
+
+        Linking.addEventListener('url', onReceiveURL);
+
+        const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+            const url = response.notification.request.content.data.url as string;
+            listener(url);
+        });
+
+        return () => {
+            Linking.removeEventListener('url', onReceiveURL);
+            subscription.remove();
+        };
     },
 };
 

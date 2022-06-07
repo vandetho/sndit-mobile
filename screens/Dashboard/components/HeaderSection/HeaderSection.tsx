@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { useCompany } from '@contexts';
+import { useCompany, useNotification } from '@contexts';
 import { GradientIcon } from '@components';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
@@ -32,6 +32,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
     const { colors } = useTheme();
     const { managerCompanies } = useCompany();
     const { onSelect } = useCompany();
+    const { schedulePushNotification } = useNotification();
     const navigation = useNavigation<NewPackageNavigationProp>();
 
     const inputRange = React.useMemo(() => [0, HEADER_HEIGHT], []);
@@ -44,28 +45,48 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
     const renderNewPackageButton = React.useCallback(() => {
         if (managerCompanies.length > 0) {
             return (
-                <Animated.View
-                    style={{
-                        marginRight: 10,
-                        transform: [
-                            {
-                                translateY: animatedValue.interpolate({
-                                    inputRange,
-                                    outputRange: [0, -30],
-                                    extrapolate: 'clamp',
-                                }),
-                            },
-                        ],
-                    }}
-                >
-                    <TouchableOpacity onPress={onPressNewPackage}>
-                        <GradientIcon name="plus" />
-                    </TouchableOpacity>
-                </Animated.View>
+                <View style={{ flexDirection: 'row' }}>
+                    <Animated.View
+                        style={{
+                            marginRight: 10,
+                            transform: [
+                                {
+                                    translateY: animatedValue.interpolate({
+                                        inputRange,
+                                        outputRange: [0, -30],
+                                        extrapolate: 'clamp',
+                                    }),
+                                },
+                            ],
+                        }}
+                    >
+                        <TouchableOpacity onPress={schedulePushNotification}>
+                            <GradientIcon name="note" />
+                        </TouchableOpacity>
+                    </Animated.View>
+                    <Animated.View
+                        style={{
+                            marginRight: 10,
+                            transform: [
+                                {
+                                    translateY: animatedValue.interpolate({
+                                        inputRange,
+                                        outputRange: [0, -30],
+                                        extrapolate: 'clamp',
+                                    }),
+                                },
+                            ],
+                        }}
+                    >
+                        <TouchableOpacity onPress={onPressNewPackage}>
+                            <GradientIcon name="plus" />
+                        </TouchableOpacity>
+                    </Animated.View>
+                </View>
             );
         }
         return null;
-    }, [animatedValue, inputRange, managerCompanies.length, onPressNewPackage]);
+    }, [animatedValue, inputRange, managerCompanies.length, onPressNewPackage, schedulePushNotification]);
 
     return (
         <View style={styles.container}>
