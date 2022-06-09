@@ -72,7 +72,7 @@ const linking: LinkingOptions<ApplicationStackParamsList> = {
         });
 
         return () => {
-            subscription.remove();
+            Notifications.removeNotificationSubscription(subscription);
         };
     },
 };
