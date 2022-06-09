@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
+import { Linking } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { Subscription } from 'expo-modules-core';
 import { Notification } from 'expo-notifications';
@@ -8,6 +9,7 @@ import Constants from 'expo-constants';
 import { axios } from '@utils';
 import { useAuthentication } from './AuthenticationContext';
 import { useApplication } from './ApplicationContext';
+import { usePackage } from './PackageContext';
 
 const NotificationContext = React.createContext({
     schedulePushNotification: () => {
@@ -28,6 +30,7 @@ interface NotificationProviderProps {}
 export const NotificationProvider = React.memo<NotificationProviderProps>(({ children }) => {
     const { isBeta } = useApplication();
     const { isLogged } = useAuthentication();
+    const { onSelect } = usePackage();
     const experienceId = Constants.manifest.extra.experienceId || '@vandetho/sndit_beta';
     const [state, setState] = React.useState<{ expoPushToken: string; notification: Notification }>({
         expoPushToken: '',
@@ -90,18 +93,15 @@ export const NotificationProvider = React.memo<NotificationProviderProps>(({ chi
                 setState((prevState) => ({ ...prevState, expoPushToken: token })),
             );
 
-            if (notificationListener.current) {
-                notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-                    setState((prevState) => ({ ...prevState, notification }));
-                });
-            }
+            notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+                setState((prevState) => ({ ...prevState, notification }));
+            });
 
-            if (responseListener.current) {
-                responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-                    const url = response.notification.request.content.data.url;
-                    console.log({ response, url });
-                });
-            }
+            responseListener.current = Notifications.addNotificationResponseReceivedListener(async (response) => {
+                const url = response.notification.request.content.data.url as string;
+                onSelect(undefined);
+                await Linking.openURL(url);
+            });
         }
 
         return () => {
@@ -114,7 +114,7 @@ export const NotificationProvider = React.memo<NotificationProviderProps>(({ chi
                 }
             }
         };
-    }, [isLogged, registerForPushNotificationsAsync]);
+    }, [isLogged, onSelect, registerForPushNotificationsAsync]);
 
     return (
         <NotificationContext.Provider value={{ ...state, schedulePushNotification }}>

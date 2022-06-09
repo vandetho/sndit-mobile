@@ -70,20 +70,20 @@ export default function App() {
                         <CityProvider>
                             <MapProvider>
                                 <AuthenticationProvider>
-                                    <NotificationProvider>
-                                        <CompanyProvider>
-                                            <TemplateProvider>
-                                                <EmployeeProvider>
-                                                    <UserProvider>
-                                                        <PackageProvider>
+                                    <CompanyProvider>
+                                        <TemplateProvider>
+                                            <EmployeeProvider>
+                                                <UserProvider>
+                                                    <PackageProvider>
+                                                        <NotificationProvider>
                                                             <ApplicationNavigator />
                                                             <Toast />
-                                                        </PackageProvider>
-                                                    </UserProvider>
-                                                </EmployeeProvider>
-                                            </TemplateProvider>
-                                        </CompanyProvider>
-                                    </NotificationProvider>
+                                                        </NotificationProvider>
+                                                    </PackageProvider>
+                                                </UserProvider>
+                                            </EmployeeProvider>
+                                        </TemplateProvider>
+                                    </CompanyProvider>
                                 </AuthenticationProvider>
                             </MapProvider>
                         </CityProvider>

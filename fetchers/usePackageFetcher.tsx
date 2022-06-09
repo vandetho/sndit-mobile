@@ -29,6 +29,7 @@ export const usePackageFetcher = () => {
                 response: { data },
             } = error;
 
+            console.error(error);
             setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
         }
     }, []);

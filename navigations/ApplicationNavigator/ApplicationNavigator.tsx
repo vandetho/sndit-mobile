@@ -32,7 +32,7 @@ export type ApplicationStackParamsList = {
     EmployeeQrCode: undefined;
     Printer: undefined;
     PackageQrCode: undefined;
-    Package: undefined;
+    Package: { token?: string };
     NewCompany: undefined;
     NewPackage: undefined;
     User: undefined;
@@ -46,7 +46,7 @@ const linking: LinkingOptions<ApplicationStackParamsList> = {
     prefixes: [prefix],
     config: {
         screens: {
-            Package: 'package',
+            Package: 'packages/:token',
         },
     },
     async getInitialURL() {
