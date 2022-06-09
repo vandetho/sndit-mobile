@@ -10,6 +10,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import Toast from 'react-native-toast-message';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
+import * as Sentry from 'sentry-expo';
 import {
     ApplicationProvider,
     AuthenticationProvider,
@@ -28,6 +29,12 @@ import { View } from 'react-native';
 import './i18n';
 
 enableScreens();
+
+Sentry.init({
+    dsn: 'https://6b69d64b18a1402bb9ea0db85454da9b@o1095003.ingest.sentry.io/6488767',
+    enableInExpoDevelopment: true,
+    debug: true,
+});
 
 export default function App() {
     const [appIsReady, setAppIsReady] = React.useState(false);
