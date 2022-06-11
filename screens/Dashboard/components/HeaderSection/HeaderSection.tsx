@@ -68,7 +68,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
             </Animated.View>,
         ];
         if (managerCompanies.length > 0) {
-            return (
+            buttons.push(
                 <Animated.View
                     key="new-package-button"
                     style={{
@@ -87,7 +87,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                     <TouchableOpacity onPress={onPressNewPackage}>
                         <GradientIcon name="plus" />
                     </TouchableOpacity>
-                </Animated.View>
+                </Animated.View>,
             );
         }
         return <View style={{ flexDirection: 'row' }}>{buttons}</View>;

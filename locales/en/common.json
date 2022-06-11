@@ -75,5 +75,7 @@
     "no": "No",
     "yes": "Yes",
     "templates": "Templates",
-    "last_updated_at": "Last Updated At"
+    "last_updated_at": "Last Updated At",
+    "notifications": "Notifications",
+    "no_notification": "No Notification"
 }

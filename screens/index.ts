@@ -12,7 +12,7 @@ export * from './Login';
 export * from './Map';
 export * from './NewCompany';
 export * from './NewPackage';
-export * from './Notifications ';
+export * from './Notifications';
 export * from './Package';
 export * from './PackageQrCode';
 export * from './Packages';

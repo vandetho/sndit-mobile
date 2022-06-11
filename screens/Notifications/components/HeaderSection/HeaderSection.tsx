@@ -2,8 +2,9 @@ import React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { Header } from '@components';
 
-export const HEADER_HEIGHT = 100;
+export const HEADER_HEIGHT = 125;
 
 const styles = StyleSheet.create({
     container: {
@@ -12,10 +13,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
         paddingHorizontal: 10,
-        alignItems: 'flex-end',
         zIndex: 1,
     },
 });
@@ -34,6 +32,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
             style={[
                 styles.container,
                 {
+                    paddingTop: 50,
                     transform: [
                         {
                             translateY: animatedValue.interpolate({
@@ -61,6 +60,22 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                     }),
                 }}
             />
+            <Animated.View
+                style={{
+                    marginBottom: 10,
+                    transform: [
+                        {
+                            translateY: animatedValue.interpolate({
+                                inputRange,
+                                outputRange: [0, 25],
+                                extrapolate: 'clamp',
+                            }),
+                        },
+                    ],
+                }}
+            >
+                <Header goBackTitle={t('back')} />
+            </Animated.View>
             <Animated.Text
                 style={{
                     color: colors.primary,
@@ -70,14 +85,14 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                         {
                             translateY: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, 0],
+                                outputRange: [0, -25],
                                 extrapolate: 'clamp',
                             }),
                         },
                         {
                             translateX: animatedValue.interpolate({
                                 inputRange,
-                                outputRange: [0, 5],
+                                outputRange: [0, 75],
                                 extrapolate: 'clamp',
                             }),
                         },

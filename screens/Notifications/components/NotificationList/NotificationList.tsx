@@ -1,9 +1,10 @@
 import React from 'react';
 import { Animated, Linking, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
-import { BarLoader, NOTIFICATION_ITEM_HEIGHT, NotificationCard, Separator, SEPARATOR_HEIGHT } from '@components';
+import { BarLoader, NOTIFICATION_ITEM_HEIGHT, NotificationCard, Separator, SEPARATOR_HEIGHT, Text } from '@components';
 import { Notification } from '@interfaces';
 import { useNotificationsFetcher } from '@fetchers';
 import { HEADER_HEIGHT } from '../HeaderSection';
+import { useTranslation } from 'react-i18next';
 
 let onEndReachedCalledDuringMomentum = true;
 
@@ -12,6 +13,7 @@ interface NotificationListProps {
 }
 
 const NotificationListComponent: React.FunctionComponent<NotificationListProps> = ({ onScroll }) => {
+    const { t } = useTranslation();
     const { notifications, isLoading, isLoadingMore, fetchMore, fetch } = useNotificationsFetcher();
 
     const onPress = React.useCallback(async (notification: Notification) => {
@@ -44,6 +46,15 @@ const NotificationListComponent: React.FunctionComponent<NotificationListProps> 
         [isLoadingMore],
     );
 
+    const Empty = React.useCallback(
+        () => (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>{t('no_notification')}</Text>
+            </View>
+        ),
+        [t],
+    );
+
     const handleFetchMore = React.useCallback(async () => {
         if (onEndReachedCalledDuringMomentum) {
             await fetchMore();
@@ -63,6 +74,7 @@ const NotificationListComponent: React.FunctionComponent<NotificationListProps> 
             keyExtractor={keyExtractor}
             getItemLayout={getItemLayout}
             ItemSeparatorComponent={Separator}
+            ListEmptyComponent={Empty}
             onScroll={onScroll}
             ListFooterComponent={renderFooter}
             onEndReached={handleFetchMore}

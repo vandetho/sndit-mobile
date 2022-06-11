@@ -33,7 +33,9 @@ const Templates = React.memo<TemplatesProps>(({ company, visible, onPress, onClo
     const bottomSheetRef = React.useRef<BottomSheetModal>(null);
 
     const handleFetch = React.useCallback(async () => {
-        await fetch(company);
+        if (company) {
+            await fetch(company);
+        }
     }, [company, fetch]);
 
     React.useEffect(() => {
