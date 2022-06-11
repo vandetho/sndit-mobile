@@ -9,6 +9,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ApplicationStackParamsList } from '@navigations';
 import { useCompanyPackagesFetcher } from '@fetchers';
+import { ROLES } from '@config';
 
 let onEndReachedCalledDuringMomentum = true;
 
@@ -39,10 +40,13 @@ const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ compa
         }
     }, [isFocused, onFetch]);
 
-    const data = React.useMemo<Array<Package>>(
-        () => [{ id: 0, name: t('new_package'), token: '', roles: [] }, ...packages],
-        [packages, t],
-    );
+    const data = React.useMemo<Array<Package>>(() => {
+        if (company.roles.includes(ROLES.MANAGER)) {
+            return [{ id: 0, name: t('new_package'), token: '', roles: [] }, ...packages];
+        }
+        return packages;
+    }, [company.roles, packages, t]);
+
     const onPress = React.useCallback(
         (item: Package) => {
             onSelect(item);

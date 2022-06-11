@@ -10,6 +10,7 @@ export const CompanyContext = React.createContext<{
     company: Company;
     isLoading: boolean;
     onSelect: (company: Company) => void;
+    onAdd: (company: Company) => void;
     onFetch: () => void;
 }>({
     isLoading: false,
@@ -21,6 +22,9 @@ export const CompanyContext = React.createContext<{
     },
     onSelect: (company: Company) => {
         console.log({ name: 'onSelect', company });
+    },
+    onAdd: (company: Company) => {
+        console.log({ name: 'onAdd', company });
     },
 });
 
@@ -60,7 +64,22 @@ export const CompanyProvider: React.FunctionComponent = ({ children }) => {
         setState((prevState) => ({ ...prevState, company }));
     }, []);
 
-    return <CompanyContext.Provider value={{ ...state, onSelect, onFetch }}>{children}</CompanyContext.Provider>;
+    const onAdd = React.useCallback(
+        (company: Company) => {
+            const managerCompanies = [...state.managerCompanies];
+            if (company.roles.includes(ROLES.MANAGER)) {
+                managerCompanies.push(company);
+            }
+            setState((prevState) => ({
+                ...prevState,
+                companies: [company, ...prevState.companies],
+                managerCompanies,
+            }));
+        },
+        [state.managerCompanies],
+    );
+
+    return <CompanyContext.Provider value={{ ...state, onSelect, onFetch, onAdd }}>{children}</CompanyContext.Provider>;
 };
 
 export const useCompany = () => {

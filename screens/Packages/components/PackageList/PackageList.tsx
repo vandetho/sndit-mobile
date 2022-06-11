@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { usePackage } from '@contexts';
+import { useCompany, usePackage } from '@contexts';
 import { BarLoader, NewPackageCard, PACKAGE_ITEM_HEIGHT, PackageCard, Separator, SEPARATOR_HEIGHT } from '@components';
 import { Package } from '@interfaces';
 import { HEADER_HEIGHT } from '../HeaderSection';
@@ -20,13 +20,16 @@ interface PackageListProps {
 
 const PackageListComponent: React.FunctionComponent<PackageListProps> = ({ onScroll, onPressNewPackage }) => {
     const { t } = useTranslation();
+    const { managerCompanies } = useCompany();
     const navigation = useNavigation<PackageScreenNavigationProp>();
     const { packages, isLoading, isLoadingMore, fetchMorePackages, fetchPackages, onSelect } = usePackage();
 
-    const data = React.useMemo<Array<Package>>(
-        () => [{ id: 0, name: t('new_package'), token: '', roles: [] }, ...packages],
-        [packages, t],
-    );
+    const data = React.useMemo<Array<Package>>(() => {
+        if (managerCompanies.length > 0) {
+            return [{ id: 0, name: t('new_package'), token: '', roles: [] }, ...packages];
+        }
+        return packages;
+    }, [managerCompanies.length, packages, t]);
 
     const onPress = React.useCallback(
         (item: Package) => {

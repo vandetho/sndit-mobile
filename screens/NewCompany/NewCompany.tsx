@@ -7,6 +7,7 @@ import { axios, showToast } from '@utils';
 import { useCompany } from '@contexts';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CompanyStackParamList } from '@navigations/CompanyNavigator';
+import { Company, ResponseSuccess } from '@interfaces';
 
 const styles = StyleSheet.create({
     container: {
@@ -32,7 +33,7 @@ interface NewCompanyProps {}
 const NewCompany = React.memo<NewCompanyProps>(() => {
     const { t } = useTranslation();
     const { colors } = useTheme();
-    const { onSelect } = useCompany();
+    const { onSelect, onAdd } = useCompany();
     const navigation = useNavigation<CompanyScreenNavigationProp>();
     const [state, setState] = React.useState({ name: '', dispatch: false });
 
@@ -43,10 +44,13 @@ const NewCompany = React.memo<NewCompanyProps>(() => {
     const onPressSave = React.useCallback(async () => {
         setState((prevState) => ({ ...prevState, dispatch: true }));
         try {
-            const { data } = await axios.post('/api/companies', { name: state.name });
+            const {
+                data: { data, message },
+            } = await axios.post<ResponseSuccess<Company>>('/api/companies', { name: state.name });
             setState((prevState) => ({ ...prevState, dispatch: false }));
-            showToast({ type: 'success', text2: data.message });
-            onSelect(data.data);
+            showToast({ type: 'success', text2: message });
+            onSelect(data);
+            onAdd(data);
             navigation.navigate('Company');
         } catch (e) {
             if (e.response) {
@@ -58,7 +62,7 @@ const NewCompany = React.memo<NewCompanyProps>(() => {
             console.error(e);
             setState((prevState) => ({ ...prevState, dispatch: false }));
         }
-    }, [navigation, onSelect, state.name]);
+    }, [navigation, onAdd, onSelect, state.name]);
 
     return (
         <SafeAreaView style={styles.container}>

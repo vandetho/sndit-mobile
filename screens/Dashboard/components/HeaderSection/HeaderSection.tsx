@@ -48,7 +48,7 @@ const HeaderSectionComponent: React.FunctionComponent<HeaderSectionProps> = ({ a
                 <View style={{ flexDirection: 'row' }}>
                     <Animated.View
                         style={{
-                            marginRight: 10,
+                            marginRight: 20,
                             transform: [
                                 {
                                     translateY: animatedValue.interpolate({
