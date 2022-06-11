@@ -23,6 +23,7 @@ import { useAuthentication } from '@contexts';
 import * as Linking from 'expo-linking';
 import * as Notifications from 'expo-notifications';
 import { LinkingOptions } from '@react-navigation/native/lib/typescript/src/types';
+import { NotificationsScreen } from '@screens/Notifications';
 
 export type ApplicationStackParamsList = {
     AuthLoading: undefined;
@@ -35,6 +36,7 @@ export type ApplicationStackParamsList = {
     Package: { token?: string };
     NewCompany: undefined;
     NewPackage: undefined;
+    Notifications: undefined;
     User: undefined;
     Login: undefined;
     Map: { draggable: boolean; latitude?: number; longitude?: number };
@@ -174,6 +176,7 @@ const ApplicationNavigator = React.memo<ApplicationNavigatorProps>(() => {
                                     ...TransitionPresets.ModalPresentationIOS,
                                 }}
                             />
+                            <ApplicationStack.Screen name="Notifications" component={NotificationsScreen} />
                             <ApplicationStack.Screen
                                 name="Package"
                                 component={PackageScreen}
