@@ -4,6 +4,7 @@ export * from './Employee';
 export * from './FormType';
 export * from './Jwt';
 export * from './MenuItem';
+export * from './Notification';
 export * from './Package';
 export * from './PackageHistory';
 export * from './Response';

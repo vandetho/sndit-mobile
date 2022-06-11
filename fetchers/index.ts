@@ -6,6 +6,7 @@ export * from './useCurrentUserFetcher';
 export * from './useEmployeeFetcher';
 export * from './useEmployeePackagesFetcher';
 export * from './useEmployeesFetcher';
+export * from './useNotificationsFetcher';
 export * from './useOnDeliveryPackagesFetcher';
 export * from './usePackageFetcher';
 export * from './usePackageHistoriesFetcher';
