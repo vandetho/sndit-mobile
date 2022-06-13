@@ -27,11 +27,12 @@ import { AppLoadingScreen } from '@screens';
 import { ApplicationNavigator } from '@navigations';
 import { View } from 'react-native';
 import './i18n';
+import Constants from 'expo-constants';
 
 enableScreens();
 
 Sentry.init({
-    dsn: 'https://6b69d64b18a1402bb9ea0db85454da9b@o1095003.ingest.sentry.io/6488767',
+    dsn: Constants.manifest.extra.dsn,
     enableInExpoDevelopment: true,
     debug: true,
 });

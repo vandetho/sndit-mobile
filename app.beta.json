@@ -41,15 +41,16 @@
             "eas": {
                 "projectId": "02089a8c-de21-49b2-9d89-c0bacf5a4a97"
             },
-            "experienceId": "@vandetho/sndit_beta"
+            "experienceId": "@vandetho/sndit_beta",
+            "dsn": "https://ea8ffa12a5bd4edd9a39cda2ecf1c2a1@o1095003.ingest.sentry.io/6500655"
         },
         "hooks": {
             "postPublish": [
                 {
                     "file": "sentry-expo/upload-sourcemaps",
                     "config": {
-                        "organization": "Bangkeut Technology",
-                        "project": "Sndit Beta",
+                        "organization": "bangkeut-technology",
+                        "project": "sndit-beta",
                         "authToken": "f6e1b65fdd5c483892e608f6d87a85ad74aa5dc33ad445fd8f7ba48c9c4e1173"
                     }
                 }
