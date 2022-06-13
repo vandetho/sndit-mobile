@@ -5,6 +5,7 @@ import { Notification } from '@interfaces';
 import { useNotificationsFetcher } from '@fetchers';
 import { HEADER_HEIGHT } from '../HeaderSection';
 import { useTranslation } from 'react-i18next';
+import { usePackage } from '@contexts';
 
 let onEndReachedCalledDuringMomentum = true;
 
@@ -14,9 +15,11 @@ interface NotificationListProps {
 
 const NotificationListComponent: React.FunctionComponent<NotificationListProps> = ({ onScroll }) => {
     const { t } = useTranslation();
+    const { onSelect } = usePackage();
     const { notifications, isLoading, isLoadingMore, fetchMore, fetch } = useNotificationsFetcher();
 
     const onPress = React.useCallback(async (notification: Notification) => {
+        onSelect(undefined);
         await Linking.openURL(notification.data.url);
     }, []);
 
