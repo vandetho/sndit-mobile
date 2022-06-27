@@ -42,8 +42,15 @@ export const usePackageHistoriesFetcher = (item: Package) => {
                     isLoading: false,
                     offset: prevState.limit,
                 }));
-            } catch ({ response: { data } }) {
-                setState((prevState) => ({ ...prevState, isLoading: false, errorMessage: data.message }));
+            } catch (error) {
+                let errorMessage = error;
+                if ((error as any).response) {
+                    const {
+                        response: { data },
+                    } = error;
+                    errorMessage = data.message || data.detail;
+                }
+                setState((prevState) => ({ ...prevState, isLoading: false, errorMessage }));
             }
         }
     }, [item, state.limit]);
