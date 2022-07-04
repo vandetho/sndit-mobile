@@ -3,7 +3,7 @@
         "name": "Sndit Beta",
         "slug": "sndit_beta",
         "scheme": "snditbeta",
-        "version": "1.0.11",
+        "version": "1.0.12",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "automatic",

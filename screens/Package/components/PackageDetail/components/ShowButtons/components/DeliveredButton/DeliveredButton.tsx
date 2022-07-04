@@ -19,10 +19,13 @@ const DeliveredButtonComponent: React.FunctionComponent<DeliveredButtonProps> = 
             onPress();
         }
         try {
-            const { data } = await axios.post(`/api/packages/${item.token}/delivered`, {
-                latitude: region.latitude,
-                longitude: region.longitude,
-            });
+            const { data } = await axios.post(
+                `/api/packages/${item.token}/delivered`,
+                region && {
+                    latitude: region.latitude,
+                    longitude: region.longitude,
+                },
+            );
             showToast({ type: 'success', text2: data.message });
         } catch (e) {
             if (e.response) {
@@ -35,7 +38,7 @@ const DeliveredButtonComponent: React.FunctionComponent<DeliveredButtonProps> = 
         if (onDone) {
             onDone();
         }
-    }, [item.token, onDone, onPress, region.latitude, region.longitude]);
+    }, [item.token, onDone, onPress, region]);
 
     return <Button label={t('delivered')} style={{ margin: 10, borderRadius: 15 }} onPress={onPressDeliver} />;
 };
