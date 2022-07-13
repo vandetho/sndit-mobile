@@ -25,9 +25,8 @@ import {
 } from '@contexts';
 import { AppLoadingScreen } from '@screens';
 import { ApplicationNavigator } from '@navigations';
-import { View } from 'react-native';
-import './i18n';
 import Constants from 'expo-constants';
+import './i18n';
 
 enableScreens();
 
@@ -39,6 +38,7 @@ Sentry.init({
 
 export default function App() {
     const [appIsReady, setAppIsReady] = React.useState(false);
+    const [isSplashAnimationComplete, setAnimationComplete] = React.useState(false);
 
     React.useEffect(() => {
         async function prepare() {
@@ -60,44 +60,36 @@ export default function App() {
         (async () => await prepare())();
     }, [appIsReady]);
 
-    const onLayoutRootView = React.useCallback(async () => {
-        if (appIsReady) {
-            await SplashScreen.hideAsync();
-        }
-    }, [appIsReady]);
-
-    if (!appIsReady) {
-        return <AppLoadingScreen />;
+    if (!appIsReady && !isSplashAnimationComplete) {
+        return <AppLoadingScreen onComplete={setAnimationComplete} />;
     }
 
     return (
-        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-            <BottomSheetModalProvider>
-                <ApplicationProvider>
-                    <UserProvider>
-                        <CityProvider>
-                            <MapProvider>
-                                <AuthenticationProvider>
-                                    <CompanyProvider>
-                                        <TemplateProvider>
-                                            <EmployeeProvider>
-                                                <UserProvider>
-                                                    <PackageProvider>
-                                                        <NotificationProvider>
-                                                            <ApplicationNavigator />
-                                                            <Toast />
-                                                        </NotificationProvider>
-                                                    </PackageProvider>
-                                                </UserProvider>
-                                            </EmployeeProvider>
-                                        </TemplateProvider>
-                                    </CompanyProvider>
-                                </AuthenticationProvider>
-                            </MapProvider>
-                        </CityProvider>
-                    </UserProvider>
-                </ApplicationProvider>
-            </BottomSheetModalProvider>
-        </View>
+        <BottomSheetModalProvider>
+            <ApplicationProvider>
+                <UserProvider>
+                    <CityProvider>
+                        <MapProvider>
+                            <AuthenticationProvider>
+                                <CompanyProvider>
+                                    <TemplateProvider>
+                                        <EmployeeProvider>
+                                            <UserProvider>
+                                                <PackageProvider>
+                                                    <NotificationProvider>
+                                                        <ApplicationNavigator />
+                                                        <Toast />
+                                                    </NotificationProvider>
+                                                </PackageProvider>
+                                            </UserProvider>
+                                        </EmployeeProvider>
+                                    </TemplateProvider>
+                                </CompanyProvider>
+                            </AuthenticationProvider>
+                        </MapProvider>
+                    </CityProvider>
+                </UserProvider>
+            </ApplicationProvider>
+        </BottomSheetModalProvider>
     );
 }
