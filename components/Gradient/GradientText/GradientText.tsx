@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TextProps } from 'react-native';
-import MaskedView from '@react-native-community/masked-view';
+import MaskedView from '@react-native-masked-view/masked-view';
 import { Point } from 'react-native-svg/lib/typescript/elements/Shape';
 import { CustomLinearGradient } from '../CustomLinearGradient';
 

@@ -30,11 +30,11 @@ import './i18n';
 
 enableScreens();
 
-Sentry.init({
-    dsn: Constants.manifest.extra.dsn,
-    enableInExpoDevelopment: true,
-    debug: true,
-});
+// Sentry.init({
+//     dsn: Constants.manifest.extra.dsn,
+//     enableInExpoDevelopment: Constants.manifest.extra.beta === 'true',
+//     debug: Constants.manifest.extra.beta === 'true',
+// });
 
 export default function App() {
     const [appIsReady, setAppIsReady] = React.useState(false);
@@ -60,7 +60,7 @@ export default function App() {
         (async () => await prepare())();
     }, [appIsReady]);
 
-    if (!appIsReady && !isSplashAnimationComplete) {
+    if (!appIsReady || !isSplashAnimationComplete) {
         return <AppLoadingScreen onComplete={setAnimationComplete} />;
     }
 

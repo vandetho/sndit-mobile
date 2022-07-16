@@ -41,7 +41,8 @@ const AuthLoading: React.FunctionComponent<AuthLoadingProps> = () => {
                     const {
                         response: { data },
                     } = e;
-                    showToast(data.message || data.detail);
+                    showToast({ text2: data.message || data.detail });
+                    return;
                 }
                 console.error(e);
             }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
-import MaskedView from '@react-native-community/masked-view';
+import MaskedView from '@react-native-masked-view/masked-view';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { Point } from 'react-native-svg/lib/typescript/elements/Shape';
 import { CustomLinearGradient } from '../CustomLinearGradient';
