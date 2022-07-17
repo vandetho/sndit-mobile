@@ -43,14 +43,13 @@ export default function App() {
     React.useEffect(() => {
         async function prepare() {
             try {
-                await SplashScreen.preventAutoHideAsync();
+                await SplashScreen.hideAsync();
                 await Font.loadAsync({
                     Rubik_400Regular,
                     Rubik_400Regular_Italic,
                     Rubik_900Black,
                     Rubik_900Black_Italic,
                 });
-                await new Promise((resolve) => setTimeout(resolve, 2000));
             } catch (e) {
                 console.warn(e);
             } finally {
