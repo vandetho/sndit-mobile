@@ -35,7 +35,11 @@ export const PackageContext = React.createContext<{
     },
 });
 
-export const PackageProvider: React.FunctionComponent = ({ children }) => {
+interface PackageProviderProps {
+    children?: React.ReactNode;
+}
+
+export const PackageProvider: React.FunctionComponent<PackageProviderProps> = ({ children }) => {
     const { isLogged } = useAuthentication();
     const [state, setState] = React.useState<{
         item: Package;

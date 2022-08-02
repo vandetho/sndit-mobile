@@ -27,7 +27,11 @@ export const TemplateContext = React.createContext<{
     },
 });
 
-export const TemplateProvider: React.FunctionComponent = ({ children }) => {
+interface TemplateProviderProps {
+    children?: React.ReactNode;
+}
+
+export const TemplateProvider: React.FunctionComponent<TemplateProviderProps> = ({ children }) => {
     const { company } = useCompany();
     const [state, setState] = React.useState<{
         item: Template;

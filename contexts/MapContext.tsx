@@ -18,7 +18,11 @@ export const MapContext = React.createContext<{
 
 const LOCATION_TASK_NAME = 'background-location-task';
 
-export const MapProvider: React.FunctionComponent = ({ children }) => {
+interface MapProviderProps {
+    children?: React.ReactNode;
+}
+
+export const MapProvider: React.FunctionComponent<MapProviderProps> = ({ children }) => {
     const [state, setState] = React.useState<{
         region: Region | undefined;
         selectRegion: Region | undefined;

@@ -21,7 +21,11 @@ export const EmployeeContext = React.createContext<{
     },
 });
 
-export const EmployeeProvider: React.FunctionComponent = ({ children }) => {
+interface EmployeeProviderProps {
+    children?: React.ReactNode;
+}
+
+export const EmployeeProvider: React.FunctionComponent<EmployeeProviderProps> = ({ children }) => {
     const { company } = useCompany();
     const [state, setState] = React.useState<{
         employee: Employee;

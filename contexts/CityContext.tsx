@@ -10,7 +10,11 @@ export const CityContext = React.createContext<{
     cities: [],
 });
 
-export const CityProvider: React.FunctionComponent = ({ children }) => {
+interface CityProviderProps {
+    children?: React.ReactNode;
+}
+
+export const CityProvider: React.FunctionComponent<CityProviderProps> = ({ children }) => {
     const [state, setState] = React.useState<{
         cities: City[];
         isLoading: boolean;

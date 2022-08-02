@@ -32,7 +32,11 @@ export const AuthenticationContext = React.createContext<{
     },
 });
 
-export const AuthenticationProvider: React.FunctionComponent = ({ children }) => {
+interface AuthenticationProviderProps {
+    children?: React.ReactNode;
+}
+
+export const AuthenticationProvider: React.FunctionComponent<AuthenticationProviderProps> = ({ children }) => {
     const [authentication, setAuthentication] = React.useState<{
         isRefreshingToken: boolean;
         isLogged: boolean;

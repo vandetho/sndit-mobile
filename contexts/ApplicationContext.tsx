@@ -9,7 +9,11 @@ export const ApplicationContext = React.createContext({
     isAndroid: false,
 });
 
-export const ApplicationProvider: React.FunctionComponent = ({ children }) => {
+interface ApplicationProviderProps {
+    children?: React.ReactNode;
+}
+
+export const ApplicationProvider: React.FunctionComponent<ApplicationProviderProps> = ({ children }) => {
     const [state, setState] = React.useState({
         isTablet: false,
         isBeta: Constants.manifest.extra.beta === 'true',

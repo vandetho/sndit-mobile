@@ -28,7 +28,11 @@ export const CompanyContext = React.createContext<{
     },
 });
 
-export const CompanyProvider: React.FunctionComponent = ({ children }) => {
+interface CompanyProviderProps {
+    children?: React.ReactNode;
+}
+
+export const CompanyProvider: React.FunctionComponent<CompanyProviderProps> = ({ children }) => {
     const { isLogged } = useAuthentication();
     const [state, setState] = React.useState<{
         companies: Company[];
