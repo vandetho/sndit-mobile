@@ -39,6 +39,14 @@ const Account = React.memo<AccountProps>(() => {
                 text: t('information'),
                 screen: 'UserInformation',
             },
+            {
+                icon: 'trash',
+                iconColor: 'red',
+                textColor: 'red',
+                key: 'delete-account',
+                text: t('delete_account'),
+                screen: 'DeleteAccount',
+            },
         ],
         [t],
     );

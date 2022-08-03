@@ -5,6 +5,7 @@ export * from './Companies';
 export * from './Company';
 export * from './CompanyQrCode';
 export * from './Dashboard';
+export * from './DeleteAccount';
 export * from './Employee';
 export * from './EmployeeQrCode';
 export * from './Employees';

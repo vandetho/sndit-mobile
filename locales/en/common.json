@@ -78,5 +78,9 @@
     "templates": "Templates",
     "last_updated_at": "Last Updated At",
     "notifications": "Notifications",
-    "no_notification": "No Notification"
+    "no_notification": "No Notification",
+    "delete_account_detail": "You delete your account, however due to ensure the delivery of all packages your in-charge of your account will be delete within 14 days, during this period you cannot be assigned to delivery new package",
+    "delete_account": "Delete Account",
+    "do_not_have_any_packages": "You do not have any packages",
+    "do_you_want_to_delete_your_account": "Do you want to delete your account ?"
 }
