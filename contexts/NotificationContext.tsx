@@ -25,7 +25,9 @@ Notifications.setNotificationHandler({
     }),
 });
 
-interface NotificationProviderProps {}
+interface NotificationProviderProps {
+    children?: React.ReactNode;
+}
 
 export const NotificationProvider = React.memo<NotificationProviderProps>(({ children }) => {
     const { isBeta } = useApplication();

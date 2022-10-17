@@ -5,6 +5,9 @@ import { Button } from '@components';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { axios, showToast } from '@utils';
 import { ResponseSuccess } from '@interfaces';
+import { useAuthentication } from '@contexts';
+import { format } from 'date-fns';
+import { DISPLAY_DATE_FORMAT } from '@config';
 
 const styles = StyleSheet.create({
     container: {
@@ -18,38 +21,58 @@ interface DeleteAccountProps {}
 
 const DeleteAccountComponent: React.FunctionComponent<DeleteAccountProps> = () => {
     const { t } = useTranslation();
+    const {
+        jwt: { user },
+    } = useAuthentication();
     const [isLoading, setLoading] = React.useState(false);
 
     const onPress = React.useCallback(() => {
-        Alert.alert(t('confirmation'), t('do_you_want_to_delete_your_account'), [
-            {
-                text: t('yes'),
-                onPress: () => {
-                    setLoading((prevState) => !prevState);
-                    axios
-                        .delete<ResponseSuccess>('/api/users/current')
-                        .then(({ data }) => {
-                            setLoading((prevState) => !prevState);
-                            showToast({ text2: data.message, type: 'success' });
-                        })
-                        .catch((reason) => {
-                            if (reason.response) {
-                                const { data } = reason.response;
+        Alert.alert(
+            t('confirmation'),
+            user.deletedAt ? t('do_you_want_to_undelete_your_account') : t('do_you_want_to_delete_your_account'),
+            [
+                {
+                    text: t('yes'),
+                    onPress: () => {
+                        setLoading((prevState) => !prevState);
+                        const caller = user.deletedAt
+                            ? axios.patch('/api/users/current/undelete')
+                            : axios.delete<ResponseSuccess>('/api/users/current');
+                        caller
+                            .then(({ data }) => {
                                 setLoading((prevState) => !prevState);
-                                showToast({ text2: data.message || data.detail, type: 'error' });
-                            }
-                            console.error(reason);
-                        });
+                                showToast({ text2: data.message, type: 'success' });
+                            })
+                            .catch((reason) => {
+                                if (reason.response) {
+                                    const { data } = reason.response;
+                                    setLoading((prevState) => !prevState);
+                                    showToast({ text2: data.message || data.detail, type: 'error' });
+                                }
+                                console.error(reason);
+                            });
+                    },
                 },
-            },
-        ]);
-    }, [t]);
+            ],
+        );
+    }, [t, user.deletedAt]);
+
+    const description = React.useMemo(
+        () =>
+            user.deletedAt
+                ? t('cancel_delete_account_detail', {
+                      deletedAt: format(new Date(user.deletedAt), DISPLAY_DATE_FORMAT),
+                  })
+                : t('delete_account_detail'),
+        [t, user.deletedAt],
+    );
+    const label = React.useMemo(() => (user.deletedAt ? t('cancel') : t('delete_account')), [t, user.deletedAt]);
 
     return (
         <View style={styles.container}>
-            <View>{t('delete_account_detail')}</View>
+            <View>{description}</View>
             <Button
-                label={t('delete_account')}
+                label={label}
                 type="error"
                 shape="square"
                 startIcon={<FontAwesome5 name="trash" />}

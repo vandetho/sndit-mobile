@@ -8,7 +8,9 @@ const UserContext = React.createContext<{ user: User | undefined; onSelect: (use
     },
 });
 
-interface UserContextProps {}
+interface UserContextProps {
+    children?: React.ReactNode;
+}
 
 export const UserProvider: React.FunctionComponent<UserContextProps> = ({ children }) => {
     const [state, setState] = React.useState<{ user: User | undefined }>({ user: undefined });

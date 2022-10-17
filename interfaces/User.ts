@@ -8,4 +8,5 @@ export interface User {
     fullName: string;
     imageFile: string | undefined;
     locale: string;
+    deletedAt?: string;
 }
