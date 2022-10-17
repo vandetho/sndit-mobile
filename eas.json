@@ -12,7 +12,7 @@
             },
             "developmentClient": true,
             "distribution": "internal",
-            "node": "16.15.0"
+            "node": "18.11.0"
         },
         "preview": {
             "env": {
@@ -23,7 +23,7 @@
             },
             "developmentClient": true,
             "distribution": "internal",
-            "node": "16.15.0"
+            "node": "18.11.0"
         },
         "production": {
             "env": {
@@ -32,7 +32,7 @@
             "android": {
                 "buildType": "apk"
             },
-            "node": "16.15.0"
+            "node": "18.11.0"
         },
         "release": {
             "env": {
@@ -41,7 +41,7 @@
             "android": {
                 "buildType": "apk"
             },
-            "node": "16.15.0"
+            "node": "18.11.0"
         }
     },
     "submit": {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ROLES } from '@config';
 import { useTheme } from '@react-navigation/native';
 import { GradientIcon, Separator, SEPARATOR_HEIGHT, Text } from '@components';

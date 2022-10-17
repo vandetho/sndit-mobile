@@ -37,7 +37,7 @@ const ReadMore = React.memo<ReadMoreProps>(({ targetLines, text, containerStyle 
         (e) => {
             const { lines } = e.nativeEvent;
             if (lines && Array.isArray(lines) && lines.length > 0) {
-                let tempTxtLocation = {
+                const tempTxtLocation = {
                     top: (lines.length - 1) * lines[0].height,
                     right: width - lines[lines.length - 1].width - 10,
                 };

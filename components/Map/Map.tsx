@@ -43,12 +43,12 @@ const Map = React.memo<MapProps>(({ onChange }) => {
     const onSelectCurrentLocation = React.useCallback(async () => {
         setCurrenLocation(true);
 
-        let { status } = await Location.requestForegroundPermissionsAsync();
+        const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
             return;
         }
 
-        let location = await Location.getCurrentPositionAsync({});
+        const location = await Location.getCurrentPositionAsync({});
         setMapRegion({
             longitude: region.longitude,
             latitude: region.latitude,
