@@ -39,7 +39,7 @@
             "beta": "false",
             "host": "https://sndit.io",
             "eas": {
-                "projectId": "02089a8c-de21-49b2-9d89-c0bacf5a4a97"
+                "projectId": "586be1dd-4bc0-43e2-9168-14a4b0d240a5"
             },
             "experienceId": "@vandetho/sndit",
             "dsn": "https://6b69d64b18a1402bb9ea0db85454da9b@o1095003.ingest.sentry.io/6488767"
@@ -56,6 +56,8 @@
                 }
             ]
         },
-        "plugins": ["sentry-expo"]
+        "plugins": [
+            "sentry-expo"
+        ]
     }
 }
