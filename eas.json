@@ -1,50 +1,63 @@
 {
     "cli": {
-        "version": ">= 0.38.3"
+        "version": ">= 5.6.0"
     },
     "build": {
-        "development": {
+        "development-simulator": {
             "env": {
-                "APP_ENV": "development"
+                "APP_VARIANT": "simulator"
+            },
+            "developmentClient": true,
+            "distribution": "internal",
+            "ios": {
+                "simulator": true
+            }
+        },
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal",
+            "env": {
+                "APP_VARIANT": "development"
             },
             "android": {
                 "buildType": "apk"
             },
-            "developmentClient": true,
-            "distribution": "internal",
-            "node": "16.18.0"
+            "ios": {
+                "resourceClass": "m-medium"
+            }
         },
         "preview": {
-            "env": {
-                "APP_ENV": "preview"
-            },
-            "android": {
-                "buildType": "apk"
-            },
-            "developmentClient": true,
             "distribution": "internal",
-            "node": "16.18.0"
-        },
-        "production": {
             "env": {
-                "APP_ENV": "production"
+                "APP_VARIANT": "preview"
             },
             "android": {
                 "buildType": "apk"
             },
-            "node": "16.18.0"
+            "ios": {
+                "resourceClass": "m-medium"
+            }
         },
         "release": {
+            "distribution": "internal",
             "env": {
-                "APP_ENV": "release"
+                "APP_VARIANT": "release"
             },
-            "android": {
-                "buildType": "apk"
-            },
-            "node": "16.18.0"
+            "ios": {
+                "resourceClass": "m-medium"
+            }
         }
     },
     "submit": {
-        "release": {}
+        "beta": {
+            "ios": {
+                "ascAppId": "1670034414"
+            }
+        },
+        "release": {
+            "ios": {
+                "ascAppId": "6446094615"
+            }
+        }
     }
 }
