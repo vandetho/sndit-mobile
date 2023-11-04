@@ -10,7 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     version: '1.0.0',
     orientation: 'portrait',
     icon: `./assets/images/icon-${variant}.png`,
-    owner: 'bangkeut',
+    owner: 'vandetho',
     userInterfaceStyle: 'automatic',
     jsEngine: 'hermes',
     splash: {
@@ -48,11 +48,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     extra: {
         variant: `${variant}`,
-        host: 'https://sndit.io',
+        host: process.env.EXPO_PUBLIC_API_URL,
         eas: {
-            projectId: '0c4bb569-acdc-4761-af14-b6853908cf19',
+            projectId: process.env.EXPO_PROJECT_ID,
         },
-        experienceId: `@vandetho/sndit_${variant}`,
     },
     experiments: {
         tsconfigPaths: true,

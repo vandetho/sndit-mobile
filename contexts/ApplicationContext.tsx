@@ -16,7 +16,7 @@ interface ApplicationProviderProps {
 export const ApplicationProvider: React.FunctionComponent<ApplicationProviderProps> = ({ children }) => {
     const [state, setState] = React.useState({
         isTablet: false,
-        isBeta: Constants.manifest.extra.beta === 'true',
+        variant: Constants.manifest.extra.beta === 'true',
         isAndroid: Platform.OS === 'android',
     });
 

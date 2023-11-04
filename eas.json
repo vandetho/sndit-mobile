@@ -5,7 +5,9 @@
     "build": {
         "development-simulator": {
             "env": {
-                "APP_VARIANT": "simulator"
+                "APP_VARIANT": "simulator",
+                "EXPO_PUBLIC_API_URL": "https://sndit.io/api/",
+                "EXPO_PROJECT_ID": "0c4bb569-acdc-4761-af14-b6853908cf19"
             },
             "developmentClient": true,
             "distribution": "internal",
@@ -17,7 +19,9 @@
             "developmentClient": true,
             "distribution": "internal",
             "env": {
-                "APP_VARIANT": "development"
+                "APP_VARIANT": "development",
+                "EXPO_PUBLIC_API_URL": "https://sndit.io/api/",
+                "EXPO_PROJECT_ID": "3042ac5c-aa9b-4bfa-92e1-b9b7379f2a84"
             },
             "android": {
                 "buildType": "apk"
@@ -29,7 +33,9 @@
         "preview": {
             "distribution": "internal",
             "env": {
-                "APP_VARIANT": "preview"
+                "APP_VARIANT": "preview",
+                "EXPO_PUBLIC_API_URL": "https://sndit.io/api/",
+                "EXPO_PROJECT_ID": "55066e75-02a3-4b5e-b348-b49ece2722f6"
             },
             "android": {
                 "buildType": "apk"
@@ -41,7 +47,9 @@
         "release": {
             "distribution": "internal",
             "env": {
-                "APP_VARIANT": "release"
+                "APP_VARIANT": "release",
+                "EXPO_PUBLIC_API_URL": "https://sndit.io/api/",
+                "EXPO_PROJECT_ID": "7451b480-ab26-4b2b-b21e-2ca22c35164a"
             },
             "ios": {
                 "resourceClass": "m-medium"
