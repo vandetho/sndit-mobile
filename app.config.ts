@@ -74,12 +74,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             },
         ],
         [
-            'expo-document-picker',
-            {
-                iCloudContainerEnvironment: 'Production',
-            },
-        ],
-        [
             'expo-screen-orientation',
             {
                 initialOrientation: 'DEFAULT',

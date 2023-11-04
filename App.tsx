@@ -7,7 +7,6 @@ import {
 } from '@expo-google-fonts/rubik';
 import { enableScreens } from 'react-native-screens';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import Toast from 'react-native-toast-message';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import {
@@ -25,6 +24,7 @@ import {
 import { AppLoadingScreen } from '@screens';
 import { ApplicationNavigator } from '@navigations';
 import './i18n';
+import FlashMessage from 'react-native-flash-message';
 
 enableScreens();
 
@@ -69,7 +69,7 @@ export default function App() {
                                                 <PackageProvider>
                                                     <NotificationProvider>
                                                         <ApplicationNavigator />
-                                                        <Toast />
+                                                        <FlashMessage position="top" />
                                                     </NotificationProvider>
                                                 </PackageProvider>
                                             </UserProvider>
