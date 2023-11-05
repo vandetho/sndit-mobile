@@ -25,8 +25,6 @@ import { AppLoadingScreen } from '@screens';
 import { ApplicationNavigator } from '@navigations';
 import './i18n';
 import FlashMessage from 'react-native-flash-message';
-import { Provider } from 'react-redux';
-import { store } from '@stores';
 
 enableScreens();
 
@@ -59,7 +57,7 @@ export default function App() {
 
     return (
         <BottomSheetModalProvider>
-            <Provider store={store}>
+            <ApplicationProvider>
                 <UserProvider>
                     <CityProvider>
                         <MapProvider>
@@ -82,7 +80,7 @@ export default function App() {
                         </MapProvider>
                     </CityProvider>
                 </UserProvider>
-            </Provider>
+            </ApplicationProvider>
         </BottomSheetModalProvider>
     );
 }
